@@ -1,0 +1,221 @@
+{
+    "menuList": [
+        {
+            "id": 1,
+            "category": "클래식",
+            "title": "에그마요",
+            "eng-title": "Egg Mayo",
+            "img": "images/menu/Egg-Mayo.png",
+            "calorie": "416 kcal",
+            "summary": "부드러운 달걀과 고소한 마요네즈가 만나 더 부드러운 스테디셀러"
+        },
+        {
+            "id": 2,
+            "category": "클래식",
+            "title": "이탈리아 비엠티",
+            "eng-title": "Italian B.M.T.™",
+            "img": "images/menu/Italian_B.M.T.png",
+            "calorie": "288 kcal",
+            "summary": "페퍼로니, 살라미 그리고 햄이 만들어내는 최상의 조화! 전세계가 사랑하는 써브웨이의 베스트셀러! \n Biggest Meatiest Tastiest, its’ B.M.T."
+        },
+        {
+            "id": 3,
+            "category": "클래식",
+            "title": "비엘티",
+            "eng-title": "B.L.T.",
+            "img": "images/menu/B.L.T.png",
+            "calorie": "300 kcal",
+            "summary": "오리지널 아메리칸 스타일 베이컨의 풍미와 바삭함 그대로"
+        },
+        {
+            "id": 4,
+            "category": "클래식",
+            "title": "햄",
+            "eng-title": "Ham",
+            "img": "images/menu/Ham.png",
+            "calorie": "262 kcal",
+            "summary": "풍부한 햄이 만들어내는 담백함을 입 안 가득 즐겨보세요!"
+        },
+        {
+            "id": 5,
+            "category": "클래식",
+            "title": "참치",
+            "eng-title": "Tuna",
+            "img": "images/menu/Tuna.png",
+            "calorie": "316 kcal",
+            "summary": "남녀노소 누구나 좋아하는 담백한 참치와 고소한 마요네즈의 완벽한 조화"
+        },
+        {
+            "id": 6,
+            "category": "프레쉬&라이트",
+            "title": "치킨 슬라이스",
+            "eng-title": "Chicken Slice",
+            "img": "images/menu/Chicken-Slice.png",
+            "calorie": "265 kcal",
+            "summary": "닭가슴살로 만든 치킨 슬라이스로 즐기는 담백한 맛!"
+        },
+        {
+            "id": 7,
+            "category": "프레쉬&라이트",
+            "title": "치킨 베이컨 아보카도",
+            "eng-title": "Chicken Bacon Avocado",
+            "img": "images/menu/Chicken-Bacon-Avocado.png",
+            "calorie": "355 kcal",
+            "summary": "담백하게 닭가슴살로 만든 치킨 슬라이스와 베이컨, 부드러운 아보카도의 만남"
+        },
+        {
+            "id": 8,
+            "category": "프레쉬&라이트",
+            "title": "로스트 치킨",
+            "eng-title": "Roasted Chicken",
+            "img": "images/menu/Roasted-Chicken.png",
+            "calorie": "300 kcal",
+            "summary": "오븐에 구워 담백한 저칼로리 닭가슴살의 건강한 풍미"
+        },
+        {
+            "id": 9,
+            "category": "프레쉬&라이트",
+            "title": "로티세리 바비큐 치킨",
+            "eng-title": "Rotisserie Barbecue Chicken",
+            "img": "images/menu/Rotisserie-Barbecue-Chicken.png",
+            "calorie": "327 kcal",
+            "summary": "촉촉한 바비큐 치킨의 풍미가득.손으로 찢어 더욱 부드러운 치킨의 혁명"
+        },
+        {
+            "id": 10,
+            "category": "프레쉬&라이트",
+            "title": "써브웨이 클럽",
+            "eng-title": "Subway Club™",
+            "img": "images/menu/Subway-Club™.png",
+            "calorie": "299 kcal",
+            "summary": "고소한 베이컨, 담백한 치킨 슬라이스에 햄까지 더해 완벽해진 조화를 즐겨보세요!"
+        },
+        {
+            "id": 11,
+            "category": "프레쉬&라이트",
+            "title": "베지",
+            "eng-title": "Veggie Delite",
+            "img": "images/menu/Veggie-Delite.png",
+            "calorie": "209 kcal",
+            "summary": "갓 구운 빵과 신선한 8가지 야채로 즐기는 깔끔한 한끼"
+        },
+        {
+            "id": 12,
+            "category": "프리미엄",
+            "title": "스파이시 쉬림프",
+            "eng-title": "Spicy Shrimp",
+            "img": "images/menu/Spicy_Shrimp_front.png",
+            "calorie": "245 kcal",
+            "summary": "탱글한 쉬림프에 이국적인 시즈닝을 더해 색다른 매콤함을 만나보세요!"
+        },
+        {
+            "id": 13,
+            "category": "프리미엄",
+            "title": "쉬림프",
+            "eng-title": "Shrimp",
+            "img": "images/menu/Shrimp_front.png",
+            "calorie": "241 kcal",
+            "summary": "탱글한 쉬림프 5마리가 그대로, 신선하고 담백한 쉬림프의 맛 그대로 즐겨보세요!"
+        },
+        {
+            "id": 14,
+            "category": "프리미엄",
+            "title": "K-바비큐",
+            "eng-title": "K-BBQ",
+            "img": "images/menu/K-BBQ.png",
+            "calorie": "372 kcal",
+            "summary": "써브웨이의 코리안 스타일 샌드위치! 마늘, 간장 그리고 은은한 불맛까지!"
+        },
+        {
+            "id": 15,
+            "category": "프리미엄",
+            "title": "풀드 포크 바비큐",
+            "eng-title": "Pulled Pork Barbecue",
+            "img": "images/menu/Pulled-Pork-Barbecue.png",
+            "calorie": "327 kcal",
+            "summary": "미국 스타일의 풀드 포크 바비큐가 가득 들어간 샌드위치"
+        },
+        {
+            "id": 16,
+            "category": "프리미엄",
+            "title": "스테이크 & 치즈",
+            "eng-title": "Steak & Cheese",
+            "img": "images/menu/Steak-&-Cheese.png",
+            "calorie": "355 kcal",
+            "summary": "육즙이 쫙~풍부한 비프 스테이크의 풍미가 입안 한가득"
+        },
+        {
+            "id": 17,
+            "category": "프리미엄",
+            "title": "스파이시 이탈리안",
+            "eng-title": "Spicy Italian",
+            "img": "images/menu/Spicy_Italian.png",
+            "calorie": "464 kcal",
+            "summary": "페퍼로니 & 살라미가 입안 가득, 페퍼로니의 부드러운 매콤함을 만나보세요!"
+        },
+        {
+            "id": 18,
+            "category": "프리미엄",
+            "title": "치킨 데리야끼",
+            "eng-title": "Chicken Teriyaki",
+            "img": "images/menu/Chicken-Teriyaki.png",
+            "calorie": "314 kcal",
+            "summary": "담백한 치킨 스트립에 달콤짭쪼름한 써브웨이 특제 데리야끼 소스와의 환상적인 만남"
+        },
+        {
+            "id": 19,
+            "category": "프리미엄",
+            "title": "이탈리안 비엠티 썹픽",
+            "eng-title": "Italian B.M.T.™ SUBPICK",
+            "img": "images/menu/(SubPick)Italian_BMT.png",
+            "calorie": "548 kcal",
+            "summary": "써브웨이가 추천하는 베스트 조합을 한번에 주문 할 수 있는 쉽고 빠른 주문, 썹픽으로 만나보세요. \n 썹픽 레시피 – 빵 : 파마산 오레가노/ 치즈 : 모차렐라 치즈/ 야채 : 양상추, 토마토, 피망, 양파, 오이, 피클, 올리브, 할라피뇨/ 소스 : 스위트 어니언 & 랜치"
+        },
+        {
+            "id": 20,
+            "category": "프리미엄",
+            "title": "스테이크&치즈 썹픽",
+            "eng-title": "Steak & Cheese SUBPICK",
+            "img": "images/menu/(SUBPICK)Steak_Cheese.png",
+            "calorie": "507 kcal",
+            "summary": "써브웨이가 추천하는 베스트 조합을 한번에 주문 할 수 있는 쉽고 빠른 주문, 썹픽으로 만나보세요. \n 썹픽 레시피 – 빵 : 화이트/ 치즈 : 아메리칸 치즈/ 야채 : 양상추, 토마토, 피망, 양파, 오이, 피클, 올리브, 할라피뇨/ 소스 : 마요네즈 & 사우스웨스트"
+        },
+        {
+            "id": 21,
+            "category": "프리미엄",
+            "title": "로티세리 바비큐 치킨 썹픽",
+            "eng-title": "Rotisserie Barbecue Chicken SUBPICK",
+            "img": "images/menu/(SUBPICK)Rotisserie_Barbecue_Chicken.png",
+            "calorie": "463 kcal",
+            "summary": "써브웨이가 추천하는 베스트 조합을 한번에 주문 할 수 있는 쉽고 빠른 주문, 썹픽으로 만나보세요. \n 썹픽 레시피 – 빵 : 화이트/ 치즈 : 아메리칸 치즈/ 야채 : 양상추, 토마토, 피망,양파,오이/ 소스 : 랜치 & 스위트 칠리"
+        }
+    ],
+    "freshInfo": {
+        "bread": [
+            {
+                "id": "b01",
+                "title": "허니오트",
+                "eng-title": "Honey Oat",
+                "img": "",
+                "calorie": "235 kcal",
+                "summary": "고소한 위트빵에 오트밀 가루를 묻혀 고소함과 식감이 두배로"
+            },
+            {
+                "id": "b02",
+                "title": "하티",
+                "eng-title": "Hearty Italian",
+                "img": "",
+                "calorie": "210 kcal",
+                "summary": "부드러운 화이트빵에 옥수수가루를 묻혀 겉은 바삭하고 고소하며 속은 부드럽게"
+            }
+        ],
+        "vegetable": [],
+        "cheese": [],
+        "sauce": []
+    },
+    "combination": [
+        {
+            "id": ""
+        }
+    ]
+}
