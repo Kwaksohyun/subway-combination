@@ -2,8 +2,9 @@ import styled from "styled-components";
 import data from "../../data.json";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const SubwayMenuWrap = styled.div`
+const SubwayMenuContainer = styled.div`
     background-color: #fff;
     height: 560px;
     padding-top: 50px;
@@ -14,19 +15,21 @@ const SubwayMenuHeader = styled.div`
     align-items: center;
     width: 1170px;
     margin: 0 auto;
+    padding-bottom: 30px;
     position: relative;
     > h2 {
         font-size: 32px;
-        font-weight: 700;
+        font-weight: 800;
         background: url("../images/main/bul_tit.png") 0 12px no-repeat;
         min-height: 60px;
-        padding: 30px 0px 10px 20px;
+        padding: 30px 0px 10px 30px;
     }
 `;
 
 const Tabs = styled.div`
     position: absolute;
     right: 0;
+    cursor: pointer;
 `;
 
 const TabList = styled.ul`
@@ -52,23 +55,25 @@ const TabItem = styled.li`
     }
 `;
 
-const MenuSliderWrap = styled.div`
+const MenuSlideContainer = styled.div`
     position: relative;
 `;
 
-const MenuListWrap = styled.div`
+const MenuSlideWrap = styled.div`
     width: 1200px;
     margin: 0 auto;
-    > ul {
-        display: flex;
-        width: 100%;
-    }
-    > ul > li {
-        margin: 0 10px;
+`;
+
+const MenuListWrap = styled.ul`
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    > li {
+        margin: 0 25px;
     }
 `;
 
-const MenuItemWrap = styled.div`
+const MenuItemInfo = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -94,7 +99,7 @@ const Summary = styled.p`
     color: ${(props) => props.theme.grey.darker};
 `;
 
-const DirectionBtnWrap = styled.div`
+const SlideDirectionBtnWrap = styled.div`
     display: flex;
     svg {
         width: 40px;
@@ -120,51 +125,83 @@ const NextBtn = styled.svg`
     right: 50px;
 `;
 
+const Slide = {
+    invisible: (back:boolean) => (
+        { x: back ? -200 : 200, opacity: 0 }
+    ),
+    visible: { x: 0, opacity: 1 },
+    exit: (back:boolean) => (
+        { x: back ? 200 : -200, opacity: 0 }
+    )
+}
+
+const offset = 4;
 function SubwayMenu() {
-    const allCategoryArr = data.menuList.map(i => i.category);
+    const allCategoryArr = data?.menuList.map(i => i.category);
     const categoryArr = allCategoryArr.filter((i, idx) => allCategoryArr.indexOf(i) === idx);
     // 선택된 탭의 인덱스
     const [activeTab, setActiveTab] = useState(0);
+    // 메뉴 페이지 인덱스
+    const [pageIndex, setPageIndex] = useState(0);
+    // back 상태 -> prev, next 방향 알기 위해
+    const [back, setBack] = useState(false);
+    const maxIndex = Math.ceil(data.menuList.filter(i => i.category === categoryArr[activeTab]).length / offset) - 1;
+    const showActiveTabMenu = (tabIndex:number) => {
+        setActiveTab(tabIndex);
+        setPageIndex(0);
+    }
+    const movePrevSlide = () => {
+        setBack(true);
+        setPageIndex((prev) => prev===0 ? 0 : prev - 1);
+    };
+    const moveNextSlide = () => {
+        setBack(false);
+        setPageIndex((prev) => prev===maxIndex ? maxIndex : prev + 1);
+    };
     return (
         <>
-            <SubwayMenuWrap>
+            <SubwayMenuContainer>
                 <SubwayMenuHeader>
                     <h2>Subway's Menu</h2>
                     <Tabs>
                         <TabList>
-                            {categoryArr.map((category, index) => (
-                                <TabItem onClick={() => setActiveTab(index)} className={activeTab===index ? "active" : ""} key={index}>{category}</TabItem>
+                            {categoryArr.map((category:string, index:number) => (
+                                <TabItem onClick={() => showActiveTabMenu(index)} className={activeTab===index ? "active" : ""} key={index}>{category}</TabItem>
                             ))}
                         </TabList>
                     </Tabs>
                 </SubwayMenuHeader>
 
-                <MenuSliderWrap>
-                    <MenuListWrap>
-                        <ul>
-                            {data.menuList.filter(i => i.category===categoryArr[activeTab]).map((item) => (
-                                <li key={item.id}>
-                                    <Link to={"/"}>
-                                        <MenuItemWrap>
-                                            <Img alt="menu_img" src={`${process.env.PUBLIC_URL}/${item.img}`} />
-                                            <strong>{item.title}</strong>
-                                            <Summary>{item.summary.split(' \n ').map(i => <>{i}<br/></>)}</Summary>
-                                        </MenuItemWrap>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </MenuListWrap>
-                    <DirectionBtnWrap>
-                        <PrevBtn viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
+                <MenuSlideContainer>
+                    <MenuSlideWrap>
+                        <AnimatePresence custom={back} mode="wait">
+                            <MenuListWrap key={pageIndex}>
+                                {data.menuList.filter(i => i.category === categoryArr[activeTab])
+                                    .slice(offset*pageIndex, offset*pageIndex + offset)
+                                    .map((item) => (
+                                    <motion.li key={item.id} custom={back} variants={Slide} initial="invisible" animate="visible" exit="exit" transition={{type: "tween"}}>
+                                        <Link to={"/"}>
+                                            <MenuItemInfo>
+                                                <Img alt={item["eng_title"]+"_img"} src={`${process.env.PUBLIC_URL}/${item.img}`} />
+                                                <strong>{item.title}</strong>
+                                                <Summary>{item.summary.split(' \n ').map(i => <>{i}<br/></>)}</Summary>
+                                            </MenuItemInfo>
+                                        </Link>
+                                    </motion.li>
+                                ))}
+                            </MenuListWrap>
+                        </AnimatePresence>
+                    </MenuSlideWrap>
+                    <SlideDirectionBtnWrap>
+                        <PrevBtn onClick={movePrevSlide} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
                             <path d="M192 448c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l137.4 137.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448z"/>
                         </PrevBtn>
-                        <NextBtn viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
+                        <NextBtn onClick={moveNextSlide} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
                             <path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/>
                         </NextBtn>
-                    </DirectionBtnWrap>
-                </MenuSliderWrap>
-            </SubwayMenuWrap>
+                    </SlideDirectionBtnWrap>
+                </MenuSlideContainer>
+            </SubwayMenuContainer>
         </>
     );
 }
