@@ -28,8 +28,7 @@ const SubwayMenuHeader = styled.div`
 
 const Tabs = styled.div`
     position: absolute;
-    right: 0;
-    cursor: pointer;
+    right: 0;  
 `;
 
 const TabList = styled.ul`
@@ -41,6 +40,7 @@ const TabItem = styled.li`
     margin-left: 40px;
     font-weight: 500;
     color: #666666;
+    cursor: pointer;
     &.active {
         color: ${(props) => props.theme.green.lighter};
     }
@@ -84,7 +84,7 @@ const MenuItemInfo = styled.div`
     }
 `;
 
-const Img = styled.img`
+const SandwichImg = styled.img`
     width: 280px;
     height: 200px;
 `;
@@ -182,7 +182,7 @@ function SubwayMenu() {
                                     <motion.li key={item.id} custom={back} variants={Slide} initial="invisible" animate="visible" exit="exit" transition={{type: "tween"}}>
                                         <Link to={"/"}>
                                             <MenuItemInfo>
-                                                <Img alt={item["eng_title"]+"_img"} src={`${process.env.PUBLIC_URL}/${item.img}`} />
+                                                <SandwichImg alt={item["eng_title"]+"_img"} src={`${process.env.PUBLIC_URL}/${item.img}`} />
                                                 <strong>{item.title}</strong>
                                                 <Summary>{item.summary.split(' \n ').map(i => <>{i}<br/></>)}</Summary>
                                             </MenuItemInfo>
