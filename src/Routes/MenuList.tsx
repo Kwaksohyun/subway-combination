@@ -1,10 +1,21 @@
+import { useEffect, useState } from "react";
 import { Link, Outlet, useMatch } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
 `;
 
-const SubHeader = styled.nav`
+const SubHeaderContainer = styled.nav`
+    &.fixed {
+        position: fixed;
+        top: 0;
+        z-index: 10;
+        background-color: #fff;
+        width: 100%;
+    }
+`;
+
+const SubHeaderWrap = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,34 +82,56 @@ const TopBtn = styled.div`
 function MenuList() {
     const sandwichMatch = useMatch("/menuList/sandwich");
     const unitMatch = useMatch("/menuList/unit");
-
+    // window 스크롤 값
+    const [scrollY, setScrollY] = useState(0);
+    // sub-header를 fixed할지 말지 정하는 setter
+    const [fixedNav, setFixedNav] = useState(false);
+    const handleScroll = () => {
+        if(scrollY > 159) {
+            setScrollY(window.pageYOffset);
+            setFixedNav(true);
+        } else {
+            setScrollY(window.pageYOffset);
+            setFixedNav(false);
+        }
+    }
+    useEffect(() => {
+        // window에서 scroll 감지
+        window.addEventListener("scroll", handleScroll);
+        // window에서 scroll 감시 종료 -> 이벤트리스너를 삭제해 줘야 scroll 시, 여러 번 렌더되지 않는다.
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+        };
+    });
     return (
         <>
             <Container>
                 {/* 메뉴소개 페이지 내부 탐색 메뉴 */}
-                <SubHeader>
-                    <Logo>
-                        <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
-                    </Logo>
-                    <LNBWrap>
-                        <ul>
-                            <LNBItem isactive={sandwichMatch !== null}>
-                                <Link to={"/menuList/sandwich"}>샌드위치</Link>
-                            </LNBItem>
-                            <LNBItem isactive={unitMatch !== null}>
-                                <Link to={"/menuList/unit"}>랩ㆍ기타</Link>
-                            </LNBItem>
-                        </ul>
-                    </LNBWrap>
-                    <TopBtn>
-                        <Link to={"#none"}>
-                            TOP
-                            <svg xmlns="http://www.w3.org/2000/svg" id="Bold" viewBox="0 0 24 24">
-                                <path d="M19.061,13.439,14.475,8.854a3.583,3.583,0,0,0-4.95,0L4.939,13.439a1.5,1.5,0,0,0,2.122,2.122l4.586-4.586a.5.5,0,0,1,.707,0l4.585,4.586a1.5,1.5,0,0,0,2.122-2.122Z"/>
-                            </svg>
-                        </Link>
-                    </TopBtn>
-                </SubHeader>
+                <SubHeaderContainer className={fixedNav ? "fixed" : ""}>
+                    <SubHeaderWrap>
+                        <Logo>
+                            <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
+                        </Logo>
+                        <LNBWrap>
+                            <ul>
+                                <LNBItem isactive={sandwichMatch !== null}>
+                                    <Link to={"/menuList/sandwich"}>샌드위치</Link>
+                                </LNBItem>
+                                <LNBItem isactive={unitMatch !== null}>
+                                    <Link to={"/menuList/unit"}>랩ㆍ기타</Link>
+                                </LNBItem>
+                            </ul>
+                        </LNBWrap>
+                        <TopBtn>
+                            <Link to={"#none"}>
+                                TOP
+                                <svg xmlns="http://www.w3.org/2000/svg" id="Bold" viewBox="0 0 24 24">
+                                    <path d="M19.061,13.439,14.475,8.854a3.583,3.583,0,0,0-4.95,0L4.939,13.439a1.5,1.5,0,0,0,2.122,2.122l4.586-4.586a.5.5,0,0,1,.707,0l4.585,4.586a1.5,1.5,0,0,0,2.122-2.122Z"/>
+                                </svg>
+                            </Link>
+                        </TopBtn>
+                    </SubHeaderWrap>
+                </SubHeaderContainer>
 
                 <Outlet />
             </Container>
