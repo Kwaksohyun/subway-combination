@@ -196,6 +196,7 @@
             "title": "미트 추가",
             "eng_title": "Meat",
             "img": "images/menu/img_topping_01.png",
+            "calorie": "",
             "summary": "주 재료를 2배로 더 푸짐하게 즐기세요 \n 15cm : 3,000원 / 30cm : 6,000원"
         },
         {
@@ -203,6 +204,7 @@
             "title": "에그마요",
             "eng_title": "Egg Mayo",
             "img": "images/menu/img_topping_02.png",
+            "calorie": "",
             "summary": "신선한 달걀과 고소한 마요네즈의 만남 \n 15cm : 2,000원 / 30cm : 4,000원"
         },
         {
@@ -210,6 +212,7 @@
             "title": "베이컨",
             "eng_title": "Bacon",
             "img": "images/menu/img_topping_03.png",
+            "calorie": "",
             "summary": "진한 풍미와 바삭한 베이컨으로 특별한 나만의 써브웨이~ \n 15cm : 1,500원 / 30cm : 3,000원"
         },
         {
@@ -217,6 +220,7 @@
             "title": "치즈 추가",
             "eng_title": "Cheese",
             "img": "images/menu/img_topping_04.jpg",
+            "calorie": "",
             "summary": "고소한 치즈를 2배로! \n 15cm : 1,400원 / 30cm: 2,800원"
         },
         {
@@ -224,6 +228,7 @@
             "title": "아보카도",
             "eng_title": "Avocado",
             "img": "images/menu/img_topping_05.png",
+            "calorie": "",
             "summary": "숲속의 버터 아보카도로 영향 UP \n 15cm : 1,500원 / 30cm : 3,000원"
         },
         {
@@ -231,6 +236,7 @@
             "title": "오믈렛",
             "eng_title": "Omelet",
             "img": "images/menu/img_topping_06.png",
+            "calorie": "",
             "summary": "더 부드럽게, 더 고소하게 \n 15cm : 1,800원 / 30cm : 3,600원"
         },
         {
@@ -238,6 +244,7 @@
             "title": "페퍼로니",
             "eng_title": "Pepperoni",
             "img": "images/menu/img_topping_07.jpg",
+            "calorie": "",
             "summary": "입맛 당기는 페퍼로니로 써브웨이를 더 맛있게! \n 15cm : 1,400원 / 30cm : 2,800원"
         }
     ],
