@@ -93,7 +93,7 @@ function Header() {
                 <Nav>
                     <ul>
                         <li onMouseEnter={() => mouseEvent(true)} onMouseLeave={() => mouseEvent(false)}>
-                            <NavLink to={"/menuList"}>메뉴소개</NavLink>
+                            <NavLink to={"#none"}>메뉴소개</NavLink>
                             {isOpen ? (
                                 <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
                                     <ul>

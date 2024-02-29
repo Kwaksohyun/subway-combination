@@ -11,7 +11,7 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/menuList/:menuId' element={<MenuList />}>
+        <Route path='/menuList' element={<MenuList />}>
           <Route path='sandwich' element={<Sandwich />}/>
           <Route path='unit' element={<Wrap />}/>
         </Route>
