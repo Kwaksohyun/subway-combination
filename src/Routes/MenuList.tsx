@@ -3,15 +3,57 @@ import { Link, Outlet, useMatch } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
+    position: relative;
+`;
+
+const Logo = styled.h1`
+    opacity: 0;
+    img{
+        width: 110px;
+        height: 25px;
+    }
+`;
+
+const TopBtn = styled.div`
+    opacity: 0;
+    a {
+        position: relative;
+        color: #bbbbbb;
+        font-size: 15px;
+        font-weight: 700;
+        top: 4px;
+        svg {
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            fill: #bbbbbb;
+            width: 28px;
+            height: 28px;
+        }
+    }
 `;
 
 const SubHeaderContainer = styled.nav`
+    position: absolute;
+    background-color: transparent;
+    z-index: 10;
+    width: 100%;
     &.fixed {
         position: fixed;
         top: 0;
-        z-index: 10;
         background-color: #fff;
+        ${Logo}, ${TopBtn} {
+            opacity: 1;
+        }
+    }
+    &::after {
+        content: '';
+        position: absolute;
         width: 100%;
+        height: 1px;
+        bottom: 0;
+        background-color: #fff;
+        opacity: 0.1;
     }
 `;
 
@@ -30,13 +72,6 @@ const SubHeaderWrap = styled.div`
     }
 `;
 
-const Logo = styled.h1`
-    img{
-        width: 110px;
-        height: 25px;
-    }
-`;
-
 const LNBWrap = styled.div`
     > ul {
         display: flex;
@@ -47,34 +82,38 @@ const LNBWrap = styled.div`
 const LNBItem = styled.li<{isactive: boolean}>`
     position: relative;
     margin: 0 25px;
-    color: ${(props) => props.isactive ?  props.theme.yellow.darker: "#999999"};
+    color: ${(props) => props.isactive ?  props.theme.yellow.darker: "#fff"};
     font-weight: 500;
+    > a {
+        line-height: 60px;
+    }
     &:not(:last-child)::after {
         content: '';
         position: absolute;
         background-color: #dddddd;
+        opacity: 0.2;
         width: 4px;
         height: 4px;
         border-radius: 30px;
         right: -25px;
-        top: 6px;
+        bottom: 28px;
     }
-`;
-
-const TopBtn = styled.div`
-    a {
-        position: relative;
-        color: #bbbbbb;
-        font-size: 15px;
-        font-weight: 700;
-        top: 4px;
-        svg {
+    &.active {
+        &::after {
+            content: '';
             position: absolute;
+            width: 100%;
+            height: 4px;
+            bottom: 0;
             left: 0;
-            bottom: 10px;
-            fill: #bbbbbb;
-            width: 28px;
-            height: 28px;
+            background-color: ${(props) => props.theme.yellow.darker};
+            opacity: 1;
+        }
+    }
+    &.fixed {
+        color: ${(props) => props.isactive ?  props.theme.yellow.darker: "#999999"};
+        &:not(:last-child)::after {
+            opacity: 1;
         }
     }
 `;
@@ -114,10 +153,12 @@ function MenuList() {
                         </Logo>
                         <LNBWrap>
                             <ul>
-                                <LNBItem isactive={sandwichMatch !== null}>
+                                <LNBItem isactive={sandwichMatch !== null} 
+                                        className={`${sandwichMatch!==null ? "active" : ""} ${fixedNav ? "fixed" : ""}`}>
                                     <Link to={"/menuList/sandwich"}>샌드위치</Link>
                                 </LNBItem>
-                                <LNBItem isactive={unitMatch !== null}>
+                                <LNBItem isactive={unitMatch !== null} 
+                                        className={`${unitMatch!==null ? "active" : ""} ${fixedNav ? "fixed" : ""}`}>
                                     <Link to={"/menuList/unit"}>랩ㆍ기타</Link>
                                 </LNBItem>
                             </ul>
