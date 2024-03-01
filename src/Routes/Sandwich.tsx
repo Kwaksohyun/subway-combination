@@ -130,10 +130,10 @@ const Calorie = styled.span`
 
 function Sandwich() {
     const sandwichTab = [
-        { index: 0, name: "All", dataList: data.menuList },
-        { index: 1, name: "클래식", dataList: data.menuList.filter(i => i.category === "클래식") },
-        { index: 2, name: "프레쉬&라이트", dataList: data.menuList.filter(i => i.category === "프레쉬&라이트") },
-        { index: 3, name: "프리미엄", dataList: data.menuList.filter(i => i.category === "클래식") },
+        { index: 0, name: "All", dataList: data.sandwichList },
+        { index: 1, name: "클래식", dataList: data.sandwichList.filter(i => i.category === "클래식") },
+        { index: 2, name: "프레쉬&라이트", dataList: data.sandwichList.filter(i => i.category === "프레쉬&라이트") },
+        { index: 3, name: "프리미엄", dataList: data.sandwichList.filter(i => i.category === "클래식") },
         { index: 4, name: "추가 선택", dataList: data.topping },
     ];
     // 선택된 탭의 인덱스

@@ -137,7 +137,7 @@ const Slide = {
 
 const offset = 4;
 function SubwayMenu() {
-    const allCategoryArr = data?.menuList.map(i => i.category);
+    const allCategoryArr = data?.sandwichList.map(i => i.category);
     const categoryArr = allCategoryArr.filter((i, idx) => allCategoryArr.indexOf(i) === idx);
     // 선택된 탭의 인덱스
     const [activeTab, setActiveTab] = useState(0);
@@ -145,7 +145,7 @@ function SubwayMenu() {
     const [pageIndex, setPageIndex] = useState(0);
     // back 상태 -> prev, next 방향 알기 위해
     const [back, setBack] = useState(false);
-    const maxIndex = Math.ceil(data.menuList.filter(i => i.category === categoryArr[activeTab]).length / offset) - 1;
+    const maxIndex = Math.ceil(data.sandwichList.filter(i => i.category === categoryArr[activeTab]).length / offset) - 1;
     const showActiveTabMenu = (tabIndex:number) => {
         setActiveTab(tabIndex);
         setPageIndex(0);
@@ -176,7 +176,7 @@ function SubwayMenu() {
                     <MenuSlideWrap>
                         <AnimatePresence custom={back} mode="wait">
                             <MenuListWrap key={pageIndex}>
-                                {data.menuList.filter(i => i.category === categoryArr[activeTab])
+                                {data.sandwichList.filter(i => i.category === categoryArr[activeTab])
                                     .slice(offset*pageIndex, offset*pageIndex + offset)
                                     .map((item) => (
                                     <motion.li key={item.id} custom={back} variants={Slide} initial="invisible" animate="visible" exit="exit" transition={{type: "tween"}}>
