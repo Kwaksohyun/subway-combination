@@ -23,6 +23,7 @@ const TopBtn = styled.button`
     font-weight: 700;
     top: 4px;
     opacity: 0;
+    cursor: pointer;
     svg {
         position: absolute;
         left: 7px;
@@ -121,19 +122,9 @@ const LNBItem = styled.li<{isactive: boolean}>`
 function MenuList() {
     const sandwichMatch = useMatch("/menuList/sandwich");
     const unitMatch = useMatch("/menuList/unit");
-    // window 스크롤 값
-    const [scrollY, setScrollY] = useState(0);
     // sub-header를 fixed할지 말지 정하는 setter
     const [fixedNav, setFixedNav] = useState(false);
-    const handleScroll = () => {
-        if(scrollY > 159) {
-            setScrollY(window.pageYOffset);
-            setFixedNav(true);
-        } else {
-            setScrollY(window.pageYOffset);
-            setFixedNav(false);
-        }
-    }
+    
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -141,11 +132,18 @@ function MenuList() {
         })
     }
     useEffect(() => {
+        const handleFixedNav = () => {
+            if(window.scrollY > 159) {
+                setFixedNav(true);
+            } else {
+                setFixedNav(false);
+            }
+        }
         // window에서 scroll 감지
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleFixedNav);
         // window에서 scroll 감시 종료 -> 이벤트리스너를 삭제해 줘야 scroll 시, 여러 번 렌더되지 않는다.
         return () => {
-            window.removeEventListener("scroll", handleScroll)
+            window.removeEventListener("scroll", handleFixedNav)
         };
     });
     return (
