@@ -88,15 +88,15 @@ const LNBItem = styled.li<{isactive: boolean}>`
     > a {
         line-height: 60px;
     }
-    &:not(:last-child)::after {
+    &:not(:first-child)::before {
         content: '';
         position: absolute;
         background-color: #dddddd;
-        opacity: 0.2;
+        opacity: 0.3;
         width: 4px;
         height: 4px;
         border-radius: 30px;
-        right: -25px;
+        left: -26px;
         bottom: 28px;
     }
     &.active {
@@ -113,7 +113,7 @@ const LNBItem = styled.li<{isactive: boolean}>`
     }
     &.fixed {
         color: ${(props) => props.isactive ?  props.theme.yellow.darker: "#999999"};
-        &:not(:last-child)::after {
+        &:not(:first-child)::before {
             opacity: 1;
         }
     }
@@ -141,7 +141,7 @@ function MenuList() {
         }
         // window에서 scroll 감지
         window.addEventListener("scroll", handleFixedNav);
-        // window에서 scroll 감시 종료 -> 이벤트리스너를 삭제해 줘야 scroll 시, 여러 번 렌더되지 않는다.
+        // window에서 scroll 감지 clean up -> 이벤트리스너를 삭제해 줘야 scroll 시, 여러 번 렌더되지 않는다.
         return () => {
             window.removeEventListener("scroll", handleFixedNav)
         };
