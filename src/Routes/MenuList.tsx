@@ -14,22 +14,22 @@ const Logo = styled.h1`
     }
 `;
 
-const TopBtn = styled.div`
+const TopBtn = styled.button`
+    border: 0;
+    background-color: transparent;
+    position: relative;
+    color: #bbbbbb;
+    font-size: 15px;
+    font-weight: 700;
+    top: 4px;
     opacity: 0;
-    a {
-        position: relative;
-        color: #bbbbbb;
-        font-size: 15px;
-        font-weight: 700;
-        top: 4px;
-        svg {
-            position: absolute;
-            left: 0;
-            bottom: 10px;
-            fill: #bbbbbb;
-            width: 28px;
-            height: 28px;
-        }
+    svg {
+        position: absolute;
+        left: 7px;
+        bottom: 10px;
+        fill: #bbbbbb;
+        width: 28px;
+        height: 28px;
     }
 `;
 
@@ -134,6 +134,12 @@ function MenuList() {
             setFixedNav(false);
         }
     }
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    }
     useEffect(() => {
         // window에서 scroll 감지
         window.addEventListener("scroll", handleScroll);
@@ -163,13 +169,11 @@ function MenuList() {
                                 </LNBItem>
                             </ul>
                         </LNBWrap>
-                        <TopBtn>
-                            <Link to={"#none"}>
-                                TOP
-                                <svg xmlns="http://www.w3.org/2000/svg" id="Bold" viewBox="0 0 24 24">
-                                    <path d="M19.061,13.439,14.475,8.854a3.583,3.583,0,0,0-4.95,0L4.939,13.439a1.5,1.5,0,0,0,2.122,2.122l4.586-4.586a.5.5,0,0,1,.707,0l4.585,4.586a1.5,1.5,0,0,0,2.122-2.122Z"/>
-                                </svg>
-                            </Link>
+                        <TopBtn onClick={scrollToTop} type="button">
+                            TOP
+                            <svg xmlns="http://www.w3.org/2000/svg" id="Bold" viewBox="0 0 24 24">
+                                <path d="M19.061,13.439,14.475,8.854a3.583,3.583,0,0,0-4.95,0L4.939,13.439a1.5,1.5,0,0,0,2.122,2.122l4.586-4.586a.5.5,0,0,1,.707,0l4.585,4.586a1.5,1.5,0,0,0,2.122-2.122Z"/>
+                            </svg>
                         </TopBtn>
                     </SubHeaderWrap>
                 </SubHeaderContainer>
