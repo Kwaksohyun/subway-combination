@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import data from "../data.json";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const MenuListWrap = styled.div`
     background-color: #f2f2f2;
@@ -83,7 +84,7 @@ const ProductListWrap = styled.div`
     }
 `;
 
-const MenuItem = styled.li`
+const MenuItem = styled(motion.li)`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,6 +129,22 @@ const Calorie = styled.span`
 //     summary: string;
 // }
 
+const menuItemVariants = {
+    invisible: {
+        opacity: 0,
+        scale: 0.8,
+    },
+    visible: {
+        opacity: 1,
+        scale: 1,
+    },
+    exit: {
+        opacity: 0,
+        scale: 0.8,
+        transition: { duration: 0.3 }
+    }
+}
+
 function Sandwich() {
     const sandwichTab = [
         { index: 0, name: "All", dataList: data.sandwichList },
@@ -137,7 +154,7 @@ function Sandwich() {
         { index: 4, name: "추가 선택", dataList: data.topping },
     ];
     // 선택된 탭의 인덱스
-    const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = useState<number>(0);
     const showActiveTabMenu = (tabIndex:number) => {
         setActiveTab(tabIndex);
     }
@@ -163,14 +180,16 @@ function Sandwich() {
                 {/* 상품목록 */}
                 <ProductListWrap>
                     <ul>
-                        {sandwichTab[activeTab].dataList?.map(sandwichInfo => (
-                            <MenuItem key={sandwichInfo.id}>
-                                <Img className={activeTab===4 ? "topping" : ""} alt={sandwichInfo["eng_title"]+"_img"} src={`${process.env.PUBLIC_URL}/${sandwichInfo.img}`} />
-                                <Title>{sandwichInfo.title}</Title>
-                                <EngTitle>{sandwichInfo.eng_title}</EngTitle>
-                                {activeTab!==4 && <Calorie>{sandwichInfo.calorie}</Calorie>}
-                            </MenuItem>
-                        ))}
+                        <AnimatePresence mode="wait">
+                            {sandwichTab[activeTab].dataList.map(sandwichInfo => (
+                                <MenuItem variants={menuItemVariants} initial="invisible" animate="visible" exit="exit" key={`${sandwichTab[activeTab].name}_${sandwichInfo.id}`}>
+                                    <Img className={activeTab===4 ? "topping" : ""} alt={sandwichInfo["eng_title"]+"_img"} src={`${process.env.PUBLIC_URL}/${sandwichInfo.img}`} />
+                                    <Title>{sandwichInfo.title}</Title>
+                                    <EngTitle>{sandwichInfo.eng_title}</EngTitle>
+                                    {activeTab!==4 && <Calorie>{sandwichInfo.calorie}</Calorie>}
+                                </MenuItem>
+                            ))}
+                        </AnimatePresence>
                     </ul>
                 </ProductListWrap>
             </MenuListWrap>
