@@ -1,14 +1,19 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const HeaderWrap = styled.header`
-    min-width: 750px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+const HeaderContainer = styled.header`
+    width: 100%;
+    position: relative;
+    z-index: 15;
+    > div {
+        min-width: 750px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 `;
 
 const Logo = styled.h1`
@@ -61,10 +66,6 @@ const Nav = styled.nav`
 const Dropdown = styled(motion.div)`
     position: absolute;
     width: 150px;
-    z-index: 2;
-    &.show {
-        display: block;
-    }
     > ul {
         padding: 15px 0px;
     }
@@ -81,68 +82,70 @@ const navVariants = {
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const mouseEvent = (bool:boolean) => {
+    const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
     };
     return (
-        <HeaderWrap>
-            <Logo>
-                <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
-            </Logo>
-            <AnimatePresence>
-                <Nav>
-                    <ul>
-                        <li onMouseEnter={() => mouseEvent(true)} onMouseLeave={() => mouseEvent(false)}>
-                            <NavLink to={"#none"}>메뉴소개</NavLink>
-                            {isOpen ? (
-                                <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
-                                    <ul>
-                                        <li><Link to={"/menuList/sandwich"}>샌드위치</Link></li>
-                                        <li><Link to={"/menuList/unit"}>랩ㆍ기타</Link></li>
-                                    </ul>
-                                </Dropdown>
-                            ) : null}
-                            
-                        </li>
-                        <li onMouseEnter={() => mouseEvent(true)} onMouseLeave={() => mouseEvent(false)}>
-                            <NavLink to={"/utilizationSubway"}>이용방법</NavLink>
-                            {isOpen ? (
-                                <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
-                                    <ul>
-                                        <li><Link to={"/utilizationSubway"}>써브웨이 이용방법</Link></li>
-                                        <li><Link to={"/freshInfo"}>신선한 재료 소개</Link></li>
-                                    </ul>
-                                </Dropdown>
-                            ) : null}
-                        </li>
-                        <li onMouseEnter={() => mouseEvent(true)} onMouseLeave={() => mouseEvent(false)}>
-                            <NavLink to={"/myRecipeList"}>꿀조합</NavLink>
-                            {isOpen ? (
-                                <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
-                                    <ul>
-                                        <li><Link to={"/myRecipeList"}>나만의 꿀조합 레시피</Link></li>
-                                    </ul>
-                                </Dropdown>
-                            ) : null}
-                        </li>
-                        <li onMouseEnter={() => mouseEvent(true)} onMouseLeave={() => mouseEvent(false)}>
-                            <NavLink to={"/"}>써브웨이</NavLink>
-                            {isOpen ? (
-                                <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
-                                    <ul>
-                                        <li><Link to={"/subwayHistory"}>써브웨이 역사</Link></li>
-                                        <li><Link to={"/storeSearch"}>매장 찾기</Link></li>
-                                    </ul>
-                                </Dropdown>
-                            ) : null}
-                        </li>
-                        <li onMouseEnter={() => mouseEvent(true)} onMouseLeave={() => mouseEvent(false)}>
-                            <NavLink to={"/"}>온라인 주문</NavLink>
-                        </li>
-                    </ul>
-                </Nav>
-            </AnimatePresence>
-        </HeaderWrap>
+        <HeaderContainer>
+            <div>
+                <Logo>
+                    <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
+                </Logo>
+                <AnimatePresence>
+                    <Nav onMouseLeave={(event) => mouseEvent(event, false)}>
+                        <ul>
+                            <li onMouseEnter={(event) => mouseEvent(event, true)}>
+                                <NavLink to={"#none"}>메뉴소개</NavLink>
+                                {isOpen ? (
+                                    <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
+                                        <ul>
+                                            <li><Link to={"/menuList/sandwich"}>샌드위치</Link></li>
+                                            <li><Link to={"/menuList/unit"}>랩ㆍ기타</Link></li>
+                                        </ul>
+                                    </Dropdown>
+                                ) : null}
+                                
+                            </li>
+                            <li onMouseEnter={(event) => mouseEvent(event, true)}>
+                                <NavLink to={"/utilizationSubway"}>이용방법</NavLink>
+                                {isOpen ? (
+                                    <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
+                                        <ul>
+                                            <li><Link to={"/utilizationSubway"}>써브웨이 이용방법</Link></li>
+                                            <li><Link to={"/freshInfo"}>신선한 재료 소개</Link></li>
+                                        </ul>
+                                    </Dropdown>
+                                ) : null}
+                            </li>
+                            <li onMouseEnter={(event) => mouseEvent(event, true)}>
+                                <NavLink to={"/myRecipeList"}>꿀조합</NavLink>
+                                {isOpen ? (
+                                    <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
+                                        <ul>
+                                            <li><Link to={"/myRecipeList"}>나만의 꿀조합 레시피</Link></li>
+                                        </ul>
+                                    </Dropdown>
+                                ) : null}
+                            </li>
+                            <li onMouseEnter={(event) => mouseEvent(event, true)}>
+                                <NavLink to={"/"}>써브웨이</NavLink>
+                                {isOpen ? (
+                                    <Dropdown variants={navVariants} initial="initial" animate="visible" exit="exit" className={isOpen ? "show" : ""}>
+                                        <ul>
+                                            <li><Link to={"/subwayHistory"}>써브웨이 역사</Link></li>
+                                            <li><Link to={"/storeSearch"}>매장 찾기</Link></li>
+                                        </ul>
+                                    </Dropdown>
+                                ) : null}
+                            </li>
+                            <li onMouseEnter={(event) => mouseEvent(event, true)}>
+                                <NavLink to={"/"}>온라인 주문</NavLink>
+                            </li>
+                        </ul>
+                    </Nav>
+                </AnimatePresence>
+            </div>
+        </HeaderContainer>
     );
 }
 export default Header;
