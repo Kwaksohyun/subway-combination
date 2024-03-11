@@ -2,6 +2,12 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+const ProductInfoWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
 const Img = styled.img`
     width: 280px;
     height: 200px;
@@ -57,11 +63,6 @@ const ProductItemWrap = styled(motion.li)`
     height: 330px;
     background-color: #fff;
     position: relative;
-    > a {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
     &:hover {
         background-color: ${(props) => props.theme.green.lighter};
         z-index: 5;
@@ -114,7 +115,8 @@ const productItemVariants = {
 }
 
 interface IProductItemProps {
-    activeTab: number;
+    isMenu: boolean;
+    activeTab: string;
     id: number;
     // category: string;
     title: string;
@@ -124,29 +126,37 @@ interface IProductItemProps {
     summary: string;
 }
 
-function ProductItem({activeTab, id, img, title, engTitle, calorie, summary}:IProductItemProps) {
+function ProductInfo({isMenu, activeTab, img, title, engTitle, calorie, summary}:IProductItemProps) {
     return (
-        <>
+        <ProductInfoWrap>
+            <Img className={(calorie.length === 0) ? "hasNotCalorie" : ""} alt={"img_" + engTitle} src={`${process.env.PUBLIC_URL}/${img}`} />
+            <Title>{title}</Title>
+            <EngTitle>{engTitle}</EngTitle>
+            {(calorie.length > 0) && <Calorie>{calorie}</Calorie>}
+            {(summary.length > 0) && (
+                <Summary>
+                    <p>{summary.split(' \n ').map(i => <>{i}<br/></>)}</p>
+                </Summary>
+            )}
+            {(isMenu && (activeTab!=="추가 선택")) && (
+                <ViewBtn version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
+                </ViewBtn>
+            )}
+        </ProductInfoWrap>
+    )
+}
+
+function ProductItem({isMenu, activeTab, id, img, title, engTitle, calorie, summary}:IProductItemProps) {
+    return (
             <ProductItemWrap variants={productItemVariants} initial="invisible" animate="visible" exit="exit">
                 {/* 메뉴소개 상세페이지로 이동 */}
-                <Link to={`/menuView/sandwich/?menuItemIdx=${id}`}>
-                    <Img className={(calorie.length === 0) ? "hasNotCalorie" : ""} alt={"img_" + engTitle} src={`${process.env.PUBLIC_URL}/${img}`} />
-                    <Title>{title}</Title>
-                    <EngTitle>{engTitle}</EngTitle>
-                    {(calorie.length > 0) && <Calorie>{calorie}</Calorie>}
-                    {(summary.length > 0) && (
-                        <Summary>
-                            <p>{summary.split(' \n ').map(i => <>{i}<br/></>)}</p>
-                        </Summary>
-                    )}
-                    {activeTab!==4 && (
-                        <ViewBtn version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z" id="XMLID_223_"/>
-                        </ViewBtn>
-                    )}
-                </Link>
+                {(isMenu && (activeTab!=="추가 선택")) ? (
+                    <Link to={`/menuView/sandwich/?menuItemIdx=${id}`}>
+                        <ProductInfo isMenu={isMenu} activeTab={activeTab} id={id} img={img} title={title} engTitle={engTitle} calorie={calorie} summary={summary} />
+                    </Link>
+                ) : <ProductInfo isMenu={isMenu} activeTab={activeTab} id={id} img={img} title={title} engTitle={engTitle} calorie={calorie} summary={summary} />}
             </ProductItemWrap>
-        </>
     )
 };
 

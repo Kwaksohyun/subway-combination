@@ -98,7 +98,6 @@ function Sandwich() {
     const showActiveTabMenu = (tabIndex:number) => {
         setActiveTab(tabIndex);
     }
-    console.log(Object.keys(data))
     return (
         <>
             <MenuListWrap>
@@ -123,8 +122,8 @@ function Sandwich() {
                     <ul>
                         <AnimatePresence >
                             {sandwichTab[activeTab].dataList.map((sandwichInfo) => (
-                               <ProductItem key={`${sandwichTab[activeTab].name}_${sandwichInfo.id}`} activeTab={activeTab} id={sandwichInfo.id} img={sandwichInfo.img} 
-                                title={sandwichInfo.title} engTitle={sandwichInfo.eng_title} calorie={sandwichInfo.calorie} summary={sandwichInfo.summary} />  
+                               <ProductItem key={`${sandwichTab[activeTab].name}_${sandwichInfo.id}`} isMenu={true} activeTab={sandwichTab[activeTab].name} id={sandwichInfo.id} 
+                                img={sandwichInfo.img} title={sandwichInfo.title} engTitle={sandwichInfo.eng_title} calorie={sandwichInfo.calorie} summary={sandwichInfo.summary} />  
                             ))}
                         </AnimatePresence>
                     </ul>
