@@ -3,38 +3,10 @@ import data from "../data.json";
 import { useState } from "react";
 import ProductItem from "../Components/MenuComponent/ProductItem";
 import { AnimatePresence } from "framer-motion";
+import ProductVisual from "../Components/MenuComponent/ProductVisual";
 
 const MenuListWrap = styled.div`
     background-color: #f2f2f2;
-`;
-
-const VisualWrap = styled.div`
-    width: 100%;
-    height: 380px;
-    background-color: #e85a1c;
-    color: #fff;
-    text-align: center;
-    position: relative;
-    > h2 {
-        font-weight: 800;
-        font-size: 65px;
-        position: relative;
-        z-index: 5;
-        padding: 123px 0 23px 0;
-    }
-    > p {
-        line-height: normal;
-        position: relative;
-        z-index: 5;
-    }
-    > div {
-        background: url("../images/menu/img_visual_sandwich.jpg") 50% 0 no-repeat;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 380px;
-    }
 `;
 
 const ProductTab = styled.div`
@@ -102,11 +74,9 @@ function Sandwich() {
         <>
             <MenuListWrap>
                 {/* 상품 visual */}
-                <VisualWrap>
-                    <h2>Sandwich</h2>
-                    <p>전세계 넘버원 브랜드 Subway!<br />50년 전통의 세계 최고의 샌드위치를 맛보세요!</p>
-                    <div></div>
-                </VisualWrap>
+                <ProductVisual visualCategory={"Sandwich"} 
+                                description={`전세계 넘버원 브랜드 Subway!\n50년 전통의 세계 최고의 샌드위치를 맛보세요!`} 
+                                visualImgSrc={"../images/menu/img_visual_sandwich.jpg"} color="#e85a1c" />
                 {/* 상품별 정렬 tab */}
                 <ProductTab>
                     <ul>
