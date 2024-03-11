@@ -50,6 +50,7 @@ const Tab = styled.li`
 const ProductListWrap = styled.div`
     width: 1170px;
     margin: 0 auto;
+    padding-bottom: 120px;
     ul {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -71,35 +72,33 @@ function Sandwich() {
         setActiveTab(tabIndex);
     }
     return (
-        <>
-            <MenuListWrap>
-                {/* 상품 visual */}
-                <ProductVisual visualCategory={"Sandwich"} 
-                                description={`전세계 넘버원 브랜드 Subway!\n50년 전통의 세계 최고의 샌드위치를 맛보세요!`} 
-                                visualImgSrc={"../images/menu/img_visual_sandwich.jpg"} color="#e85a1c" />
-                {/* 상품별 정렬 tab */}
-                <ProductTab>
-                    <ul>
-                        {sandwichTab.map((tab, idx) => (
-                            <Tab onClick={() => showActiveTabMenu(idx)} className={activeTab===tab.index ? "active" : ""} key={idx}>
-                                {tab.name}
-                            </Tab>
+        <MenuListWrap>
+            {/* 상품 visual */}
+            <ProductVisual visualCategory="Sandwich"
+                            description={`전세계 넘버원 브랜드 Subway!\n50년 전통의 세계 최고의 샌드위치를 맛보세요!`} 
+                            visualImgSrc={"../images/menu/img_visual_sandwich.jpg"} color="#e85a1c" />
+            {/* 상품별 정렬 tab */}
+            <ProductTab>
+                <ul>
+                    {sandwichTab.map((tab, idx) => (
+                        <Tab onClick={() => showActiveTabMenu(idx)} className={activeTab===tab.index ? "active" : ""} key={idx}>
+                            {tab.name}
+                        </Tab>
+                    ))}
+                </ul>
+            </ProductTab>
+            {/* 상품목록 */}
+            <ProductListWrap>
+                <ul>
+                    <AnimatePresence>
+                        {sandwichTab[activeTab].dataList.map((sandwichInfo) => (
+                            <ProductItem key={`${sandwichTab[activeTab].name}_${sandwichInfo.id}`} isMenu={true} activeTab={sandwichTab[activeTab].name} id={sandwichInfo.id} 
+                            img={sandwichInfo.img} title={sandwichInfo.title} engTitle={sandwichInfo.eng_title} calorie={sandwichInfo.calorie} summary={sandwichInfo.summary} />  
                         ))}
-                    </ul>
-                </ProductTab>
-                {/* 상품목록 */}
-                <ProductListWrap>
-                    <ul>
-                        <AnimatePresence >
-                            {sandwichTab[activeTab].dataList.map((sandwichInfo) => (
-                               <ProductItem key={`${sandwichTab[activeTab].name}_${sandwichInfo.id}`} isMenu={true} activeTab={sandwichTab[activeTab].name} id={sandwichInfo.id} 
-                                img={sandwichInfo.img} title={sandwichInfo.title} engTitle={sandwichInfo.eng_title} calorie={sandwichInfo.calorie} summary={sandwichInfo.summary} />  
-                            ))}
-                        </AnimatePresence>
-                    </ul>
-                </ProductListWrap>
-            </MenuListWrap>
-        </>
+                    </AnimatePresence>
+                </ul>
+            </ProductListWrap>
+        </MenuListWrap>
     );
 }
 

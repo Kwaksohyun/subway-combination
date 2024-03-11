@@ -14,7 +14,7 @@ const VisualWrap = styled.div`
         padding: 123px 0 23px 0;
     }
     > p {
-        line-height: normal;
+        line-height: 1.5;
         position: relative;
         z-index: 5;
     }
