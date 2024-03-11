@@ -92,7 +92,7 @@ function FreshIngredients() {
                 <ul>
                     <AnimatePresence mode="wait">
                         {freshInfoTab[activeTab].dataList.map((freshInfo) => (
-                            <ProductItem key={`${freshInfoTab[activeTab].name}_${freshInfo.id}`} isMenu={true} activeTab={freshInfoTab[activeTab].name} id={freshInfo.id} 
+                            <ProductItem key={`${freshInfoTab[activeTab].name}_${freshInfo.id}`} isMenu={false} activeTab={freshInfoTab[activeTab].name} id={freshInfo.id} 
                             img={freshInfo.img} title={freshInfo.title} engTitle={freshInfo.eng_title} calorie={freshInfo.calorie} summary={freshInfo.summary} />  
                         ))}
                     </AnimatePresence>
