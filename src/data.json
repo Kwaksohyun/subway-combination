@@ -277,10 +277,9 @@
             "summary": "담백한 치킨, 바삭한 베이컨 비츠가 쫀득한 통밀 랩에 쏘옥!\n치킨 베이컨 미니 랩"
         }
     ],
-    "freshInfo": {
-        "bread": [
+    "freshInfo": [
             {
-                "id": "b01",
+                "id": 1,
                 "category": "빵",
                 "title": "허니오트",
                 "eng_title": "Honey Oat",
@@ -289,7 +288,7 @@
                 "summary": "고소한 위트빵에 오트밀 가루를 묻혀 고소함과 식감이 두배로 \n (허니오트의 칼로리는 15cm 기준입니다.)"
             },
             {
-                "id": "b02",
+                "id": 2,
                 "category": "빵",
                 "title": "하티",
                 "eng_title": "Hearty Italian",
@@ -298,7 +297,7 @@
                 "summary": "부드러운 화이트빵에 옥수수가루를 묻혀 겉은 바삭하고 고소하며 속은 부드럽게 \n (하티의 칼로리는 15cm 기준입니다.)"
             },
             {
-                "id": "b03",
+                "id": 3,
                 "category": "빵",
                 "title": "위트",
                 "eng_title": "Wheat",
@@ -307,7 +306,7 @@
                 "summary": "여러 가지 곡물로 만들어 건강하고 고소한 맛의 곡물빵 \n (위트의 칼로리는 15cm 기준입니다.)"
             },
             {
-                "id": "b04",
+                "id": 4,
                 "category": "빵",
                 "title": "파마산 오레가노",
                 "eng_title": "Parmesan Oregano",
@@ -316,7 +315,7 @@
                 "summary": "부드러운 화이트빵에 파마산 오레가노 시즈닝을 묻혀 허브향 가득 \n (파마산 오레가노의 칼로리는 15cm 기준입니다.)"
             },
             {
-                "id": "b05",
+                "id": 5,
                 "category": "빵",
                 "title": "화이트",
                 "eng_title": "White",
@@ -325,18 +324,16 @@
                 "summary": "가장 클래식한 빵으로 부드러운 식감이 매력 포인트 \n (화이트의 칼로리는 15cm 기준입니다.)"
             },
             {
-                "id": "b06",
+                "id": 6,
                 "category": "빵",
                 "title": "플랫브레드",
                 "eng_title": "Flat Bread",
                 "img": "images/ingredients/img_recipe_b06.jpg",
                 "calorie": "232 kcal",
                 "summary": "이름처럼 납작 모양에 피자도우처럼 쫀득한 맛이 일품 \n (플랫브레드의 칼로리는 15cm 기준입니다.)"
-            }
-        ],
-        "vegetable": [
+            },
             {
-                "id": "v01",
+                "id": 7,
                 "category": "야채",
                 "title": "양상추",
                 "eng_title": "Lettuce",
@@ -345,7 +342,7 @@
                 "summary": ""
             },
             {
-                "id": "v02",
+                "id": 8,
                 "category": "야채",
                 "title": "토마토",
                 "eng_title": "Tomatoes",
@@ -354,7 +351,7 @@
                 "summary": ""
             },
             {
-                "id": "v03",
+                "id": 9,
                 "category": "야채",
                 "title": "오이",
                 "eng_title": "Cucumbers",
@@ -363,7 +360,7 @@
                 "summary": ""
             },
             {
-                "id": "v04",
+                "id": 10,
                 "category": "야채",
                 "title": "피망",
                 "eng_title": "Peppers",
@@ -372,7 +369,7 @@
                 "summary": ""
             },
             {
-                "id": "v05",
+                "id": 11,
                 "category": "야채",
                 "title": "양파",
                 "eng_title": "Red Onions",
@@ -381,7 +378,7 @@
                 "summary": ""
             },
             {
-                "id": "v06",
+                "id": 12,
                 "category": "야채",
                 "title": "피클",
                 "eng_title": "Pickles",
@@ -390,7 +387,7 @@
                 "summary": ""
             },
             {
-                "id": "v07",
+                "id": 13,
                 "category": "야채",
                 "title": "올리브",
                 "eng_title": "Olives",
@@ -399,7 +396,7 @@
                 "summary": ""
             },
             {
-                "id": "v08",
+                "id": 14,
                 "category": "야채",
                 "title": "할라피뇨",
                 "eng_title": "Jalapenos",
@@ -408,18 +405,16 @@
                 "summary": ""
             },
             {
-                "id": "v09",
+                "id": 15,
                 "category": "야채",
                 "title": "아보카도",
                 "eng_title": "Avocado",
                 "img": "images/ingredients/img_recipe_v09.jpg",
                 "calorie": "56.6 kcal",
                 "summary": ""
-            }
-        ],
-        "cheese": [
+            },
             {
-                "id": "c01",
+                "id": 16,
                 "category": "치즈",
                 "title": "아메리칸 치즈",
                 "eng_title": "American Cheese",
@@ -428,7 +423,7 @@
                 "summary": ""
             },
             {
-                "id": "c02",
+                "id": 17,
                 "category": "치즈",
                 "title": "슈레드 치즈",
                 "eng_title": "Shredded Cheese",
@@ -437,18 +432,16 @@
                 "summary": ""
             },
             {
-                "id": "c03",
+                "id": 18,
                 "category": "치즈",
                 "title": "모차렐라 치즈",
                 "eng_title": "Mozzarella Cheese",
                 "img": "images/ingredients/img_recipe_c03.jpg",
                 "calorie": "43.8 kcal",
                 "summary": ""
-            }
-        ],
-        "sauce": [
+            },
             {
-                "id": "s01",
+                "id": 19,
                 "category": "소스",
                 "title": "랜치",
                 "eng_title": "Ranch",
@@ -457,7 +450,7 @@
                 "summary": "고소한 마요네즈와 레몬즙의 만남! \n 고소함이 두배!"
             },
             {
-                "id": "s02",
+                "id": 20,
                 "category": "소스",
                 "title": "스위트 어니언",
                 "eng_title": "Sweet Onion",
@@ -466,7 +459,7 @@
                 "summary": "써브웨이만의 특제 레시피로 만든 달콤한 양파소스"
             },
             {
-                "id": "s03",
+                "id": 21,
                 "category": "소스",
                 "title": "마요네즈",
                 "eng_title": "Mayonnaise",
@@ -475,7 +468,7 @@
                 "summary": "말이 필요없는 고소함의 대명사, 마요네즈 소스"
             },
             {
-                "id": "s04",
+                "id": 22,
                 "category": "소스",
                 "title": "스위트 칠리",
                 "eng_title": "Sweet Chilli",
@@ -484,7 +477,7 @@
                 "summary": "매콤한 칠리에 더해진 기분 좋은 달콤함!"
             },
             {
-                "id": "s05",
+                "id": 23,
                 "category": "소스",
                 "title": "스모크 바비큐",
                 "eng_title": "Smoke BBQ",
@@ -493,7 +486,7 @@
                 "summary": "스모크 향과 달콤한 바비큐의 완벽한 조화"
             },
             {
-                "id": "s06",
+                "id": 24,
                 "category": "소스",
                 "title": "핫 칠리",
                 "eng_title": "Hot Chilli",
@@ -502,7 +495,7 @@
                 "summary": "진짜 매운맛을 보고 싶다면? \n 써브웨이의 핫 칠리!"
             },
             {
-                "id": "s07",
+                "id": 25,
                 "category": "소스",
                 "title": "허니 머스터드",
                 "eng_title": "Honey Mustard",
@@ -511,7 +504,7 @@
                 "summary": "겨자씨가 아낌없이 들어간 달콤한 머스터드 소스"
             },
             {
-                "id": "s08",
+                "id": 26,
                 "category": "소스",
                 "title": "사우스웨스트 치폴레",
                 "eng_title": "Southwest Chipotle",
@@ -520,7 +513,7 @@
                 "summary": "핫 칠리와 고소한 마요네즈가 만난 이국적인 매콤한 맛"
             },
             {
-                "id": "s09",
+                "id": 27,
                 "category": "소스",
                 "title": "홀스래디쉬",
                 "eng_title": "Horseradish",
@@ -529,7 +522,7 @@
                 "summary": "고소한 마요네즈와 고추냉이의 이색적인 만남! \n 매니아층을 사로잡은 매력No.1 소스"
             },
             {
-                "id": "s10",
+                "id": 28,
                 "category": "소스",
                 "title": "머스타드",
                 "eng_title": "Yellow Mustard",
@@ -538,7 +531,7 @@
                 "summary": "겨자씨로 만든 오리지날 머스터드 소스"
             },
             {
-                "id": "s11",
+                "id": 29,
                 "category": "소스",
                 "title": "엑스트라 버진 올리브 오일",
                 "eng_title": "Extra Virgin Olive Oil",
@@ -547,7 +540,7 @@
                 "summary": "담백하고 깔끔하게 즐기고 싶다면 주저하지 말고 올리브오일"
             },
             {
-                "id": "s12",
+                "id": 30,
                 "category": "소스",
                 "title": "레드 와인 식초",
                 "eng_title": "Red Wine Vinaigrette",
@@ -556,7 +549,7 @@
                 "summary": "레드와인을 발효시켜 풍미가 가득한 식초"
             },
             {
-                "id": "s13",
+                "id": 31,
                 "category": "소스",
                 "title": "소금",
                 "eng_title": "Salt",
@@ -565,7 +558,7 @@
                 "summary": ""
             },
             {
-                "id": "s14",
+                "id": 32,
                 "category": "소스",
                 "title": "후추",
                 "eng_title": "Black Pepper",
@@ -573,6 +566,5 @@
                 "calorie": "",
                 "summary": ""
             }
-        ]
-    }
+    ]
 }
