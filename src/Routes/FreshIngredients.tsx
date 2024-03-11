@@ -63,8 +63,8 @@ function FreshIngredients() {
         { index: 0, name: "All", dataList: data.freshInfo },
         { index: 1, name: "빵", dataList: data.freshInfo.filter(i => i.category === "빵") },
         { index: 2, name: "야채", dataList: data.freshInfo.filter(i => i.category === "야채") },
-        { index: 2, name: "치즈", dataList: data.freshInfo.filter(i => i.category === "치즈") },
-        { index: 2, name: "소스", dataList: data.freshInfo.filter(i => i.category === "소스") }
+        { index: 3, name: "치즈", dataList: data.freshInfo.filter(i => i.category === "치즈") },
+        { index: 4, name: "소스", dataList: data.freshInfo.filter(i => i.category === "소스") }
     ];
     // 선택된 탭의 인덱스
     const [activeTab, setActiveTab] = useState<number>(0);
