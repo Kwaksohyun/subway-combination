@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const ProductInfoWrap = styled.div`
@@ -148,11 +148,13 @@ function ProductInfo({isMenu, activeTab, img, title, engTitle, calorie, summary}
 }
 
 function ProductItem({isMenu, activeTab, id, img, title, engTitle, calorie, summary}:IProductItemProps) {
+    const {pathname} = useLocation();
+    const menuPath = pathname.split('/menuList/')[1];
     return (
             <ProductItemWrap variants={productItemVariants} initial="invisible" animate="visible" exit="exit">
                 {/* 메뉴소개 상세페이지로 이동 */}
                 {(isMenu && (activeTab!=="추가 선택")) ? (
-                    <Link to={`/menuView/sandwich/?menuItemIdx=${id}`}>
+                    <Link to={`/menuView/${menuPath}?menuItemIdx=${id}`}>
                         <ProductInfo isMenu={isMenu} activeTab={activeTab} id={id} img={img} title={title} engTitle={engTitle} calorie={calorie} summary={summary} />
                     </Link>
                 ) : <ProductInfo isMenu={isMenu} activeTab={activeTab} id={id} img={img} title={title} engTitle={engTitle} calorie={calorie} summary={summary} />}
