@@ -4,6 +4,7 @@ import Home from './Routes/Home';
 import MenuList from './Routes/MenuList';
 import Sandwich from './Routes/Sandwich';
 import Wrap from './Routes/Wrap';
+import FreshIngredients from './Routes/FreshIngredients';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path='sandwich' element={<Sandwich />}/>
           <Route path='unit' element={<Wrap />}/>
         </Route>
+        <Route path='/freshInfo' element={<FreshIngredients/>} />
       </Routes>
     </BrowserRouter>
   );
