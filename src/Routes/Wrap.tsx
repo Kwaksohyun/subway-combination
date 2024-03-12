@@ -1,12 +1,50 @@
 import styled from "styled-components";
 import data from "../data.json";
-import ProductVisual from "../Components/MenuComponent/ProductVisual";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import ProductItem from "../Components/MenuComponent/ProductItem";
 
 const MenuListWrap = styled.div`
     background-color: #f2f2f2;
+`;
+
+const VisualWrap = styled.div`
+    height: 380px;
+    background-color: #85c441;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    > h2 {
+        font-weight: 800;
+        font-size: 65px;
+        position: relative;
+        z-index: 5;
+        padding: 123px 0 23px 0;
+    }
+    > p {
+        line-height: 1.5;
+        position: relative;
+        z-index: 5;
+    }
+    .img1 {
+        position: absolute;
+        left: 50%;
+        margin-left: 320px;
+        bottom: 0;
+        background: url("../images/menu/img_visual_wrap01.jpg") no-repeat;
+        width: 400px;
+        height: 300px;
+    }
+    .img2 {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -800px;
+        background: url("../images/menu/img_visual_wrap02.jpg") no-repeat;
+        width: 590px;
+        height: 280px;
+    }
 `;
 
 const ProductTab = styled.div`
@@ -72,9 +110,16 @@ function Wrap() {
     return (
         <MenuListWrap>
             {/* 상품 visual */}
-            <ProductVisual visualCategory="Wrap"
-                            description={`Subway를 더 맛있고 간편하게 즐기는 방법\n최상의 레시피로 만들어진 써브웨이 랩 시리즈, 이젠 고민하지 마세요!\n* 그릴드 랩은 일부 매장에서만 제공 가능합니다.\n* 그릴드 랩을 제공하는 매장에서는 시그니처랩을 제공하지 않습니다.매장찾기의 매장정보를 확인해주세요.`} 
-                            visualImgSrc={""} color="#85c441" />
+            <VisualWrap>
+                <h2>Wrap</h2>
+                <p>
+                    Subway를 더 맛있고 간편하게 즐기는 방법<br/>최상의 레시피로 만들어진 써브웨이 랩 시리즈, 이젠 고민하지 마세요!<br/>
+                    * 그릴드 랩은 일부 매장에서만 제공 가능합니다.<br/>
+                    * 그릴드 랩을 제공하는 매장에서는 시그니처랩을 제공하지 않습니다.매장찾기의 매장정보를 확인해주세요.
+                </p>
+                <div className="img1"></div>
+                <div className="img2"></div>
+            </VisualWrap>
             {/* 상품별 정렬 tab */}
             <ProductTab>
                 <ul>

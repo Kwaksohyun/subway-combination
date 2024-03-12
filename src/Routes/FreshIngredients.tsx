@@ -1,12 +1,59 @@
 import styled from "styled-components";
 import data from "../data.json";
-import ProductVisual from "../Components/MenuComponent/ProductVisual";
 import { AnimatePresence } from "framer-motion";
 import ProductItem from "../Components/MenuComponent/ProductItem";
 import { useState } from "react";
 
 const MenuListWrap = styled.div`
     background-color: #f2f2f2;
+`;
+
+const VisualWrap = styled.div`
+    width: 100%;
+    height: 380px;
+    background-color: #07a5e6;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    > h2 {
+        font-weight: 800;
+        font-size: 65px;
+        position: relative;
+        z-index: 5;
+        padding: 123px 0 23px 0;
+    }
+    > p {
+        line-height: 1.5;
+        position: relative;
+        z-index: 5;
+    }
+    .img1 {
+        background: url("../images/menu/img_visual_fresh01.jpg") no-repeat;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        margin-left: 350px;
+        width: 340px;
+        height: 300px;
+    }
+    .img2 {
+        background: url("../images/menu/img_visual_fresh02.jpg") no-repeat;
+        position: absolute;
+        left: 50%;
+        top: 30px;
+        margin-left: -650px;
+        width: 210px;
+        height: 200px;
+    }
+    .img3 {
+        background: url("../images/menu/img_visual_fresh03.jpg") no-repeat;
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        margin-left: -450px;
+        width: 180px;
+        height: 220px;
+    }
 `;
 
 const ProductTab = styled.div`
@@ -74,9 +121,13 @@ function FreshIngredients() {
     return (
         <MenuListWrap>
             {/* 상품 visual */}
-            <ProductVisual visualCategory="Fresh Ingredients"
-                            description={`매장에서 직접 굽는 빵, 엄격하게 세척하는 야채의 신선함,\n써브웨이만의 다양한 소스를 맛보세요.`} 
-                            visualImgSrc={""} color="#07a5e6" />
+            <VisualWrap>
+                <h2>Fresh Ingredients</h2>
+                <p>매장에서 직접 굽는 빵, 엄격하게 세척하는 야채의 신선함,<br/>써브웨이만의 다양한 소스를 맛보세요.</p>
+                <div className="img1"></div>
+                <div className="img2"></div>
+                <div className="img3"></div>
+            </VisualWrap>
             {/* 상품별 정렬 tab */}
             <ProductTab>
                 <ul>
