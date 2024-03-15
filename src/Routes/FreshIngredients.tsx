@@ -3,6 +3,7 @@ import data from "../data.json";
 import { AnimatePresence } from "framer-motion";
 import ProductItem from "../Components/MenuComponent/ProductItem";
 import { useState } from "react";
+import Footer from "../Components/Footer";
 
 const MenuListWrap = styled.div`
     background-color: #f2f2f2;
@@ -119,37 +120,40 @@ function FreshIngredients() {
         setActiveTab(tabIndex);
     }
     return (
-        <MenuListWrap>
-            {/* 상품 visual */}
-            <VisualWrap>
-                <h2>Fresh Ingredients</h2>
-                <p>매장에서 직접 굽는 빵, 엄격하게 세척하는 야채의 신선함,<br/>써브웨이만의 다양한 소스를 맛보세요.</p>
-                <div className="img1"></div>
-                <div className="img2"></div>
-                <div className="img3"></div>
-            </VisualWrap>
-            {/* 상품별 정렬 tab */}
-            <ProductTab>
-                <ul>
-                    {freshInfoTab.map((tab, idx) => (
-                        <Tab onClick={() => showActiveTabMenu(idx)} className={activeTab===tab.index ? "active" : ""} key={idx}>
-                            {tab.name}
-                        </Tab>
-                    ))}
-                </ul>
-            </ProductTab>
-            {/* 상품목록 */}
-            <ProductListWrap>
-                <ul>
-                    <AnimatePresence mode="wait">
-                        {freshInfoTab[activeTab].dataList.map((freshInfo) => (
-                            <ProductItem key={`${freshInfoTab[activeTab].name}_${freshInfo.id}`} isMenu={false} activeTab={freshInfoTab[activeTab].name} id={freshInfo.id} 
-                            img={freshInfo.img} title={freshInfo.title} engTitle={freshInfo.eng_title} calorie={freshInfo.calorie} summary={freshInfo.summary} />  
+        <>
+            <MenuListWrap>
+                {/* 상품 visual */}
+                <VisualWrap>
+                    <h2>Fresh Ingredients</h2>
+                    <p>매장에서 직접 굽는 빵, 엄격하게 세척하는 야채의 신선함,<br/>써브웨이만의 다양한 소스를 맛보세요.</p>
+                    <div className="img1"></div>
+                    <div className="img2"></div>
+                    <div className="img3"></div>
+                </VisualWrap>
+                {/* 상품별 정렬 tab */}
+                <ProductTab>
+                    <ul>
+                        {freshInfoTab.map((tab, idx) => (
+                            <Tab onClick={() => showActiveTabMenu(idx)} className={activeTab===tab.index ? "active" : ""} key={idx}>
+                                {tab.name}
+                            </Tab>
                         ))}
-                    </AnimatePresence>
-                </ul>
-            </ProductListWrap>
-        </MenuListWrap>
+                    </ul>
+                </ProductTab>
+                {/* 상품목록 */}
+                <ProductListWrap>
+                    <ul>
+                        <AnimatePresence mode="wait">
+                            {freshInfoTab[activeTab].dataList.map((freshInfo) => (
+                                <ProductItem key={`${freshInfoTab[activeTab].name}_${freshInfo.id}`} isMenu={false} activeTab={freshInfoTab[activeTab].name} id={freshInfo.id} 
+                                img={freshInfo.img} title={freshInfo.title} engTitle={freshInfo.eng_title} calorie={freshInfo.calorie} summary={freshInfo.summary} />  
+                            ))}
+                        </AnimatePresence>
+                    </ul>
+                </ProductListWrap>
+            </MenuListWrap>
+            <Footer />
+        </>
     );
 }
 
