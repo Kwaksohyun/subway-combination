@@ -445,7 +445,7 @@
                 "category": "소스",
                 "title": "랜치",
                 "eng_title": "Ranch",
-                "img": "images/ingredients/img_recipe_s01.jpg",
+                "img": "images/ingredients/img_recipe_s01.png",
                 "calorie": "116 kcal",
                 "summary": "고소한 마요네즈와 레몬즙의 만남! \n 고소함이 두배!"
             },
@@ -454,7 +454,7 @@
                 "category": "소스",
                 "title": "스위트 어니언",
                 "eng_title": "Sweet Onion",
-                "img": "images/ingredients/img_recipe_s02.jpg",
+                "img": "images/ingredients/img_recipe_s02.png",
                 "calorie": "40.1 kcal",
                 "summary": "써브웨이만의 특제 레시피로 만든 달콤한 양파소스"
             },
@@ -463,7 +463,7 @@
                 "category": "소스",
                 "title": "마요네즈",
                 "eng_title": "Mayonnaise",
-                "img": "images/ingredients/img_recipe_s03.jpg",
+                "img": "images/ingredients/img_recipe_s03.png",
                 "calorie": "158 kcal",
                 "summary": "말이 필요없는 고소함의 대명사, 마요네즈 소스"
             },
@@ -472,7 +472,7 @@
                 "category": "소스",
                 "title": "스위트 칠리",
                 "eng_title": "Sweet Chilli",
-                "img": "images/ingredients/img_recipe_s04.jpg",
+                "img": "images/ingredients/img_recipe_s04.png",
                 "calorie": "40 kcal",
                 "summary": "매콤한 칠리에 더해진 기분 좋은 달콤함!"
             },
@@ -481,7 +481,7 @@
                 "category": "소스",
                 "title": "스모크 바비큐",
                 "eng_title": "Smoke BBQ",
-                "img": "images/ingredients/img_recipe_s05.jpg",
+                "img": "images/ingredients/img_recipe_s05.png",
                 "calorie": "32.8 kcal",
                 "summary": "스모크 향과 달콤한 바비큐의 완벽한 조화"
             },
@@ -490,7 +490,7 @@
                 "category": "소스",
                 "title": "핫 칠리",
                 "eng_title": "Hot Chilli",
-                "img": "images/ingredients/img_recipe_s06.jpg",
+                "img": "images/ingredients/img_recipe_s06.png",
                 "calorie": "41.8 kcal",
                 "summary": "진짜 매운맛을 보고 싶다면? \n 써브웨이의 핫 칠리!"
             },
@@ -499,7 +499,7 @@
                 "category": "소스",
                 "title": "허니 머스터드",
                 "eng_title": "Honey Mustard",
-                "img": "images/ingredients/img_recipe_s07.jpg",
+                "img": "images/ingredients/img_recipe_s07.png",
                 "calorie": "38.4 kcal",
                 "summary": "겨자씨가 아낌없이 들어간 달콤한 머스터드 소스"
             },
@@ -508,7 +508,7 @@
                 "category": "소스",
                 "title": "사우스웨스트 치폴레",
                 "eng_title": "Southwest Chipotle",
-                "img": "images/ingredients/img_recipe_s08.jpg",
+                "img": "images/ingredients/img_recipe_s08.png",
                 "calorie": "96.5 kcal",
                 "summary": "핫 칠리와 고소한 마요네즈가 만난 이국적인 매콤한 맛"
             },
@@ -517,7 +517,7 @@
                 "category": "소스",
                 "title": "홀스래디쉬",
                 "eng_title": "Horseradish",
-                "img": "images/ingredients/img_recipe_s09.jpg",
+                "img": "images/ingredients/img_recipe_s09.png",
                 "calorie": "106 kcal",
                 "summary": "고소한 마요네즈와 고추냉이의 이색적인 만남! \n 매니아층을 사로잡은 매력No.1 소스"
             },
@@ -526,7 +526,7 @@
                 "category": "소스",
                 "title": "머스타드",
                 "eng_title": "Yellow Mustard",
-                "img": "images/ingredients/img_recipe_s10.jpg",
+                "img": "images/ingredients/img_recipe_s10.png",
                 "calorie": "15.3 kcal",
                 "summary": "겨자씨로 만든 오리지날 머스터드 소스"
             },
@@ -535,7 +535,7 @@
                 "category": "소스",
                 "title": "엑스트라 버진 올리브 오일",
                 "eng_title": "Extra Virgin Olive Oil",
-                "img": "images/ingredients/img_recipe_s11.jpg",
+                "img": "images/ingredients/img_recipe_s11.png",
                 "calorie": "29 kcal",
                 "summary": "담백하고 깔끔하게 즐기고 싶다면 주저하지 말고 올리브오일"
             },
@@ -544,7 +544,7 @@
                 "category": "소스",
                 "title": "레드 와인 식초",
                 "eng_title": "Red Wine Vinaigrette",
-                "img": "images/ingredients/img_recipe_s12.jpg",
+                "img": "images/ingredients/img_recipe_s12.png",
                 "calorie": "0.7 kcal",
                 "summary": "레드와인을 발효시켜 풍미가 가득한 식초"
             },
@@ -553,7 +553,7 @@
                 "category": "소스",
                 "title": "소금",
                 "eng_title": "Salt",
-                "img": "images/ingredients/img_recipe_s13.jpg",
+                "img": "images/ingredients/img_recipe_s13.png",
                 "calorie": "",
                 "summary": ""
             },
@@ -562,7 +562,7 @@
                 "category": "소스",
                 "title": "후추",
                 "eng_title": "Black Pepper",
-                "img": "images/ingredients/img_recipe_s14.jpg",
+                "img": "images/ingredients/img_recipe_s14.png",
                 "calorie": "",
                 "summary": ""
             }
