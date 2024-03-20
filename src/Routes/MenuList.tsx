@@ -16,7 +16,7 @@ function MenuList() {
         <>
             <Container>
                 {/* 메뉴소개 페이지 내부 탐색 메뉴 */}
-                <SubHeader subMenuInfo={subMenuInfo} />
+                <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={true} />
 
                 <Outlet />
             </Container>
