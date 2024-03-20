@@ -6,11 +6,15 @@ export const theme: DefaultTheme = {
         darker: "#00682B",
     },
     yellow: {
-        darker: "#ffce32",
         lighter: "#ffc300",
+        darker: "#ffce32",
+        darkest: "#FBC200",
     },
     grey: {
         lighter: "#f2f2f2",
         darker: "#999999"
+    },
+    brown: {
+        darker: "#5F311B"
     }
 };

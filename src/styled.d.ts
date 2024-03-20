@@ -7,11 +7,15 @@ declare module "styled-components" {
             darker: string;
         }
         yellow: {
-            darker: string;
             lighter: string;
+            darker: string;
+            darkest: string;
         },
         grey: {
             lighter: string;
+            darker: string;
+        },
+        brown: {
             darker: string;
         }
     }
