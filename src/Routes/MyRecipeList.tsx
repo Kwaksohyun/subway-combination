@@ -1,14 +1,15 @@
 import { Link, useMatch } from "react-router-dom";
 import SubHeader from "../Components/SubHeader";
 import styled from "styled-components";
+// import data from "../data.json";
 
 const PageHeaderContainer = styled.article`
-    height: 400px;
+    height: 280px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
-    padding-top: 60px;
+    margin-top: 140px;
 `;
 
 const PageHeader = styled.div`
@@ -90,7 +91,7 @@ function MyRecipeList() {
 
             {/* 꿀조합 레시피 목록 */}
             <div>
-
+                
             </div>
         </>
     )
