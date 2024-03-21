@@ -6,6 +6,7 @@ import Sandwich from './Routes/Sandwich';
 import Wrap from './Routes/Wrap';
 import FreshIngredients from './Routes/FreshIngredients';
 import MyRecipeList from './Routes/MyRecipeList';
+import Footer from './Components/Footer';
 
 function App() {
   return (
@@ -18,8 +19,9 @@ function App() {
           <Route path='unit' element={<Wrap />}/>
         </Route>
         <Route path='/freshInfo' element={<FreshIngredients/>} />
-        <Route path='myRecipeList' element={<MyRecipeList/>} />
+        <Route path='/myRecipeList' element={<MyRecipeList/>} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

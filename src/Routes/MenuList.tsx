@@ -1,7 +1,6 @@
 import { Outlet, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import SubHeader from "../Components/SubHeader";
-import Footer from "../Components/Footer";
 
 const Container = styled.div`
     position: relative;
@@ -13,15 +12,12 @@ function MenuList() {
         { index: 1, menuName: "랩ㆍ기타", menuPath: "/menuList/unit", menuMatch: useMatch("/menuList/unit") }
     ];
     return (
-        <>
-            <Container>
-                {/* 메뉴소개 페이지 내부 탐색 메뉴 */}
-                <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={true} />
+        <Container>
+            {/* 메뉴소개 페이지 내부 탐색 메뉴 */}
+            <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={true} />
 
-                <Outlet />
-            </Container>
-            <Footer />
-        </>
+            <Outlet />
+        </Container>
     );
 }
 
