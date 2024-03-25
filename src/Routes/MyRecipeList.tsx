@@ -84,7 +84,7 @@ function MyRecipeList() {
                         <PageText>내가 즐겨벅는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</PageText>
                     </MakeMyRecipeContent>
                     <ShareButton>
-                        <Link to={"/"}>공유하기</Link>
+                        <Link to={"/myRecipeList/registerMyRecipe"}>공유하기</Link>
                     </ShareButton>
                 </MakeMyRecipeBox>
             </PageHeaderContainer>
