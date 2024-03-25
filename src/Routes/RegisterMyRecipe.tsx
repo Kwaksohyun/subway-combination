@@ -67,7 +67,9 @@ const FormContent = styled.div`
         height: 40px;
         border-radius: 7px;
         border: 2px solid #dadada;
-        font-size: 16px;   
+        font-family: 'Noto Sans KR', sans-serif;
+        font-size: 15px;
+        padding-left: 10px;
     }
     > select {
         outline: none;
@@ -76,8 +78,8 @@ const FormContent = styled.div`
         border-radius: 7px;
         padding: 0 5px;
         border: 2px solid #dadada;
-        font-size: 16px;
-        font-weight: 500;
+        font-family: 'Noto Sans KR', sans-serif;
+        font-size: 15px;
     }
 `;
 
@@ -90,15 +92,39 @@ const IngredientItem = styled.li`
         align-items: center;
         text-align: center;
         word-break: keep-all;
-        font-size: 14px;
+        font-size: 14.5px;
+        cursor: pointer;
     }
     &.noImg {
         display: flex;
+        align-items: center;
     }
     &.noImg > label {
         display: block;
         text-align: start;
-        padding-left: 10px;
+        padding-left: 8px;
+        width: 84px;
+    }
+`;
+
+const InputRadio = styled.input`
+    -webkit-appearance: none;       // 웹킷 브라우저에서 기본 스타일 제거
+    -moz-appearance: none;          // 모질라 브라우저에서 기본 스타일 제거
+    appearance: none;               // 기본 브라우저에서 기본 스타일 제거
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    border: 2px solid #dadada;
+    cursor: pointer;
+    &:checked {
+        background-color: ${(props) => props.theme.green.lighter};  // checked 시 내부 원 색상
+        border: 3px solid #fff;       // 테두리가 아닌 테두리와 내부 원 사이의 색상
+        box-shadow: 0 0 0 2px ${(props) => props.theme.green.lighter};  // 테두리
+        // 그림자로 테두리를 직접 만들어야 한다. 없으면 설정한 색으로 꽉 찬 원만 나온다.
+    }
+    &:checked + label {
+        color: ${(props) => props.theme.green.lighter};
+        font-weight: 500;
     }
 `;
 
@@ -113,6 +139,18 @@ const NotSelectedImg = styled.svg`
     height: 90px;
     padding: 10px;
     fill: #dadada;
+`;
+
+const SubmitBtn = styled.button`
+    border: 0;
+    width: 125px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: ${(props) => props.theme.green.darker};
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
 `;
 
 function RegisterMyRecipe() {
@@ -151,7 +189,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "빵").map(bread => (
                                     <IngredientItem key={bread.id}>
-                                        <input {...register("bread", { required: true })} type="radio" id={`bread_${bread.id}`} />
+                                        <InputRadio {...register("bread", { required: true })} type="radio" id={`bread_${bread.id}`} />
                                         <label htmlFor={`bread_${bread.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${bread.img}`} alt={`img_${bread.eng_title}`} />
                                             {bread.title}
@@ -167,11 +205,11 @@ function RegisterMyRecipe() {
                         <FormContent>
                             <ul>
                                 <IngredientItem className="noImg">
-                                    <input {...register("toasting", { required: true })} type="radio" id={"toasting"} />
+                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"toasting"} />
                                     <label htmlFor={"toasting"}>토스팅</label>
                                 </IngredientItem>
                                 <IngredientItem className="noImg">
-                                    <input {...register("toasting", { required: true })} type="radio" id={"no_toasting"} />
+                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"no_toasting"} />
                                     <label htmlFor={"no_toasting"}>토스팅 안 함</label>
                                 </IngredientItem>
                             </ul>
@@ -184,7 +222,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "치즈").map(cheese => (
                                     <IngredientItem key={cheese.id}>
-                                        <input {...register("cheese", { required: true })} type="radio" id={`cheese_${cheese.id}`} />
+                                        <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_${cheese.id}`} />
                                         <label htmlFor={`cheese_${cheese.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${cheese.img}`} alt={`img_${cheese.eng_title}`} />
                                             {cheese.title}
@@ -192,7 +230,7 @@ function RegisterMyRecipe() {
                                     </IngredientItem>
                                 ))}
                                 <IngredientItem>
-                                    <input {...register("cheese", { required: true })} type="radio" id={`cheese_notSelected`} />
+                                    <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_notSelected`} />
                                     <label htmlFor={`cheese_notSelected`}>
                                         <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
                                             <rect fill="none" height="256" width="256"/>
@@ -211,7 +249,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.topping.map(topping => (
                                     <IngredientItem key={topping.id}>
-                                        <input {...register("topping", { required: true })} type="radio" id={`topping_${topping.id}`} />
+                                        <InputRadio {...register("topping", { required: true })} type="radio" id={`topping_${topping.id}`} />
                                         <label htmlFor={`topping_${topping.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${topping.img}`} alt={`img_${topping.eng_title}`} />
                                             {topping.title}
@@ -219,7 +257,7 @@ function RegisterMyRecipe() {
                                     </IngredientItem>
                                 ))}
                                 <IngredientItem>
-                                    <input {...register("topping", { required: true })} type="radio" id={`topping_notSelected`} />
+                                    <InputRadio {...register("topping", { required: true })} type="radio" id={`topping_notSelected`} />
                                     <label htmlFor={`topping_notSelected`}>
                                         <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
                                             <rect fill="none" height="256" width="256"/>
@@ -265,6 +303,9 @@ function RegisterMyRecipe() {
                             </ul>
                         </FormContent>
                     </FormStepWrap>
+                    <div>
+                        <SubmitBtn type="submit">등록하기</SubmitBtn>
+                    </div>
                 </MyRecipeForm>
             </MyRecipeFormWrap>
         </>
