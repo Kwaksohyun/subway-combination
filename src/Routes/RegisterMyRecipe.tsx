@@ -85,6 +85,7 @@ const FormContent = styled.div`
 
 const IngredientItem = styled.li`
     margin: 10px;
+    position: relative;
     > label {
         width: 107px;
         display: flex;
@@ -122,6 +123,34 @@ const InputRadio = styled.input`
         box-shadow: 0 0 0 2px ${(props) => props.theme.green.lighter};  // 테두리
         // 그림자로 테두리를 직접 만들어야 한다. 없으면 설정한 색으로 꽉 찬 원만 나온다.
     }
+    /* checked 시 label CSS */
+    &:checked + label {
+        color: ${(props) => props.theme.green.lighter};
+        font-weight: 500;
+    }
+`;
+
+const InputCheckbox = styled.input`
+    -webkit-appearance: none;       // 웹킷 브라우저에서 기본 스타일 제거
+    -moz-appearance: none;          // 모질라 브라우저에서 기본 스타일 제거
+    appearance: none;               // 기본 브라우저에서 기본 스타일 제거
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 2px solid #dadada;
+    &:checked {
+        background-color: ${(props) => props.theme.green.lighter};
+        border-color: ${(props) => props.theme.green.lighter};
+    }
+    &:checked + label::before {
+        content: "✔"; 
+        color: #fff;
+        position: absolute;
+        font-size: 12px;
+        font-weight: 700;
+        top: 4px;
+        left: 7px;
+    }
     &:checked + label {
         color: ${(props) => props.theme.green.lighter};
         font-weight: 500;
@@ -151,6 +180,7 @@ const SubmitBtn = styled.button`
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-weight: 500;
+    cursor: pointer;
 `;
 
 function RegisterMyRecipe() {
@@ -276,7 +306,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "야채").map(vege => (
                                     <IngredientItem key={vege.id}>
-                                        <input {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} />
+                                        <InputCheckbox {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} />
                                         <label htmlFor={`vege_${vege.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${vege.img}`} alt={`img_${vege.eng_title}`} />
                                             {vege.title}
@@ -293,7 +323,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "소스").map(sauce => (
                                     <IngredientItem key={sauce.id}>
-                                        <input {...register(`sauce_${sauce.id}`, { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title} />
+                                        <InputCheckbox {...register(`sauce_${sauce.id}`, { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title} />
                                         <label htmlFor={`sauce_${sauce.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${sauce.img}`} alt={`img_${sauce.eng_title}`} />
                                             {sauce.title}
