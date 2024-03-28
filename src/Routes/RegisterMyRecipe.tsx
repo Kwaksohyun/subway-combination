@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import data from "../data.json";
 import styled from "styled-components";
+import { useState } from "react";
 
 const PageHeader = styled.div`
     display: flex;
@@ -41,18 +42,27 @@ const FormStepWrap = styled.div`
     width: 1005px;
 `;
 
+const FormTitleWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 240px;        /* 가장 긴 FormTitle에 따라 */
+    padding: 0 35px;
+`;
+
 const FormLabelTitle = styled.label`
     font-size: 20px;
     font-weight: 500;
-    width: 240px;        /* 가장 긴 FormTitle에 따라 */
-    padding: 0 35px;
 `;
 
 const FormTitle = styled.span`
     font-size: 20px;
     font-weight: 500;
-    width: 240px;        /* 가장 긴 FormTitle에 따라 */
-    padding: 0 35px;
+`;
+
+const CheckMaximum = styled.span`
+    font-size: 13px;
+    color: ${(props) => props.theme.grey.darker};
+    padding-top: 3px;
 `;
 
 const FormContent = styled.div`
@@ -184,7 +194,29 @@ const SubmitBtn = styled.button`
 `;
 
 function RegisterMyRecipe() {
-    const { register } = useForm();
+    const { register, handleSubmit, setValue } = useForm();
+    const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
+    
+    // 체크박스 checked 개수 제한 함수
+    const countCheckBox = (event:React.ChangeEvent<HTMLInputElement>) => {
+        const checkedTarget = event?.currentTarget.getAttribute("id");    // 현재 선택한 태그의 id
+        // 1) 체크박스 checked 여부 확인
+        if(event.target.checked) {
+            setCheckedBtns([...checkedBtns, `${checkedTarget}`]);
+        } else {
+            setCheckedBtns(checkedBtns.filter(i => i !== `${checkedTarget}`));
+        } 
+        // ※ 가장 최근 체크박스를 클릭한 것은 다시 함수가 실행되었을 때 함수 내부에 반영된다!
+        // 2) 최대 개수만큼 checked된 경우
+        if(checkedBtns.length > 2) {
+            // 이미 선택된 체크박스가 아닌 새로운 체크박스 눌렀을 경우
+            if(!checkedBtns.includes(`${checkedTarget}`)) {
+                alert("소스는 최대 3개까지 선택 가능합니다.");
+                setValue(`${checkedTarget}`, false);        // event.currentTarget.checked = false;
+                setCheckedBtns(checkedBtns.filter(i => i !== `${checkedTarget}`));
+            }
+        }
+    };
     return (
         <>
             <PageHeader>
@@ -192,17 +224,21 @@ function RegisterMyRecipe() {
                 <span>내가 즐겨먹는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</span>
             </PageHeader>
             <MyRecipeFormWrap>
-                <MyRecipeForm>
+                <MyRecipeForm onSubmit={handleSubmit((data) => console.log(data))}>
                     {/* 1) 제목 */}
                     <FormStepWrap>
-                        <FormLabelTitle htmlFor="title">제목</FormLabelTitle>
+                        <FormTitleWrap>
+                            <FormLabelTitle htmlFor="title">제목</FormLabelTitle>
+                        </FormTitleWrap>
                         <FormContent>
-                            <input {...register("title", { required: true })} type="text" id="title" placeholder="제목을 입력해주세요."/>
+                            <input {...register("title", { required: true })} type="text" id="title" placeholder="제목을 입력해주세요." />
                         </FormContent>
                     </FormStepWrap>
                     {/* 2) 메뉴 */}
                     <FormStepWrap>
-                        <FormLabelTitle htmlFor="menu-select">메뉴</FormLabelTitle>
+                        <FormTitleWrap>
+                            <FormLabelTitle htmlFor="menu-select">메뉴</FormLabelTitle>
+                        </FormTitleWrap>
                         <FormContent>
                             <select {...register("sandwich", { required: true })} id="menu-select">
                                 <option value="">메뉴를 선택해주세요</option>
@@ -214,7 +250,9 @@ function RegisterMyRecipe() {
                     </FormStepWrap>
                     {/* 3) 빵 */}
                     <FormStepWrap>
-                        <FormTitle>빵</FormTitle>
+                        <FormTitleWrap>
+                            <FormTitle>빵</FormTitle>
+                        </FormTitleWrap>
                         <FormContent>
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "빵").map(bread => (
@@ -231,7 +269,9 @@ function RegisterMyRecipe() {
                     </FormStepWrap>
                     {/* 4) 토스팅 */}
                     <FormStepWrap>
-                        <FormTitle>빵/미트 토스팅 선택</FormTitle>
+                        <FormTitleWrap>
+                            <FormTitle>빵/미트 토스팅 선택</FormTitle>
+                        </FormTitleWrap>
                         <FormContent>
                             <ul>
                                 <IngredientItem className="noImg">
@@ -247,7 +287,9 @@ function RegisterMyRecipe() {
                     </FormStepWrap>
                     {/* 5) 치즈 */}
                     <FormStepWrap>
-                        <FormTitle>치즈</FormTitle>
+                        <FormTitleWrap>
+                            <FormTitle>치즈</FormTitle>
+                        </FormTitleWrap>
                         <FormContent>
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "치즈").map(cheese => (
@@ -274,7 +316,9 @@ function RegisterMyRecipe() {
                     </FormStepWrap>
                     {/* 6) 추가 토핑 */}
                     <FormStepWrap>
-                        <FormTitle>추가 토핑</FormTitle>
+                        <FormTitleWrap>
+                            <FormTitle>추가 토핑</FormTitle>
+                        </FormTitleWrap>
                         <FormContent>
                             <ul>
                                 {data.topping.map(topping => (
@@ -301,10 +345,13 @@ function RegisterMyRecipe() {
                     </FormStepWrap>
                     {/* 7) 야채 - 다중 선택 */}
                     <FormStepWrap>
-                        <FormTitle>야채</FormTitle>
+                        <FormTitleWrap>
+                            <FormTitle>야채</FormTitle>
+                            <CheckMaximum>(최대 8개 선택)</CheckMaximum>
+                        </FormTitleWrap>
                         <FormContent>                        
                             <ul>
-                                {data.freshInfo.filter(i => i.category === "야채").map(vege => (
+                                {data.freshInfo.filter(i => i.category === "야채" && i.title !== "아보카도").map(vege => (
                                     <IngredientItem key={vege.id}>
                                         <InputCheckbox {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} />
                                         <label htmlFor={`vege_${vege.id}`}>
@@ -318,12 +365,16 @@ function RegisterMyRecipe() {
                     </FormStepWrap>
                     {/* 8) 소스 - 다중 선택(최대 3개) */}
                     <FormStepWrap>
-                        <FormTitle>소스</FormTitle>
+                        <FormTitleWrap>
+                            <FormTitle>소스</FormTitle>
+                            <CheckMaximum>(최대 3개 선택)</CheckMaximum>
+                        </FormTitleWrap>
                         <FormContent>
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "소스").map(sauce => (
                                     <IngredientItem key={sauce.id}>
-                                        <InputCheckbox {...register(`sauce_${sauce.id}`, { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title} />
+                                        <InputCheckbox {...register(`sauce_${sauce.id}`, { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title}
+                                                onChange={countCheckBox} />
                                         <label htmlFor={`sauce_${sauce.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${sauce.img}`} alt={`img_${sauce.eng_title}`} />
                                             {sauce.title}
