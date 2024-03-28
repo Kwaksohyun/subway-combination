@@ -39,24 +39,31 @@ const MyRecipeForm = styled.form`
 const FormStepWrap = styled.div`
     padding: 20px 0;
     display: flex;
-    width: 1005px;
+    width: 1008px;
 `;
 
 const FormTitleWrap = styled.div`
     display: flex;
     flex-direction: column;
-    width: 240px;        /* 가장 긴 FormTitle에 따라 */
-    padding: 0 35px;
+    margin: 0 35px;
 `;
 
 const FormLabelTitle = styled.label`
     font-size: 20px;
     font-weight: 500;
+    width: 175px;        /* 가장 긴 FormTitle에 따라 */
+    > span {
+        color: #e85a1c;
+    }
 `;
 
 const FormTitle = styled.span`
     font-size: 20px;
     font-weight: 500;
+    width: 175px;        /* 가장 긴 FormTitle에 따라 */
+    > span {
+        color: #e85a1c;
+    }
 `;
 
 const CheckMaximum = styled.span`
@@ -122,8 +129,8 @@ const InputRadio = styled.input`
     -webkit-appearance: none;       // 웹킷 브라우저에서 기본 스타일 제거
     -moz-appearance: none;          // 모질라 브라우저에서 기본 스타일 제거
     appearance: none;               // 기본 브라우저에서 기본 스타일 제거
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
     border-radius: 100%;
     border: 2px solid #dadada;
     cursor: pointer;
@@ -228,7 +235,7 @@ function RegisterMyRecipe() {
                     {/* 1) 제목 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormLabelTitle htmlFor="title">제목</FormLabelTitle>
+                            <FormLabelTitle htmlFor="title">제목<span>*</span></FormLabelTitle>
                         </FormTitleWrap>
                         <FormContent>
                             <input {...register("title", { required: true })} type="text" id="title" placeholder="제목을 입력해주세요." />
@@ -237,7 +244,7 @@ function RegisterMyRecipe() {
                     {/* 2) 메뉴 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormLabelTitle htmlFor="menu-select">메뉴</FormLabelTitle>
+                            <FormLabelTitle htmlFor="menu-select">메뉴<span>*</span></FormLabelTitle>
                         </FormTitleWrap>
                         <FormContent>
                             <select {...register("sandwich", { required: true })} id="menu-select">
@@ -251,7 +258,7 @@ function RegisterMyRecipe() {
                     {/* 3) 빵 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormTitle>빵</FormTitle>
+                            <FormTitle>빵<span>*</span></FormTitle>
                         </FormTitleWrap>
                         <FormContent>
                             <ul>
@@ -270,7 +277,7 @@ function RegisterMyRecipe() {
                     {/* 4) 토스팅 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormTitle>빵/미트 토스팅 선택</FormTitle>
+                            <FormTitle>빵/미트 토스팅 선택<span>*</span></FormTitle>
                         </FormTitleWrap>
                         <FormContent>
                             <ul>
@@ -288,7 +295,7 @@ function RegisterMyRecipe() {
                     {/* 5) 치즈 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormTitle>치즈</FormTitle>
+                            <FormTitle>치즈<span>*</span></FormTitle>
                         </FormTitleWrap>
                         <FormContent>
                             <ul>
@@ -317,13 +324,14 @@ function RegisterMyRecipe() {
                     {/* 6) 추가 토핑 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormTitle>추가 토핑</FormTitle>
+                            <FormTitle>추가 토핑<span>*</span></FormTitle>
+                            <CheckMaximum>(최대 7개 선택)</CheckMaximum>
                         </FormTitleWrap>
                         <FormContent>
                             <ul>
                                 {data.topping.map(topping => (
                                     <IngredientItem key={topping.id}>
-                                        <InputRadio {...register("topping", { required: true })} type="radio" id={`topping_${topping.id}`} />
+                                        <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_${topping.id}`} value={topping.title} />
                                         <label htmlFor={`topping_${topping.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${topping.img}`} alt={`img_${topping.eng_title}`} />
                                             {topping.title}
@@ -331,7 +339,7 @@ function RegisterMyRecipe() {
                                     </IngredientItem>
                                 ))}
                                 <IngredientItem>
-                                    <InputRadio {...register("topping", { required: true })} type="radio" id={`topping_notSelected`} />
+                                    <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_notSelected`} value=""/>
                                     <label htmlFor={`topping_notSelected`}>
                                         <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
                                             <rect fill="none" height="256" width="256"/>
@@ -346,14 +354,14 @@ function RegisterMyRecipe() {
                     {/* 7) 야채 - 다중 선택 */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormTitle>야채</FormTitle>
+                            <FormTitle>야채<span>*</span></FormTitle>
                             <CheckMaximum>(최대 8개 선택)</CheckMaximum>
                         </FormTitleWrap>
                         <FormContent>                        
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "야채" && i.title !== "아보카도").map(vege => (
                                     <IngredientItem key={vege.id}>
-                                        <InputCheckbox {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} />
+                                        <InputCheckbox {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} value={vege.title} />
                                         <label htmlFor={`vege_${vege.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${vege.img}`} alt={`img_${vege.eng_title}`} />
                                             {vege.title}
@@ -366,7 +374,7 @@ function RegisterMyRecipe() {
                     {/* 8) 소스 - 다중 선택(최대 3개) */}
                     <FormStepWrap>
                         <FormTitleWrap>
-                            <FormTitle>소스</FormTitle>
+                            <FormTitle>소스<span>*</span></FormTitle>
                             <CheckMaximum>(최대 3개 선택)</CheckMaximum>
                         </FormTitleWrap>
                         <FormContent>
