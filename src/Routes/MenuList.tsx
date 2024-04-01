@@ -4,6 +4,7 @@ import SubHeader from "../Components/SubHeader";
 
 const Container = styled.div`
     position: relative;
+    padding-top: 170px;
 `;
 
 function MenuList() {

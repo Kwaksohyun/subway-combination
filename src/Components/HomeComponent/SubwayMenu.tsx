@@ -6,8 +6,11 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const SubwayMenuContainer = styled.div`
     background-color: #fff;
-    height: 560px;
-    padding-top: 50px;
+    height: 700px;
+    padding-top: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 `;
 
 const SubwayMenuHeader = styled.div`

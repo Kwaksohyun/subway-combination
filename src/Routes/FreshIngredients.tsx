@@ -7,6 +7,7 @@ import Footer from "../Components/Footer";
 
 const MenuListWrap = styled.div`
     background-color: #f2f2f2;
+    padding-top: 170px;
 `;
 
 const VisualWrap = styled.div`

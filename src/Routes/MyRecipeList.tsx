@@ -62,6 +62,7 @@ const ShareButton = styled.div`
     justify-content: center;
     align-items: center;
     font-weight: 500;
+    cursor: pointer;
 `;
 
 function MyRecipeList() {
@@ -69,7 +70,7 @@ function MyRecipeList() {
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
     return (
-        <>
+        <div style={{paddingTop: "170px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
 
             <PageHeaderContainer>
@@ -93,7 +94,7 @@ function MyRecipeList() {
             <div>
                 
             </div>
-        </>
+        </div>
     )
 }
 

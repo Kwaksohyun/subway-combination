@@ -225,7 +225,7 @@ function RegisterMyRecipe() {
         }
     };
     return (
-        <>
+        <div style={{paddingTop: "170px"}}>
             <PageHeader>
                 <PageHeaderTitle>나만의 써브웨이 꿀조합은?</PageHeaderTitle>
                 <span>내가 즐겨먹는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</span>
@@ -397,7 +397,7 @@ function RegisterMyRecipe() {
                     </div>
                 </MyRecipeForm>
             </MyRecipeFormWrap>
-        </>
+        </div>
     )
 }
 
