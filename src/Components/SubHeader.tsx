@@ -30,7 +30,7 @@ const TopBtn = styled.button`
     }
 `;
 
-const SubHeaderContainer = styled.nav<{isBackImg: boolean}>`
+const SubHeaderContainer = styled.nav<{$isBackImg: boolean}>`
     position: absolute;
     background-color: transparent;
     z-index: 10;
@@ -49,8 +49,8 @@ const SubHeaderContainer = styled.nav<{isBackImg: boolean}>`
         width: 100%;
         height: 1px;
         bottom: 0;
-        background-color: ${(props) => props.isBackImg ? "#fff" : "#e5e5e5"};
-        opacity: ${(props) => props.isBackImg ? 0.1 : 1};
+        background-color: ${(props) => props.$isBackImg ? "#fff" : "#e5e5e5"};
+        opacity: ${(props) => props.$isBackImg ? 0.1 : 1};
     }
 `;
 
@@ -76,7 +76,7 @@ const LNBWrap = styled.div`
     }
 `;
 
-const LNBItem = styled.li<{isactive: boolean, isBackImg: boolean}>`
+const LNBItem = styled.li<{$isactive: boolean, $isBackImg: boolean}>`
     position: relative;
     margin: 0 25px;
     font-weight: 500;
@@ -84,10 +84,10 @@ const LNBItem = styled.li<{isactive: boolean, isBackImg: boolean}>`
         line-height: 60px;
     }
     &.isBackgroundImg {
-        color: ${(props) => props.isactive ? props.theme.yellow.darker: "#fff"};
+        color: ${(props) => props.$isactive ? props.theme.yellow.darker: "#fff"};
     }
     &.NoBackgroundImg {
-        color: ${(props) => props.isactive ? props.theme.green.lighter: props.theme.grey.darker};
+        color: ${(props) => props.$isactive ? props.theme.green.lighter: props.theme.grey.darker};
     }
     &:not(:first-child)::before {
         content: '';
@@ -108,13 +108,13 @@ const LNBItem = styled.li<{isactive: boolean, isBackImg: boolean}>`
             height: 4px;
             bottom: 0;
             left: 0;
-            background-color: ${(props) => props.isBackImg ? props.theme.yellow.darker : props.theme.green.lighter};
+            background-color: ${(props) => props.$isBackImg ? props.theme.yellow.darker : props.theme.green.lighter};
             opacity: 1;
             z-index: 5;
         }
     }
     &.fixed {
-        color: ${(props) => (!props.isactive) ? props.theme.grey.darker : props.isBackImg ? props.theme.yellow.darker : props.theme.green.lighter};
+        color: ${(props) => (!props.$isactive) ? props.theme.grey.darker : props.$isBackImg ? props.theme.yellow.darker : props.theme.green.lighter};
         &:not(:first-child)::before {
             opacity: 1;
         }
@@ -159,7 +159,7 @@ function SubHeader(props:IsubMenuProps) {
         };
     });
     return (
-        <SubHeaderContainer className={fixedNav ? "fixed" : ""} isBackImg={props.isBackgroundImg}>
+        <SubHeaderContainer className={fixedNav ? "fixed" : ""} $isBackImg={props.isBackgroundImg}>
             <SubHeaderWrap>
                 <Logo>
                     <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
@@ -167,7 +167,7 @@ function SubHeader(props:IsubMenuProps) {
                 <LNBWrap>
                     <ul>
                         {props.subMenuInfo.map((menuItem)  => (
-                            <LNBItem key={menuItem.index} isactive={menuItem.menuMatch !== null} isBackImg={props.isBackgroundImg}
+                            <LNBItem key={menuItem.index} $isactive={menuItem.menuMatch !== null} $isBackImg={props.isBackgroundImg}
                                 className={`${props.isBackgroundImg ? "isBackgroundImg" : "NoBackgroundImg"} ${(menuItem.menuMatch !== null) ? "active" : ""} ${fixedNav ? "fixed" : ""}`}>
                                 <Link to={menuItem.menuPath}>{menuItem.menuName}</Link>
                             </LNBItem>
