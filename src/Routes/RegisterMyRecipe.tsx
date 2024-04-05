@@ -215,7 +215,7 @@ interface IForm {
 
 function RegisterMyRecipe() {
     const setRecipeLists = useSetRecoilState(recipeState);
-    const { register, handleSubmit, formState:{ isSubmitting }} = useForm<IForm>();
+    const { register, handleSubmit, formState:{ isSubmitting }, reset } = useForm<IForm>();
     const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
     
     // 체크박스 checked 개수 제한 함수
@@ -240,6 +240,9 @@ function RegisterMyRecipe() {
     };
     const onSubmit = async (data:IForm) => {
         console.log(data);
+        // 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
+        await new Promise((r) => setTimeout(r, 1000));
+        alert("나만의 꿀조합 레시피 등록이 완료되었습니다.");
         // 제출된 폼의 내용을 모두 담은 객체 생성
         const newRecipe = {
             id: Date.now(),
@@ -251,6 +254,8 @@ function RegisterMyRecipe() {
             console.log(allRecipesCopy);
             return allRecipesCopy;
         });
+        // 제출 후 form 전체 state 초기화
+        reset();
     };
     return (
         <div style={{paddingTop: "170px"}}>
