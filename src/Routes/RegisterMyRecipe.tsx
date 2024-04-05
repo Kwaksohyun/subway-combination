@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import data from "../data.json";
 import styled from "styled-components";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { recipeState } from "../atoms";
 
 const PageHeader = styled.div`
     display: flex;
@@ -200,8 +202,20 @@ const SubmitBtn = styled.button`
     cursor: pointer;
 `;
 
+interface IForm {
+    title: string;
+    sandwich: string;
+    bread: string;
+    toasting: string;
+    cheese: string;
+    topping: string[];
+    vegetable: string[];
+    sauce: string[];
+}
+
 function RegisterMyRecipe() {
-    const { register, handleSubmit, setValue } = useForm();
+    const setRecipeLists = useSetRecoilState(recipeState);
+    const { register, handleSubmit, formState:{ isSubmitting }} = useForm<IForm>();
     const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
     
     // 체크박스 checked 개수 제한 함수
@@ -219,10 +233,24 @@ function RegisterMyRecipe() {
             // 이미 선택된 체크박스가 아닌 새로운 체크박스 눌렀을 경우
             if(!checkedBtns.includes(`${checkedTarget}`)) {
                 alert("소스는 최대 3개까지 선택 가능합니다.");
-                setValue(`${checkedTarget}`, false);        // event.currentTarget.checked = false;
+                event.currentTarget.checked = false;
                 setCheckedBtns(checkedBtns.filter(i => i !== `${checkedTarget}`));
             }
         }
+    };
+    const onSubmit = async (data:IForm) => {
+        console.log(data);
+        // 제출된 폼의 내용을 모두 담은 객체 생성
+        const newRecipe = {
+            id: Date.now(),
+            ...data
+        };
+        setRecipeLists((allRecipes) => {
+            const allRecipesCopy = [...allRecipes];
+            allRecipesCopy.push(newRecipe);
+            console.log(allRecipesCopy);
+            return allRecipesCopy;
+        });
     };
     return (
         <div style={{paddingTop: "170px"}}>
@@ -231,7 +259,7 @@ function RegisterMyRecipe() {
                 <span>내가 즐겨먹는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</span>
             </PageHeader>
             <MyRecipeFormWrap>
-                <MyRecipeForm onSubmit={handleSubmit((data) => console.log(data))}>
+                <MyRecipeForm onSubmit={handleSubmit(onSubmit)}>
                     {/* 1) 제목 */}
                     <FormStepWrap>
                         <FormTitleWrap>
@@ -264,7 +292,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "빵").map(bread => (
                                     <IngredientItem key={bread.id}>
-                                        <InputRadio {...register("bread", { required: true })} type="radio" id={`bread_${bread.id}`} />
+                                        <InputRadio {...register("bread", { required: true })} type="radio" id={`bread_${bread.id}`} value={bread.title} />
                                         <label htmlFor={`bread_${bread.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${bread.img}`} alt={`img_${bread.eng_title}`} />
                                             {bread.title}
@@ -282,11 +310,11 @@ function RegisterMyRecipe() {
                         <FormContent>
                             <ul>
                                 <IngredientItem className="noImg">
-                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"toasting"} />
+                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"toasting"} value="토스팅 O" />
                                     <label htmlFor={"toasting"}>토스팅</label>
                                 </IngredientItem>
                                 <IngredientItem className="noImg">
-                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"no_toasting"} />
+                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"no_toasting"} value="토스팅 X" />
                                     <label htmlFor={"no_toasting"}>토스팅 안 함</label>
                                 </IngredientItem>
                             </ul>
@@ -301,7 +329,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "치즈").map(cheese => (
                                     <IngredientItem key={cheese.id}>
-                                        <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_${cheese.id}`} />
+                                        <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_${cheese.id}`} value={cheese.title} />
                                         <label htmlFor={`cheese_${cheese.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${cheese.img}`} alt={`img_${cheese.eng_title}`} />
                                             {cheese.title}
@@ -381,8 +409,7 @@ function RegisterMyRecipe() {
                             <ul>
                                 {data.freshInfo.filter(i => i.category === "소스").map(sauce => (
                                     <IngredientItem key={sauce.id}>
-                                        <InputCheckbox {...register(`sauce_${sauce.id}`, { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title}
-                                                onChange={countCheckBox} />
+                                        <InputCheckbox {...register("sauce", { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title} onChange={countCheckBox} />
                                         <label htmlFor={`sauce_${sauce.id}`}>
                                             <IngredientImg src={`${process.env.PUBLIC_URL}/${sauce.img}`} alt={`img_${sauce.eng_title}`} />
                                             {sauce.title}
@@ -393,7 +420,7 @@ function RegisterMyRecipe() {
                         </FormContent>
                     </FormStepWrap>
                     <div>
-                        <SubmitBtn type="submit">등록하기</SubmitBtn>
+                        <SubmitBtn type="submit" disabled={isSubmitting}>등록하기</SubmitBtn>
                     </div>
                 </MyRecipeForm>
             </MyRecipeFormWrap>
