@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { recipeState } from "../atoms";
+import { useNavigate } from "react-router-dom";
 
 const PageHeader = styled.div`
     display: flex;
@@ -217,7 +218,8 @@ function RegisterMyRecipe() {
     const setRecipeLists = useSetRecoilState(recipeState);
     const { register, handleSubmit, formState:{ isSubmitting }, reset } = useForm<IForm>();
     const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
-    
+    const navigate = useNavigate();
+
     // 체크박스 checked 개수 제한 함수
     const countCheckBox = (event:React.ChangeEvent<HTMLInputElement>) => {
         const checkedTarget = event?.currentTarget.getAttribute("id");    // 현재 선택한 태그의 id
@@ -239,15 +241,22 @@ function RegisterMyRecipe() {
         }
     };
     const onSubmit = async (data:IForm) => {
-        console.log(data);
         // 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
         await new Promise((r) => setTimeout(r, 1000));
         alert("나만의 꿀조합 레시피 등록이 완료되었습니다.");
+
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = ("0"+ (today.getMonth()+1)).slice(-2);
+        const day =("0" + today.getDate()).slice(-2);
+
         // 제출된 폼의 내용을 모두 담은 객체 생성
         const newRecipe = {
             id: Date.now(),
+            date: `${year}-${month}-${day}`,
             ...data
         };
+
         setRecipeLists((allRecipes) => {
             const allRecipesCopy = [...allRecipes];
             allRecipesCopy.push(newRecipe);
@@ -256,6 +265,8 @@ function RegisterMyRecipe() {
         });
         // 제출 후 form 전체 state 초기화
         reset();
+        // 꿀조합 레시피 리스트 페이지로 이동
+        navigate("/myRecipeList");
     };
     return (
         <div style={{paddingTop: "170px"}}>
@@ -342,7 +353,7 @@ function RegisterMyRecipe() {
                                     </IngredientItem>
                                 ))}
                                 <IngredientItem>
-                                    <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_notSelected`} />
+                                    <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_notSelected`} value="치즈 X" />
                                     <label htmlFor={`cheese_notSelected`}>
                                         <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
                                             <rect fill="none" height="256" width="256"/>

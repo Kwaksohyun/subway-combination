@@ -2,6 +2,7 @@ import { atom } from "recoil";
 
 interface IRecipe {
     id: number;
+    date: string;
     title: string;
     sandwich: string;
     bread: string;
@@ -22,7 +23,6 @@ const localStorageEffect = (key: string) => ({ setSelf, onSet }: any) => {
     onSet((newValue: IRecipe[]) => {
         localStorage.setItem(key, JSON.stringify(newValue));
     })
-
 };
 
 export const recipeState = atom<IRecipe[]>({
@@ -30,6 +30,7 @@ export const recipeState = atom<IRecipe[]>({
     default: [
         {
             id: 1,
+            date: "2024-04-04",
             title: "베스트셀러 메뉴의 추천 꿀조합",
             sandwich: "이탈리안 비엠티",
             bread: "파마산 오레가노",
@@ -41,6 +42,7 @@ export const recipeState = atom<IRecipe[]>({
         },
         {
             id: 2,
+            date: "2024-04-04",
             title: "다이어터를 위한 담백한 샌드위치",
             sandwich: "로스트 치킨",
             bread: "위트",
@@ -52,6 +54,7 @@ export const recipeState = atom<IRecipe[]>({
         },
         {
             id: 3,
+            date: "2024-04-04",
             title: "매운맛에 미친자의 추천 레시피",
             sandwich: "치킨 데리야끼",
             bread: "화이트",
@@ -63,6 +66,7 @@ export const recipeState = atom<IRecipe[]>({
         },
         {
             id: 4,
+            date: "2024-04-05",
             title: "호불호 없이 맛있게 매운 거 좋아하시는 분들 추천",
             sandwich: "스테이크 & 치즈",
             bread: "화이트",
@@ -74,6 +78,7 @@ export const recipeState = atom<IRecipe[]>({
         },
         {
             id: 5,
+            date: "2024-04-05",
             title: "진리의 에그마요",
             sandwich: "에그마요",
             bread: "플랫브레드",
