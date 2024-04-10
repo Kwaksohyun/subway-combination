@@ -25,6 +25,7 @@ const PageHeaderTitle = styled.h2`
 
 const PageText = styled.span`
     color: ${(props) => props.theme.grey.darker};
+    white-space: nowrap;    // 자동 줄바꿈 무시
 `;
 
 const MyRecipeContentWrap = styled.div`
@@ -68,7 +69,6 @@ const ShareButton = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 500;
     cursor: pointer;
 `;
 
@@ -127,13 +127,13 @@ const RecipeTextWrap = styled.div`
 const RecipeTitle = styled.strong`
     font-size: 17px;
     font-weight: 700;
-    line-height: normal;
+    line-height: 1.3;
 `;
 
 const RecipeMenu = styled.span`
     color: #666666;
     font-size: 13px;
-    margin-top: 13px;
+    margin-top: 7px;
 `;
 
 const RecipeTextRowWrap = styled.div`
@@ -196,7 +196,8 @@ function MyRecipeList() {
                     <ul>
                         {recipes.map((recipe) => (
                             <RecipeItem key={recipe.id}>
-                                <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipe.id}`}>
+                                <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipe.id}`}
+                                    state={{imgSrc: `${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`, calorie: `${sandwichInfoObj(recipe.sandwich)?.calorie}`}}>
                                     <RecipeImg alt={`img_${sandwichInfoObj(recipe.sandwich)?.eng_title}`} src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`} />
                                     <RecipeInfoWrap>
                                         <RecipeTextWrap>
