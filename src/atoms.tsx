@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-interface IRecipe {
+export interface IRecipe {
     id: number;
     date: string;
     title: string;
