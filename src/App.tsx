@@ -8,6 +8,7 @@ import FreshIngredients from './Routes/FreshIngredients';
 import MyRecipeList from './Routes/MyRecipeList';
 import Footer from './Components/Footer';
 import RegisterMyRecipe from './Routes/RegisterMyRecipe';
+import MyRecipeDetail from './Routes/MyRecipeDetail';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         </Route>
         <Route path='/freshInfo' element={<FreshIngredients/>} />
         <Route path='/myRecipeList' element={<MyRecipeList/>} />
+        <Route path='/myRecipeView/recipe?' element={<MyRecipeDetail/>} />
         <Route path='/myRecipeList/registerMyRecipe' element={<RegisterMyRecipe />} />
       </Routes>
       <Footer />
