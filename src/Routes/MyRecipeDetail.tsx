@@ -1,7 +1,8 @@
 import { useRecoilValue } from "recoil";
 import { IRecipe, recipeState } from "../atoms";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import ListViewButton from "../Components/ListViewButton";
 
 const RecipeHeader = styled.div`
     display: flex;
@@ -184,37 +185,12 @@ const ReviewText = styled.p`
     font-size: 15px;
 `;
 
-const ListViewButton = styled.div`
-    background-color: ${(props) => props.theme.green.darker};
-    color: #fff;
-    font-weight: 500;
-    width: 130px;
-    height: 40px;
-    border-radius: 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 80px auto;
-    > a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-`;
-
-const ListIcon = styled.svg`
-    width: 25px;
-    height: 25px;
-    margin-right: 5px;
-`;
-
 function MyRecipeDetail() {
     const location = useLocation();
     const recipes = useRecoilValue<IRecipe[]>(recipeState);
     // location.search 예시 : "?recipeItemIdx=1"
     const recipeData = recipes.find(i => `${i.id}` === location.search.slice(15));
-    console.log(location);
+    
     return (
         <div style={{paddingTop: "200px"}}>
             <RecipeHeader>
@@ -241,7 +217,7 @@ function MyRecipeDetail() {
 
             {/* 레시피 */}
             <RecipeInfoWrap>
-                <RecipeImg src={location.state.imgSrc} alt={`img_${recipeData?.sandwich}`} />
+                <RecipeImg src={`${process.env.PUBLIC_URL}${location.state.imgSrc}`} alt={`img_${recipeData?.sandwich}`} />
                 <RecipeDetailWrap>
                     <strong>나만의 꿀조합 레시피</strong>
                     <StepItem>
@@ -316,17 +292,7 @@ function MyRecipeDetail() {
                 </ul>
             </RecipeReviewWrap>
 
-            <ListViewButton>
-                <Link to={"/myRecipeList"}>
-                    <ListIcon viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <title/>
-                        <path d="M19,8H5A1,1,0,0,1,5,6H19a1,1,0,0,1,0,2Z" fill="#ffc300"/>
-                        <path d="M19,13H5a1,1,0,0,1,0-2H19a1,1,0,0,1,0,2Z" fill="#ffc300"/>
-                        <path d="M19,18H5a1,1,0,0,1,0-2H19a1,1,0,0,1,0,2Z" fill="#ffc300"/>
-                    </ListIcon>
-                    <span>목록보기</span>
-                </Link>
-            </ListViewButton>
+            <ListViewButton linkPath="/myRecipeList" />
         </div>
     )
 }
