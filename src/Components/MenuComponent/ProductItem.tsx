@@ -148,8 +148,8 @@ function ProductInfo({isMenu, activeTab, img, title, engTitle, calorie, summary}
 }
 
 function ProductItem({isMenu, activeTab, id, img, title, engTitle, calorie, summary}:IProductItemProps) {
-    const {pathname} = useLocation();
-    const menuCategory = pathname.split('/menuList/')[1];
+    const location = useLocation();
+    const menuCategory = location.pathname.split('/menuList/')[1];
     return (
         <ProductItemWrap variants={productItemVariants} initial="invisible" animate="visible" exit="exit">
             {/* 메뉴소개 상세페이지로 이동 */}

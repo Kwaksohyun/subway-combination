@@ -1,10 +1,12 @@
 import { useRecoilValue } from "recoil";
 import { IRecipe, recipeState } from "../atoms";
-import { useLocation } from "react-router-dom";
+import { useLocation, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import ListViewButton from "../Components/ListViewButton";
+import SubHeader from "../Components/SubHeader";
 
 const RecipeHeader = styled.div`
+    margin-top: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -186,13 +188,17 @@ const ReviewText = styled.p`
 `;
 
 function MyRecipeDetail() {
+    const subMenuInfo = [
+        { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
+    ];
     const location = useLocation();
     const recipes = useRecoilValue<IRecipe[]>(recipeState);
     // location.search 예시 : "?recipeItemIdx=1"
     const recipeData = recipes.find(i => `${i.id}` === location.search.slice(15));
     
     return (
-        <div style={{paddingTop: "200px"}}>
+        <div style={{paddingTop: "170px"}}>
+            <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false}  pathIncludesStr="myRecipe" />
             <RecipeHeader>
                 <RecipeMenuWrap>
                     <span>샌드위치</span>

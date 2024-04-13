@@ -131,6 +131,7 @@ interface ImenuInfo {
 interface IsubMenuProps {
     subMenuInfo: ImenuInfo[];
     isBackgroundImg: boolean;
+    pathIncludesStr?: string|undefined;
 };
 
 function SubHeader(props:IsubMenuProps) {
@@ -167,8 +168,10 @@ function SubHeader(props:IsubMenuProps) {
                 <LNBWrap>
                     <ul>
                         {props.subMenuInfo.map((menuItem)  => (
-                            <LNBItem key={menuItem.index} $isactive={menuItem.menuMatch !== null} $isBackImg={props.isBackgroundImg}
-                                className={`${props.isBackgroundImg ? "isBackgroundImg" : "NoBackgroundImg"} ${(menuItem.menuMatch !== null) ? "active" : ""} ${fixedNav ? "fixed" : ""}`}>
+                            <LNBItem key={menuItem.index} 
+                                $isactive={(menuItem.menuMatch !== null) || (menuItem.menuPath.includes(props.pathIncludesStr ?? " "))} 
+                                $isBackImg={props.isBackgroundImg}
+                                className={`${props.isBackgroundImg ? "isBackgroundImg" : "NoBackgroundImg"} ${((menuItem.menuMatch !== null) || (menuItem.menuPath.includes(props.pathIncludesStr ?? " "))) ? "active" : ""} ${fixedNav ? "fixed" : ""}`}>
                                 <Link to={menuItem.menuPath}>{menuItem.menuName}</Link>
                             </LNBItem>
                         ))}

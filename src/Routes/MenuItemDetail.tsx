@@ -1,10 +1,11 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useMatch, useParams } from "react-router-dom";
 import styled from "styled-components";
 import data from "../data.json";
 import ListViewButton from "../Components/ListViewButton";
+import SubHeader from "../Components/SubHeader";
 
 const ProductInfoWrap = styled.div`
-    padding-top: 200px;
+    padding-top: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,11 +56,18 @@ const Summary = styled.p`
 `;
 
 function MenuItemDetail() {
+    const subMenuInfo = [
+        { index: 0, menuName: "샌드위치", menuPath: "/menuList/sandwich", menuMatch: useMatch("/menuList/sandwich") },
+        { index: 1, menuName: "랩ㆍ기타", menuPath: "/menuList/unit", menuMatch: useMatch("/menuList/unit") }
+    ];
     const { menuCategory } = useParams();
     const location = useLocation();
     const productData = menuCategory === "sandwich" ? data.sandwichList.find(i => `${i.id}` === location.state.productId) : data.unitList.find(i => `${i.id}` === location.state.productId);
     return (
-        <>
+        <div style={{paddingTop: "170px"}}>
+            {/* 메뉴소개 페이지 내부 탐색 메뉴 */}
+            <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} pathIncludesStr={menuCategory} />
+
             <ProductInfoWrap>
                 <ProductCategory>{productData?.category}</ProductCategory>
                 <Title>{productData?.title}</Title>
@@ -71,8 +79,8 @@ function MenuItemDetail() {
                 <Summary>{productData?.summary.split(' \n ').map(i => <>{i}<br/></>)}</Summary>
             </ProductInfoWrap>
 
-            <ListViewButton linkPath={`/menuList/${location.state.menuCategory}`} />
-        </>
+            <ListViewButton linkPath={`/menuList/${menuCategory}`} />
+        </div>
         
     )
 }
