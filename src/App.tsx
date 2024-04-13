@@ -9,6 +9,7 @@ import MyRecipeList from './Routes/MyRecipeList';
 import Footer from './Components/Footer';
 import RegisterMyRecipe from './Routes/RegisterMyRecipe';
 import MyRecipeDetail from './Routes/MyRecipeDetail';
+import MenuItemDetail from './Routes/MenuItemDetail';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='sandwich' element={<Sandwich />}/>
           <Route path='unit' element={<Wrap />}/>
         </Route>
+        <Route path='/menuView/:menuCategory?' element={<MenuItemDetail/> } />
         <Route path='/freshInfo' element={<FreshIngredients/>} />
         <Route path='/myRecipeList' element={<MyRecipeList/>} />
         <Route path='/myRecipeView/recipe?' element={<MyRecipeDetail/>} />
