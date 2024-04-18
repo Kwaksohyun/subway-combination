@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { recipeState } from "../atoms";
-import { useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 
 const PageHeader = styled.div`
     display: flex;
@@ -26,29 +26,41 @@ const PageHeaderTitle = styled.h2`
 const MyRecipeFormWrap = styled.div`
     background-color: #f2f2f2;
     padding: 70px 0;
+    width: 100%;
+    > div {
+        max-width: 1050px;
+        margin: 0 auto;
+        background-color: #fff;
+    }
 `;
 
 const MyRecipeForm = styled.form`
-    width: 1050px;
-    margin: 0 auto;
-    padding: 30px 0;
+    min-width: 330px;
+    padding: 30px 25px 30px 35px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    background-color: #fff;
 `;
 
 const FormStepWrap = styled.div`
     padding: 20px 0;
     display: flex;
-    width: 1008px;
+    width: 100%;
+    // 화면 1024px 이하
+    @media (max-width: 1024px) {
+        flex-direction: column;
+        padding: 25px 0;
+    }
 `;
 
 const FormTitleWrap = styled.div`
     display: flex;
     flex-direction: column;
-    margin: 0 35px;
+    margin-right: 35px;
+    // 화면 1024px 이하
+    @media (max-width: 1024px) {
+        padding-bottom: 10px;
+    }
 `;
 
 const FormLabelTitle = styled.label`
@@ -77,7 +89,6 @@ const CheckMaximum = styled.span`
 
 const FormContent = styled.div`
     > ul {
-        width: 763px;
         display: flex;
         flex-wrap: wrap;
     }
@@ -268,177 +279,180 @@ function RegisterMyRecipe() {
         // 꿀조합 레시피 리스트 페이지로 이동
         navigate("/myRecipeList");
     };
+    console.log(useMatch("/myRecipeList/*"));
     return (
-        <div style={{paddingTop: "170px"}}>
+        <div style={{ paddingTop: "170px", minWidth: "800px" }}>
             <PageHeader>
                 <PageHeaderTitle>나만의 써브웨이 꿀조합은?</PageHeaderTitle>
                 <span>내가 즐겨먹는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</span>
             </PageHeader>
             <MyRecipeFormWrap>
-                <MyRecipeForm onSubmit={handleSubmit(onSubmit)}>
-                    {/* 1) 제목 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormLabelTitle htmlFor="title">제목<span>*</span></FormLabelTitle>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <input {...register("title", { required: true })} type="text" id="title" placeholder="제목을 입력해주세요." />
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 2) 메뉴 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormLabelTitle htmlFor="menu-select">메뉴<span>*</span></FormLabelTitle>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <select {...register("sandwich", { required: true })} id="menu-select">
-                                <option value="">메뉴를 선택해주세요</option>
-                                {data.sandwichList.map(sandwich => (
-                                    <option key={sandwich.id} value={sandwich.title}>{sandwich.title}</option>
-                                ))}
-                            </select>
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 3) 빵 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormTitle>빵<span>*</span></FormTitle>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <ul>
-                                {data.freshInfo.filter(i => i.category === "빵").map(bread => (
-                                    <IngredientItem key={bread.id}>
-                                        <InputRadio {...register("bread", { required: true })} type="radio" id={`bread_${bread.id}`} value={bread.title} />
-                                        <label htmlFor={`bread_${bread.id}`}>
-                                            <IngredientImg src={`${process.env.PUBLIC_URL}/${bread.img}`} alt={`img_${bread.eng_title}`} />
-                                            {bread.title}
+                <div>
+                    <MyRecipeForm onSubmit={handleSubmit(onSubmit)}>
+                        {/* 1) 제목 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormLabelTitle htmlFor="title">제목<span>*</span></FormLabelTitle>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <input {...register("title", { required: true })} type="text" id="title" placeholder="제목을 입력해주세요." />
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 2) 메뉴 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormLabelTitle htmlFor="menu-select">메뉴<span>*</span></FormLabelTitle>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <select {...register("sandwich", { required: true })} id="menu-select">
+                                    <option value="">메뉴를 선택해주세요</option>
+                                    {data.sandwichList.map(sandwich => (
+                                        <option key={sandwich.id} value={sandwich.title}>{sandwich.title}</option>
+                                    ))}
+                                </select>
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 3) 빵 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormTitle>빵<span>*</span></FormTitle>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <ul>
+                                    {data.freshInfo.filter(i => i.category === "빵").map(bread => (
+                                        <IngredientItem key={bread.id}>
+                                            <InputRadio {...register("bread", { required: true })} type="radio" id={`bread_${bread.id}`} value={bread.title} />
+                                            <label htmlFor={`bread_${bread.id}`}>
+                                                <IngredientImg src={`${process.env.PUBLIC_URL}/${bread.img}`} alt={`img_${bread.eng_title}`} />
+                                                {bread.title}
+                                            </label>
+                                        </IngredientItem>
+                                    ))}
+                                </ul>
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 4) 토스팅 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormTitle>빵/미트 토스팅 선택<span>*</span></FormTitle>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <ul>
+                                    <IngredientItem className="noImg">
+                                        <InputRadio {...register("toasting", { required: true })} type="radio" id={"toasting"} value="토스팅 O" />
+                                        <label htmlFor={"toasting"}>토스팅</label>
+                                    </IngredientItem>
+                                    <IngredientItem className="noImg">
+                                        <InputRadio {...register("toasting", { required: true })} type="radio" id={"no_toasting"} value="토스팅 X" />
+                                        <label htmlFor={"no_toasting"}>토스팅 안 함</label>
+                                    </IngredientItem>
+                                </ul>
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 5) 치즈 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormTitle>치즈<span>*</span></FormTitle>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <ul>
+                                    {data.freshInfo.filter(i => i.category === "치즈").map(cheese => (
+                                        <IngredientItem key={cheese.id}>
+                                            <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_${cheese.id}`} value={cheese.title} />
+                                            <label htmlFor={`cheese_${cheese.id}`}>
+                                                <IngredientImg src={`${process.env.PUBLIC_URL}/${cheese.img}`} alt={`img_${cheese.eng_title}`} />
+                                                {cheese.title}
+                                            </label>
+                                        </IngredientItem>
+                                    ))}
+                                    <IngredientItem>
+                                        <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_notSelected`} value="치즈 X" />
+                                        <label htmlFor={`cheese_notSelected`}>
+                                            <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                                                <rect fill="none" height="256" width="256"/>
+                                                <path d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm37.7,130.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L128,139.3l-26.3,26.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L116.7,128,90.3,101.7a8.1,8.1,0,0,1,11.4-11.4L128,116.7l26.3-26.4a8.1,8.1,0,0,1,11.4,11.4L139.3,128Z"/>
+                                            </NotSelectedImg>
+                                            치즈 제외
                                         </label>
                                     </IngredientItem>
-                                ))}
-                            </ul>
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 4) 토스팅 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormTitle>빵/미트 토스팅 선택<span>*</span></FormTitle>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <ul>
-                                <IngredientItem className="noImg">
-                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"toasting"} value="토스팅 O" />
-                                    <label htmlFor={"toasting"}>토스팅</label>
-                                </IngredientItem>
-                                <IngredientItem className="noImg">
-                                    <InputRadio {...register("toasting", { required: true })} type="radio" id={"no_toasting"} value="토스팅 X" />
-                                    <label htmlFor={"no_toasting"}>토스팅 안 함</label>
-                                </IngredientItem>
-                            </ul>
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 5) 치즈 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormTitle>치즈<span>*</span></FormTitle>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <ul>
-                                {data.freshInfo.filter(i => i.category === "치즈").map(cheese => (
-                                    <IngredientItem key={cheese.id}>
-                                        <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_${cheese.id}`} value={cheese.title} />
-                                        <label htmlFor={`cheese_${cheese.id}`}>
-                                            <IngredientImg src={`${process.env.PUBLIC_URL}/${cheese.img}`} alt={`img_${cheese.eng_title}`} />
-                                            {cheese.title}
+                                </ul>
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 6) 추가 토핑 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormTitle>추가 토핑<span>*</span></FormTitle>
+                                <CheckMaximum>(최대 7개 선택)</CheckMaximum>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <ul>
+                                    {data.topping.map(topping => (
+                                        <IngredientItem key={topping.id}>
+                                            <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_${topping.id}`} value={topping.title} />
+                                            <label htmlFor={`topping_${topping.id}`}>
+                                                <IngredientImg src={`${process.env.PUBLIC_URL}/${topping.img}`} alt={`img_${topping.eng_title}`} />
+                                                {topping.title}
+                                            </label>
+                                        </IngredientItem>
+                                    ))}
+                                    <IngredientItem>
+                                        <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_notSelected`} value=""/>
+                                        <label htmlFor={`topping_notSelected`}>
+                                            <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                                                <rect fill="none" height="256" width="256"/>
+                                                <path d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm37.7,130.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L128,139.3l-26.3,26.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L116.7,128,90.3,101.7a8.1,8.1,0,0,1,11.4-11.4L128,116.7l26.3-26.4a8.1,8.1,0,0,1,11.4,11.4L139.3,128Z"/>
+                                            </NotSelectedImg>
+                                            선택 안함
                                         </label>
                                     </IngredientItem>
-                                ))}
-                                <IngredientItem>
-                                    <InputRadio {...register("cheese", { required: true })} type="radio" id={`cheese_notSelected`} value="치즈 X" />
-                                    <label htmlFor={`cheese_notSelected`}>
-                                        <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-                                            <rect fill="none" height="256" width="256"/>
-                                            <path d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm37.7,130.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L128,139.3l-26.3,26.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L116.7,128,90.3,101.7a8.1,8.1,0,0,1,11.4-11.4L128,116.7l26.3-26.4a8.1,8.1,0,0,1,11.4,11.4L139.3,128Z"/>
-                                        </NotSelectedImg>
-                                        치즈 제외
-                                    </label>
-                                </IngredientItem>
-                            </ul>
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 6) 추가 토핑 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormTitle>추가 토핑<span>*</span></FormTitle>
-                            <CheckMaximum>(최대 7개 선택)</CheckMaximum>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <ul>
-                                {data.topping.map(topping => (
-                                    <IngredientItem key={topping.id}>
-                                        <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_${topping.id}`} value={topping.title} />
-                                        <label htmlFor={`topping_${topping.id}`}>
-                                            <IngredientImg src={`${process.env.PUBLIC_URL}/${topping.img}`} alt={`img_${topping.eng_title}`} />
-                                            {topping.title}
-                                        </label>
-                                    </IngredientItem>
-                                ))}
-                                <IngredientItem>
-                                    <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_notSelected`} value=""/>
-                                    <label htmlFor={`topping_notSelected`}>
-                                        <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-                                            <rect fill="none" height="256" width="256"/>
-                                            <path d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm37.7,130.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L128,139.3l-26.3,26.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L116.7,128,90.3,101.7a8.1,8.1,0,0,1,11.4-11.4L128,116.7l26.3-26.4a8.1,8.1,0,0,1,11.4,11.4L139.3,128Z"/>
-                                        </NotSelectedImg>
-                                        선택 안함
-                                    </label>
-                                </IngredientItem>
-                            </ul>
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 7) 야채 - 다중 선택 */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormTitle>야채<span>*</span></FormTitle>
-                            <CheckMaximum>(최대 8개 선택)</CheckMaximum>
-                        </FormTitleWrap>
-                        <FormContent>                        
-                            <ul>
-                                {data.freshInfo.filter(i => i.category === "야채" && i.title !== "아보카도").map(vege => (
-                                    <IngredientItem key={vege.id}>
-                                        <InputCheckbox {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} value={vege.title} />
-                                        <label htmlFor={`vege_${vege.id}`}>
-                                            <IngredientImg src={`${process.env.PUBLIC_URL}/${vege.img}`} alt={`img_${vege.eng_title}`} />
-                                            {vege.title}
-                                        </label>
-                                    </IngredientItem>
-                                ))}
-                            </ul>
-                        </FormContent>
-                    </FormStepWrap>
-                    {/* 8) 소스 - 다중 선택(최대 3개) */}
-                    <FormStepWrap>
-                        <FormTitleWrap>
-                            <FormTitle>소스<span>*</span></FormTitle>
-                            <CheckMaximum>(최대 3개 선택)</CheckMaximum>
-                        </FormTitleWrap>
-                        <FormContent>
-                            <ul>
-                                {data.freshInfo.filter(i => i.category === "소스").map(sauce => (
-                                    <IngredientItem key={sauce.id}>
-                                        <InputCheckbox {...register("sauce", { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title} onChange={countCheckBox} />
-                                        <label htmlFor={`sauce_${sauce.id}`}>
-                                            <IngredientImg src={`${process.env.PUBLIC_URL}/${sauce.img}`} alt={`img_${sauce.eng_title}`} />
-                                            {sauce.title}
-                                        </label>
-                                    </IngredientItem>
-                                ))}
-                            </ul>
-                        </FormContent>
-                    </FormStepWrap>
-                    <div>
-                        <SubmitBtn type="submit" disabled={isSubmitting}>등록하기</SubmitBtn>
-                    </div>
-                </MyRecipeForm>
+                                </ul>
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 7) 야채 - 다중 선택 */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormTitle>야채<span>*</span></FormTitle>
+                                <CheckMaximum>(최대 8개 선택)</CheckMaximum>
+                            </FormTitleWrap>
+                            <FormContent>                        
+                                <ul>
+                                    {data.freshInfo.filter(i => i.category === "야채" && i.title !== "아보카도").map(vege => (
+                                        <IngredientItem key={vege.id}>
+                                            <InputCheckbox {...register("vegetable", { required: true })} type="checkbox" id={`vege_${vege.id}`} value={vege.title} />
+                                            <label htmlFor={`vege_${vege.id}`}>
+                                                <IngredientImg src={`${process.env.PUBLIC_URL}/${vege.img}`} alt={`img_${vege.eng_title}`} />
+                                                {vege.title}
+                                            </label>
+                                        </IngredientItem>
+                                    ))}
+                                </ul>
+                            </FormContent>
+                        </FormStepWrap>
+                        {/* 8) 소스 - 다중 선택(최대 3개) */}
+                        <FormStepWrap>
+                            <FormTitleWrap>
+                                <FormTitle>소스<span>*</span></FormTitle>
+                                <CheckMaximum>(최대 3개 선택)</CheckMaximum>
+                            </FormTitleWrap>
+                            <FormContent>
+                                <ul>
+                                    {data.freshInfo.filter(i => i.category === "소스").map(sauce => (
+                                        <IngredientItem key={sauce.id}>
+                                            <InputCheckbox {...register("sauce", { required: true })} type="checkbox" id={`sauce_${sauce.id}`} value={sauce.title} onChange={countCheckBox} />
+                                            <label htmlFor={`sauce_${sauce.id}`}>
+                                                <IngredientImg src={`${process.env.PUBLIC_URL}/${sauce.img}`} alt={`img_${sauce.eng_title}`} />
+                                                {sauce.title}
+                                            </label>
+                                        </IngredientItem>
+                                    ))}
+                                </ul>
+                            </FormContent>
+                        </FormStepWrap>
+                        <div style={{margin: "15px auto"}}>
+                            <SubmitBtn type="submit" disabled={isSubmitting}>등록하기</SubmitBtn>
+                        </div>
+                    </MyRecipeForm>
+                </div>
             </MyRecipeFormWrap>
         </div>
     )

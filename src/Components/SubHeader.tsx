@@ -61,7 +61,7 @@ const SubHeaderWrap = styled.div`
     margin: 0 auto;
     height: 60px;
     max-width: 1160px;
-    min-width: 680px;
+    min-width: 650px;
     padding: 0 10px;
     > ul {
         overflow: hidden;

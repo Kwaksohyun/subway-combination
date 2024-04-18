@@ -79,10 +79,19 @@ const ProductListWrap = styled.div`
     width: 1170px;
     margin: 0 auto;
     padding-bottom: 120px;
+    // 화면 1024px 이하
+    @media (max-width: 1024px) {
+        width: 800px;
+    }
     ul {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 30px;
+        overflow: hidden;
+        // 화면 1024px 이하
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 `;
 

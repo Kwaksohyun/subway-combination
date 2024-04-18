@@ -3,9 +3,11 @@ import data from "../data.json";
 import { AnimatePresence } from "framer-motion";
 import ProductItem from "../Components/MenuComponent/ProductItem";
 import { useState } from "react";
-import Footer from "../Components/Footer";
+import SubHeader from "../Components/SubHeader";
+import { useMatch } from "react-router-dom";
 
 const MenuListWrap = styled.div`
+    min-width: 800px;
     background-color: #f2f2f2;
     padding-top: 170px;
 `;
@@ -17,6 +19,7 @@ const VisualWrap = styled.div`
     color: #fff;
     text-align: center;
     position: relative;
+    overflow: hidden;
     > h2 {
         font-weight: 800;
         font-size: 65px;
@@ -100,14 +103,27 @@ const ProductListWrap = styled.div`
     width: 1170px;
     margin: 0 auto;
     padding-bottom: 120px;
+    // 화면 1024px 이하
+    @media (max-width: 1024px) {
+        width: 800px;
+    }
     ul {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 30px;
+        overflow: hidden;
+        // 화면 1024px 이하
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 `;
 
 function FreshIngredients() {
+    const subMenuInfo = [
+        { index: 0, menuName: "써브웨이 이용방법", menuPath: "/utilizationSubway", menuMatch: useMatch("/utilizationSubway") },
+        { index: 1, menuName: "신선한 재료 소개", menuPath: "/freshInfo", menuMatch: useMatch("/freshInfo") }
+    ];
     const freshInfoTab = [
         { index: 0, name: "All", dataList: data.freshInfo },
         { index: 1, name: "빵", dataList: data.freshInfo.filter(i => i.category === "빵") },
@@ -122,6 +138,9 @@ function FreshIngredients() {
     }
     return (
         <>
+            {/* 이용방법 페이지 내부 탐색 메뉴 */}
+            <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={true} />
+
             <MenuListWrap>
                 {/* 상품 visual */}
                 <VisualWrap>
@@ -153,7 +172,6 @@ function FreshIngredients() {
                     </ul>
                 </ProductListWrap>
             </MenuListWrap>
-            <Footer />
         </>
     );
 }

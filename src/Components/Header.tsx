@@ -6,17 +6,15 @@ import styled from "styled-components";
 const HeaderContainer = styled.header`
     background-color: #fff;
     width: 100%;
-    height: 170px;
+    min-width: 800px;
+    height: 171px;
     overflow: hidden;
     position: absolute;     // body를 기준으로 위치
     z-index: 20;
     transition: all 0.3s ease;
     > div {
-        min-width: 750px;
+        max-width: 775px;
         margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }
     &::after {
         content: '';
@@ -55,12 +53,8 @@ const NavLink = styled(Link)`
 const Nav = styled.nav`
     width: 100%;
     text-align: center;
-    position: absolute;
-    top: 102px;
     > ul {
         display: flex;
-        width: 775px;
-        margin: 0 auto;
     }
     > ul > li {
         display: flex;
@@ -94,6 +88,11 @@ const Dropdown = styled(motion.div)`
     }   
     > ul > li {
         padding: 15px 0;
+    }
+    > ul > li > a:hover,
+    > ul > li > a:focus {
+        color: ${(props) => props.theme.green.lighter};
+        transition-duration: 0.2s;
     }
 `;
 

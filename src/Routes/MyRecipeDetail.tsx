@@ -65,11 +65,19 @@ const RecipeInfoWrap = styled.div`
     display: flex;
     justify-content: center;
     margin: 70px 0 80px 0;
+    // 화면 800px 이하
+    @media (max-width: 900px) {
+        flex-wrap: wrap;
+        margin-top: 0;
+    }
 `;
 
 const RecipeImg = styled.img`
-    width: 530px;
-    height: 360px;
+    max-width: 100%;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 `;
 
 const RecipeDetailWrap = styled.ul`

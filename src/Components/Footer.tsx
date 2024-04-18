@@ -4,6 +4,7 @@ import styled from "styled-components";
 const FooterContainer = styled.footer`
     background-color: #292929;
     color: #ffffff95;
+    min-width: 800px;
     > div {
         max-width: 1200px;
         padding: 40px 0;
@@ -11,7 +12,7 @@ const FooterContainer = styled.footer`
         display: flex;
         justify-content: center;
     }
-    // 화면 최대 767px
+    // 화면 최대 768px
     @media (max-width: 768px) {
         text-align: center;
         > div {

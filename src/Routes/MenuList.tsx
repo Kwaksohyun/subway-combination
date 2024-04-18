@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SubHeader from "../Components/SubHeader";
 
 const Container = styled.div`
+    min-width: 800px;
     position: relative;
     padding-top: 170px;
 `;
