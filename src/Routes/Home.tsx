@@ -1,11 +1,11 @@
-import Footer from "../Components/Footer";
+import MyRecipeBanner from "../Components/HomeComponent/MyRecipeBanner";
 import SubwayMenu from "../Components/HomeComponent/SubwayMenu";
 
 function Home() {
     return (
         <>
             <SubwayMenu />
-            <Footer />
+            <MyRecipeBanner />
         </>
     );
 }
