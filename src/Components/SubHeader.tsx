@@ -137,13 +137,15 @@ interface IsubMenuProps {
 function SubHeader(props:IsubMenuProps) {
     // sub-header를 fixed할지 말지 정하는 setter
     const [fixedNav, setFixedNav] = useState(false);
-    
+
+    // TOP 버튼 누르면 상단으로 이동
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         })
     }
+    // 스크롤했을 때 특정 위치에서 상단 고정
     useEffect(() => {
         const handleFixedNav = () => {
             if(window.scrollY > 159) {
@@ -154,11 +156,11 @@ function SubHeader(props:IsubMenuProps) {
         }
         // window에서 scroll 감지
         window.addEventListener("scroll", handleFixedNav);
-        // window에서 scroll 감지 clean up -> 이벤트리스너를 삭제해 줘야 scroll 시, 여러 번 렌더되지 않는다.
+        // 이벤트 제거 -> 이벤트리스너를 삭제해주지 않으면 계속해서 scroll 이벤트를 감지하여 성능 저하를 일으킬 수 있다.
         return () => {
-            window.removeEventListener("scroll", handleFixedNav)
+            window.removeEventListener("scroll", handleFixedNav);
         };
-    });
+    }, []);
     return (
         <SubHeaderContainer className={fixedNav ? "fixed" : ""} $isBackImg={props.isBackgroundImg}>
             <SubHeaderWrap>

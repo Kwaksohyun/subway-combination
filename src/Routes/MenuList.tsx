@@ -18,6 +18,7 @@ function MenuList() {
             {/* 메뉴소개 페이지 내부 탐색 메뉴 */}
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={true} />
 
+            {/* "샌드위치" or "랩ㆍ기타" 컴포넌트*/}
             <Outlet />
         </Container>
     );

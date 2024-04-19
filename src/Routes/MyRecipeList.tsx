@@ -192,7 +192,7 @@ function MyRecipeList() {
     return (
         <div style={{paddingTop: "170px", minWidth: "800px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
-
+            {/* 나만의 꿀조합 레시피 헤더 */}
             <PageHeaderContainer>
                 <PageHeader>
                     <PageHeaderTitle>나만의 꿀조합 레시피</PageHeaderTitle>
@@ -213,7 +213,7 @@ function MyRecipeList() {
                     </ShareButton>
                 </MakeMyRecipeBox>
             
-                {/* 꿀조합 레시피 목록 */}
+                {/* 나만의 꿀조합 레시피 목록 */}
                 <RecipeListWrap>
                     <div>
                         <ul>

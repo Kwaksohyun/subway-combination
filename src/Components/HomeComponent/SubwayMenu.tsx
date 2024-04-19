@@ -143,19 +143,21 @@ const Slide = {
 
 function SubwayMenu() {
     const allCategoryArr = data?.sandwichList.map(i => i.category);
-    const categoryArr = allCategoryArr.filter((i, idx) => allCategoryArr.indexOf(i) === idx); 
     // categoryArr : ['클래식', '프레쉬&라이트', '프리미엄']
+    const categoryArr = allCategoryArr.filter((i, idx) => allCategoryArr.indexOf(i) === idx); 
 
     // 선택된 탭의 인덱스
     const [activeTab, setActiveTab] = useState(0);
-    // 메뉴 페이지당 보여주는 메뉴 수
+    // 카테고리 페이지당 보여주는 메뉴 수
     const [offset, setOffset] = useState(4);
-    // 메뉴 페이지 인덱스
+    // 카테고리 페이지 인덱스
     const [pageIndex, setPageIndex] = useState(0);
     // back 상태 -> prev, next 방향 알기 위해
     const [back, setBack] = useState(false);
     const maxIndex = Math.ceil(data.sandwichList.filter(i => i.category === categoryArr[activeTab]).length / offset) - 1;
+    
     const handleResize = () => {
+        // 현재 브라우저 가로 길이에 따라 페이지당 보여주는 메뉴 수 변경
         if(window.innerWidth <= 960) {
             setOffset(3);
         } else {
@@ -192,7 +194,7 @@ function SubwayMenu() {
                     </TabList>
                 </Tabs>
             </SubwayMenuHeader>
-
+            {/* 메뉴 슬라이드 */}           
             <MenuSlideContainer>
                 <MenuSlideWrap>
                     <AnimatePresence custom={back} mode="wait">
@@ -213,6 +215,7 @@ function SubwayMenu() {
                         </MenuListWrap>
                     </AnimatePresence>
                 </MenuSlideWrap>
+                {/* 메뉴 슬라이드 버튼 */}   
                 <SlideDirectionBtnWrap>
                     <PrevBtn onClick={() => movePrevSlide()} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
                         <path d="M192 448c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l137.4 137.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448z"/>

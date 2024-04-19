@@ -231,7 +231,7 @@ function RegisterMyRecipe() {
     const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
     const navigate = useNavigate();
 
-    // 체크박스 checked 개수 제한 함수
+    // "소스" 체크박스 checked 개수 제한 함수
     const countCheckBox = (event:React.ChangeEvent<HTMLInputElement>) => {
         const checkedTarget = event?.currentTarget.getAttribute("id");    // 현재 선택한 태그의 id
         // 1) 체크박스 checked 여부 확인
@@ -252,31 +252,30 @@ function RegisterMyRecipe() {
         }
     };
     const onSubmit = async (data:IForm) => {
-        // 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
+        // 1. 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
         await new Promise((r) => setTimeout(r, 1000));
         alert("나만의 꿀조합 레시피 등록이 완료되었습니다.");
-
+        // form 작성 날짜 = 오늘의 날짜
         const today = new Date();
         const year = today.getFullYear();
         const month = ("0"+ (today.getMonth()+1)).slice(-2);
         const day =("0" + today.getDate()).slice(-2);
 
-        // 제출된 폼의 내용을 모두 담은 객체 생성
+        // 2. 제출된 폼의 내용을 모두 담은 객체 생성
         const newRecipe = {
             id: Date.now(),
             date: `${year}-${month}-${day}`,
             ...data
         };
-
+        // 3. 새로운 레시피 추가
         setRecipeLists((allRecipes) => {
             const allRecipesCopy = [...allRecipes];
             allRecipesCopy.push(newRecipe);
-            console.log(allRecipesCopy);
             return allRecipesCopy;
         });
-        // 제출 후 form 전체 state 초기화
+        // 4. 제출 후 form 적은 값 화면에서 없애기
         reset();
-        // 꿀조합 레시피 리스트 페이지로 이동
+        // 5. 꿀조합 레시피 리스트 페이지로 이동
         navigate("/myRecipeList");
     };
     console.log(useMatch("/myRecipeList/*"));
@@ -378,7 +377,7 @@ function RegisterMyRecipe() {
                                 </ul>
                             </FormContent>
                         </FormStepWrap>
-                        {/* 6) 추가 토핑 */}
+                        {/* 6) 추가 토핑 - 다중 선택 */}
                         <FormStepWrap>
                             <FormTitleWrap>
                                 <FormTitle>추가 토핑<span>*</span></FormTitle>
@@ -448,6 +447,7 @@ function RegisterMyRecipe() {
                                 </ul>
                             </FormContent>
                         </FormStepWrap>
+                        {/* form 제출 버튼 */}
                         <div style={{margin: "15px auto"}}>
                             <SubmitBtn type="submit" disabled={isSubmitting}>등록하기</SubmitBtn>
                         </div>
