@@ -10,6 +10,7 @@ import Footer from './Components/Footer';
 import RegisterMyRecipe from './Routes/RegisterMyRecipe';
 import MyRecipeDetail from './Routes/MyRecipeDetail';
 import MenuItemDetail from './Routes/MenuItemDetail';
+import UtilizationSubway from './Routes/UtilizationSubway';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='unit' element={<Wrap />}/>
         </Route>
         <Route path='/menuView/:menuCategory?' element={<MenuItemDetail/> } />
+        <Route path='/utilizationSubway' element={<UtilizationSubway />} />
         <Route path='/freshInfo' element={<FreshIngredients/>} />
         <Route path='/myRecipeList' element={<MyRecipeList/>} />
         <Route path='/myRecipeView/recipe?' element={<MyRecipeDetail/>} />
