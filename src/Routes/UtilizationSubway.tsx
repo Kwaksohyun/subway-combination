@@ -53,6 +53,7 @@ const SingleStepItem = styled.li<{$isActive:boolean}>`
     background-color: ${(props) => props.$isActive ? props.theme.green.lighter : "#dddddd"};
     color: ${(props) => props.$isActive ? "#fff" : "#bbbbbb"};
     position: relative;
+    transition: all 0.2s;   // property-name | duration
     &:not(:last-child) {
         margin-right: 70px;
     }
@@ -63,6 +64,7 @@ const SingleStepItem = styled.li<{$isActive:boolean}>`
         background-color: ${(props) => props.$isActive ? props.theme.green.lighter : "#dddddd"};
         position: absolute;
         right: 70px;
+        transition: all 0.2s;   // property-name | duration
     }
     > strong {
         font-size: 26px;
@@ -71,16 +73,45 @@ const SingleStepItem = styled.li<{$isActive:boolean}>`
 `;
 
 const ImgContent = styled.div`
+    height: 420px;
+    margin-top: 55px;
     > ol {
+        height: 420px;
         display: flex;
+        position: relative;
+        overflow: hidden;
+    }
+`;
+
+const StepImgItem = styled.li`
+    width: 1170px;
+    position: absolute;
+    opacity: 0;
+    // 이전 STEP 이미지
+    &.prev {
+        opacity: 1;
+        left: -35%;
+        transition: 0.6s;
+    }
+    // 현재 STEP 이미지
+    &.active {
+        opacity: 1;
+        left: 11%;
+        transition: 0.6s;
+    }
+    // 다음 sTEP 이미지
+    &.active + li {
+        opacity: 1;
+        left: 82%;
+        transition: 0.6s;
     }
 `;
 
 const StepInfoContent = styled.div`
     position: absolute;
-    left: 50%;
+    left: 52%;
     top: 170px;
-    margin-left: 100px;
+    margin-left: 150px;
     > ol {
         width: 400px;
         height: 415px;
@@ -91,22 +122,12 @@ const StepInfoContent = styled.div`
     }
 `;
 
-const StepInfoItem = styled.li`
-    display: flex;
-    flex-direction: column;
-    height: 335px;
+const LeftIcon = styled.svg`
+    width: 30px;
+    height: 30px;
     position: absolute;
     top: 40px;
-    opacity: 0;
-    &.active {
-        opacity: 1;
-    }
-`;
-
-const StepNum = styled.strong`
-    color: ${(props) => props.theme.green.lighter};
-    font-size: 18px;
-    font-weight: 800;
+    left: -24px;
 `;
 
 const StepTitle = styled.strong`
@@ -158,13 +179,36 @@ const MagnifierIcon = styled.svg`
     margin-left: 5px;
 `;
 
+const StepInfoItem = styled.li`
+    display: flex;
+    flex-direction: column;
+    height: 335px;
+    position: absolute;
+    top: 40px;
+    opacity: 0;
+    &.active {
+        opacity: 1;
+        ${StepTitle}, ${Description} {
+            transform: translateY(-40px);
+            transition: all 0.6s;
+        }
+    }
+`;
+
+const StepNum = styled.strong`
+    color: ${(props) => props.theme.green.lighter};
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 40px;
+`;
+
 const UtilizationSlideControlBtnWrap = styled.div`
     svg {
         width: 40px;
         height: 40px;
         border-radius: 100%;
         position: absolute;
-        top: 320px;
+        top: 350px;
         padding: 5px;
         overflow: hidden;
         fill: ${(props) => props.theme.grey.darker};
@@ -189,6 +233,7 @@ function UtilizationSubway() {
         { index: 0, menuName: "써브웨이 이용방법", menuPath: "/utilizationSubway", menuMatch: useMatch("/utilizationSubway") },
         { index: 1, menuName: "신선한 재료 소개", menuPath: "/freshInfo", menuMatch: useMatch("/freshInfo") }
     ];
+    // 현재 STEP 번호
     const [stepNum, setStepNum] = useState(1);
     const movePrevSlide = () => {
         setStepNum((prev) => prev > 1 ? prev - 1 : 1);
@@ -196,7 +241,6 @@ function UtilizationSubway() {
     const moveNextSlide = () => {
         setStepNum((prev) => prev===5 ? 5 : prev + 1);
     };
-    console.log(stepNum);
     return (
         <div style={{paddingTop: "170px", minWidth: "800px"}}>
             {/* 이용방법 페이지 내부 탐색 메뉴 */}
@@ -227,9 +271,9 @@ function UtilizationSubway() {
                         <ImgContent>
                             <ol>
                                 {data.utilization.map(step => (
-                                    <li key={`stepImg_${step.id}`}>
+                                    <StepImgItem className={parseInt(step.stepNum.slice(-1)) === stepNum ? "active" : (parseInt(step.stepNum.slice(-1)) === stepNum-1) ? "prev" : ""} key={`stepImg_${step.id}`}>
                                         <img src={`${process.env.PUBLIC_URL}/${step.img}`} alt={step.stepTitle} />
-                                    </li>
+                                    </StepImgItem>
                                 ))}
                             </ol>
                         </ImgContent>
@@ -254,6 +298,9 @@ function UtilizationSubway() {
                                     </StepInfoItem>
                                 ))}
                             </ol>
+                            <LeftIcon enableBackground="new 0 0 32 32" id="Layer_4" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="6,16 26,3 26,29   " fill="#fff" stroke="#dddddd" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="1"/>
+                            </LeftIcon>
                         </StepInfoContent>
                         {/* 이용 방법 슬라이드 버튼 */}
                         <UtilizationSlideControlBtnWrap>
