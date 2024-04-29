@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link, useMatch } from "react-router-dom";
 import SubHeader from "../Components/SubHeader";
 import data from "../data.json";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 const PageHeaderContainer = styled.article`
     align-items: center;
@@ -284,7 +284,7 @@ function UtilizationSubway() {
                                     <StepInfoItem className={parseInt(step.stepNum.slice(-1)) === stepNum ? "active" : ""} key={`stepInfo_${step.id}`}>
                                         <StepNum>{step.stepNum}</StepNum>
                                         <StepTitle>{step.stepTitle}</StepTitle>
-                                        <Description>{step.description.split(" \n ").map(i => <>{i}<br /></>)}</Description>
+                                        <Description>{step.description.split(" \n ").map((i, index) => <Fragment key={index}>{i}<br /></Fragment>)}</Description>
                                         <ShowMoreBtnWrap>
                                             {step.showMoreBtn.map(btn => (
                                                 <Link key={btn.btnId} to={btn.url}>

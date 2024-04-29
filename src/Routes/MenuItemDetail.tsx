@@ -3,6 +3,7 @@ import styled from "styled-components";
 import data from "../data.json";
 import ListViewButton from "../Components/ListViewButton";
 import SubHeader from "../Components/SubHeader";
+import { Fragment } from "react";
 
 const ProductInfoWrap = styled.div`
     padding-top: 140px;
@@ -76,7 +77,7 @@ function MenuItemDetail() {
                     <Calorie>{productData?.calorie}</Calorie>
                 </TextRowWrap>
                 <Img src={`${process.env.PUBLIC_URL}/${productData?.img}`} alt={`img_${productData?.eng_title}`} />
-                <Summary>{productData?.summary.split(' \n ').map(i => <>{i}<br/></>)}</Summary>
+                <Summary>{productData?.summary.split(' \n ').map((i, index) => <Fragment key={index}>{i}<br/></Fragment>)}</Summary>
             </ProductInfoWrap>
 
             <ListViewButton linkPath={`/menuList/${menuCategory}`} />

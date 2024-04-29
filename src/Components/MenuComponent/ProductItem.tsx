@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -135,7 +136,7 @@ function ProductInfo({isMenu, activeTab, img, title, engTitle, calorie, summary}
             {(calorie.length > 0) && <Calorie>{calorie}</Calorie>}
             {(summary.length > 0) && (
                 <Summary>
-                    <p>{summary.split(' \n ').map(i => <>{i}<br/></>)}</p>
+                    <p>{summary.split(' \n ').map((i, index) => <Fragment key={index}>{i}<br/></Fragment>)}</p>
                 </Summary>
             )}
             {(isMenu && (activeTab!=="추가 선택")) && (

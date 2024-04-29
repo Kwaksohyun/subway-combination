@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import data from "../../data.json";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const SubwayMenuContainer = styled.div`
@@ -83,15 +83,16 @@ const MenuItemInfo = styled.div`
     flex-direction: column;
     align-items: center;
     width: 250px;
-    strong {
-        font-size: 18px;
-        font-weight: 700;
-    }
 `;
 
 const SandwichImg = styled.img`
     width: 280px;
     height: 200px;
+`;
+
+const SandwichTitle = styled.strong`
+    font-size: 18px;
+    font-weight: 700;
 `;
 
 const Summary = styled.p`
@@ -189,7 +190,7 @@ function SubwayMenu() {
                 <Tabs>
                     <TabList>
                         {categoryArr.map((category:string, index:number) => (
-                            <TabItem onClick={() => showActiveTabMenu(index)} className={activeTab===index ? "active" : ""} key={index}>{category}</TabItem>
+                            <TabItem onClick={() => showActiveTabMenu(index)} className={activeTab===index ? "active" : ""} key={category}>{category}</TabItem>
                         ))}
                     </TabList>
                 </Tabs>
@@ -205,9 +206,9 @@ function SubwayMenu() {
                                 <motion.li key={item.id} custom={back} variants={Slide} initial="invisible" animate="visible" exit="exit" transition={{type: "tween"}}>
                                     <Link to={`/menuView/sandwich?menuItemIdx=${item.id}`} state={{ productId: `${item.id}` }}>
                                         <MenuItemInfo>
-                                            <SandwichImg alt={item["eng_title"]+"_img"} src={`${process.env.PUBLIC_URL}/${item.img}`} />
-                                            <strong>{item.title}</strong>
-                                            <Summary>{item.summary.split(' \n ').map(i => <>{i}<br/></>)}</Summary>
+                                            <SandwichImg alt={item["eng_title"]} src={`${process.env.PUBLIC_URL}/${item.img}`} />
+                                            <SandwichTitle>{item.title}</SandwichTitle>
+                                            <Summary>{item.summary.split(' \n ').map((i, index) => <Fragment key={index}>{i}<br/></Fragment>)}</Summary>
                                         </MenuItemInfo>
                                     </Link>
                                 </motion.li>
