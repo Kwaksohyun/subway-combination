@@ -24,12 +24,12 @@ const PageHeaderTitle = styled.h2`
 
 const UtilizationContentWrap = styled.div`
     background-color: #f6f6f6;
+    position: relative;
 `;
 
 const UtilizationSlideWrap = styled.div`
     height: 695px;
     padding-top: 50px;
-    position: relative;
 `;
 
 const StepProgressContent = styled.div`
@@ -84,7 +84,7 @@ const ImgContent = styled.div`
 `;
 
 const StepImgItem = styled.li`
-    width: 1170px;
+    width: 700px;
     position: absolute;
     opacity: 0;
     // 이전 STEP 이미지
@@ -105,13 +105,31 @@ const StepImgItem = styled.li`
         left: 82%;
         transition: 0.6s;
     }
+    // 화면 1024px 이하
+    @media (max-width: 1024px) {
+        & > img {
+            width: 78%;
+        }
+        // 이전 STEP 이미지
+        &.prev {
+            left: -45%;
+        }
+        // 현재 STEP 이미지
+        &.active {
+            left: 0%;
+        }
+    }
 `;
 
 const StepInfoContent = styled.div`
     position: absolute;
-    left: 52%;
+    left: 62%;
     top: 170px;
-    margin-left: 150px;
+    overflow: hidden;
+    // 화면 1024px 이하
+    @media (max-width: 1024px) {
+        left: 50%;
+    }
     > ol {
         width: 400px;
         height: 415px;
@@ -202,7 +220,7 @@ const StepNum = styled.strong`
     margin-bottom: 40px;
 `;
 
-const UtilizationSlideControlBtnWrap = styled.div`
+const SlideControlBtnWrap = styled.div`
     svg {
         width: 40px;
         height: 40px;
@@ -252,7 +270,6 @@ function UtilizationSubway() {
                         <PageHeaderTitle>써브웨이 이용방법</PageHeaderTitle>
                     </PageHeader>
                 </PageHeaderContainer>
-
                 {/* 이용 방법 내용 */}
                 <UtilizationContentWrap>
                     <UtilizationSlideWrap>
@@ -302,16 +319,16 @@ function UtilizationSubway() {
                                 <polygon points="6,16 26,3 26,29   " fill="#fff" stroke="#dddddd" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="1"/>
                             </LeftIcon>
                         </StepInfoContent>
-                        {/* 이용 방법 슬라이드 버튼 */}
-                        <UtilizationSlideControlBtnWrap>
-                            <PrevBtn onClick={() => movePrevSlide()} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M192 448c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l137.4 137.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448z"/>
-                            </PrevBtn>
-                            <NextBtn onClick={() => moveNextSlide()} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/>
-                            </NextBtn>
-                        </UtilizationSlideControlBtnWrap>
                     </UtilizationSlideWrap>
+                    {/* 이용 방법 슬라이드 버튼 */}
+                    <SlideControlBtnWrap>
+                        <PrevBtn onClick={() => movePrevSlide()} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M192 448c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L77.25 256l137.4 137.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448z"/>
+                        </PrevBtn>
+                        <NextBtn onClick={() => moveNextSlide()} viewBox="0 0 256 512" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/>
+                        </NextBtn>
+                    </SlideControlBtnWrap>
                 </UtilizationContentWrap>
             </div>
         </div>
