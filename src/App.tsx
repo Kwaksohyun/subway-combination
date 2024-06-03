@@ -11,6 +11,7 @@ import RegisterMyRecipe from './Routes/RegisterMyRecipe';
 import MyRecipeDetail from './Routes/MyRecipeDetail';
 import MenuItemDetail from './Routes/MenuItemDetail';
 import UtilizationSubway from './Routes/UtilizationSubway';
+import Join from './Routes/Join';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/join' element={<Join />} />
         <Route path='/menuList' element={<MenuList />}>
           <Route path='sandwich' element={<Sandwich />}/>
           <Route path='unit' element={<Wrap />}/>
