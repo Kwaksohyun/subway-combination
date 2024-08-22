@@ -12,10 +12,6 @@ const HeaderContainer = styled.header`
     position: absolute;     // body를 기준으로 위치
     z-index: 20;
     transition: all 0.3s ease;
-    > div {
-        max-width: 775px;
-        margin: 0 auto;
-    }
     &::after {
         content: '';
         position: absolute;
@@ -32,6 +28,12 @@ const HeaderContainer = styled.header`
     }
 `;
 
+const HeaderWrap = styled.div`
+    max-width: 775px;
+    margin: 0 auto;
+    position: relative;
+`;
+
 const Logo = styled.h1`
     margin: 30px auto;
     max-width: 200px;
@@ -44,13 +46,43 @@ const Logo = styled.h1`
     }
 `;
 
+const Utility = styled.div`
+    position: absolute;
+    top: 10px;
+    right: -130px;
+    > ul {
+        display: flex;
+        align-items: center;
+    }
+`;
+
+const UtilityItem = styled.li`
+    position: relative;
+    margin: 0 15px;
+    > a {
+        font-size: 13px;
+        color: #666666;
+    }
+    &:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        background-color: ${(props) => props.theme.grey.darker};
+        opacity: 0.3;
+        width: 3px;
+        height: 3px;
+        border-radius: 30px;
+        left: -16px;
+        bottom: 5px;
+    }
+`;
+
 const NavLink = styled(Link)`
     font-weight: 700;
     font-size: 18px;
     margin: 25px 0px;
 `;
 
-const Nav = styled.nav`
+const GNBWrap = styled.nav`
     width: 100%;
     text-align: center;
     > ul {
@@ -103,11 +135,17 @@ function Header() {
     };
     return (
         <HeaderContainer className={isOpen ? "open" : ""}>
-            <div>
+            <HeaderWrap>
                 <Logo>
                     <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
                 </Logo>
-                <Nav onMouseLeave={(event) => mouseEvent(event, false)}>
+                <Utility>
+                    <ul>
+                        <UtilityItem><Link to={"/login"}>로그인</Link></UtilityItem>
+                        <UtilityItem><Link to={"/join"}>회원가입</Link></UtilityItem>
+                    </ul>
+                </Utility>
+                <GNBWrap onMouseLeave={(event) => mouseEvent(event, false)}>
                     <ul>
                         <li onMouseEnter={(event) => mouseEvent(event, true)}>
                             <NavLink to={"#none"}>메뉴소개</NavLink>
@@ -148,8 +186,8 @@ function Header() {
                             <NavLink to={"/"}>온라인 주문</NavLink>
                         </li>
                     </ul>
-                </Nav>
-            </div>
+                </GNBWrap>
+            </HeaderWrap>
         </HeaderContainer>
     );
 }
