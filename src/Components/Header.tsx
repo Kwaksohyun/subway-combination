@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import supabase from "../supabaseClient";
+import { Session } from "@supabase/supabase-js";
 
 const HeaderContainer = styled.header`
     background-color: #fff;
@@ -60,7 +62,7 @@ const UtilityItem = styled.li`
     position: relative;
     margin: 0 15px;
     > a {
-        font-size: 13px;
+        font-size: 14px;
         color: #666666;
     }
     &:not(:first-child)::before {
@@ -74,6 +76,18 @@ const UtilityItem = styled.li`
         left: -16px;
         bottom: 5px;
     }
+`;
+
+const Username = styled.span`
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 10px;
+`;
+
+const Logout = styled.span`
+    font-size: 14px;
+    color: #666666;
+    cursor: pointer;
 `;
 
 const NavLink = styled(Link)`
@@ -130,9 +144,34 @@ const Dropdown = styled(motion.div)`
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState("");
+    const [session, setSession] = useState<Session|null>(null);
     const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
     };
+    // 로그아웃
+    const signOut = async() => {
+        const { error } = await supabase.auth.signOut();
+        if(error) {
+            console.log(error);
+        } else {
+            alert("로그아웃 되었습니다.");
+        }
+    }
+    // 현재 세션 정보를 상태에 저장
+    const getSession = (session:Session | null) => {
+        setSession(session);
+    }
+    // onAuthStateChange를 통해 auth 상태 감지하고 세션 업데이트
+    useEffect(() => {
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                // 로그인한 경우, username 상태 저장
+                setUser(session?.user.user_metadata.username);
+            }
+            getSession(session);
+        });
+    }, [])
     return (
         <HeaderContainer className={isOpen ? "open" : ""}>
             <HeaderWrap>
@@ -140,10 +179,22 @@ function Header() {
                     <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
                 </Logo>
                 <Utility>
-                    <ul>
-                        <UtilityItem><Link to={"/login"}>로그인</Link></UtilityItem>
-                        <UtilityItem><Link to={"/join"}>회원가입</Link></UtilityItem>
-                    </ul>
+                    {session ? (
+                        <ul>
+                            <UtilityItem>
+                                <div>
+                                    <Username>{user}</Username>
+                                    <Logout onClick={signOut}>로그아웃</Logout>
+                                </div>
+                            </UtilityItem>
+                            <UtilityItem><Link to={"/"}>내 정보</Link></UtilityItem>
+                        </ul>
+                    ) : (
+                        <ul>
+                            <UtilityItem><Link to={"/login"}>로그인</Link></UtilityItem>
+                            <UtilityItem><Link to={"/join"}>회원가입</Link></UtilityItem>
+                        </ul>
+                    )}
                 </Utility>
                 <GNBWrap onMouseLeave={(event) => mouseEvent(event, false)}>
                     <ul>
