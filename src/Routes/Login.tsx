@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import supabase from "../supabaseClient";
 
 const LoginPageWrap = styled.div`
     width: 470px;
@@ -95,16 +96,39 @@ interface ILoginInfo {
 
 function Login() {
     const { register, handleSubmit } = useForm<ILoginInfo>();
-    const onSubmit = (loginData:ILoginInfo) => {
-        console.log(loginData);
-        // 로그인 로직
-    }
+    const navigate = useNavigate();
+
+    // supabase의 인증 API를 사용한 로그인
+    const loginHandler = async (loginData:ILoginInfo) => {
+        try {
+            // 1. supabase.auth.signInWithPassword 메소드로 로그인 시도
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: loginData.email,
+                password: loginData.password,
+            });
+            
+            if(error) {
+                // 에러 발생 시, 에러 메세지 담은 경고창 띄우기
+                console.log(error.message); // Invalid login credentials
+                console.log(error.code, error.status); // undefined 400
+                alert(`로그인 실패 : ${error.message}`);
+            } else {
+                // 로그인 성공 시, 성공 메시지 띄우고 홈 화면으로 이동
+                console.log(data);
+                alert("로그인에 성공하였습니다.");
+                navigate("/");
+            }
+        } catch(error) {
+            // 예상치 못한 오류 처리
+            console.log(error);
+        }
+    };
     return (
         <div style={{paddingTop: "170px", minWidth: "800px", backgroundColor: "#f2f2f2"}}>
             <LoginPageWrap>
                 <LoginPageTitle>로그인</LoginPageTitle>
                 <LoginFormWrap>
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(loginHandler)}>
                         <FormContent>                        
                             {/* <label htmlFor="email">이메일</label> */}
                             <LoginInput {...register("email", { 
