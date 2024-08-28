@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import supabase from "../supabaseClient";
 
 const JoinPageWrap = styled.div`
     width: 470px;
@@ -84,32 +86,67 @@ interface IUserInfo {
 }
 
 function Join() {
-    const { register, watch, getValues, setError, clearErrors, handleSubmit, formState:{errors} } = useForm<IUserInfo>();
+    const { register, watch, getValues, setError, clearErrors,
+         handleSubmit, formState:{errors} } = useForm<IUserInfo>();
+    const navigate = useNavigate();
+    
     // 비밀번호 일치 여부 확인
     useEffect(() => {
         if(watch("password") !== watch("confirmPassword") && watch("confirmPassword")) {
+            // "confirmPassword" 필드의 오류 설정
             setError("confirmPassword", {
                 type: "confirmPassword",
                 message: "비밀번호가 일치하지 않습니다.",
             })
         } else {
-            // 비밀번호 일치 시, "confirmPassword" input에 입력한 값이 없을 때 오류 제거
+            // 비밀번호 일치 시, "confirmPassword" 필드에 입력한 값이 없을 때 오류 제거
             clearErrors("confirmPassword");
         } 
     }, [watch, setError, clearErrors])
-    
-    const onSubmit = (userInfoData:IUserInfo) => {
-        console.log(userInfoData);
-        // 회원가입 로직
-            // 사용자 정보 저장하고
-            // 로그인 페이지로 이동 : navigate("/login");
+
+    // supabase 회원가입
+    const signUpHandler = async (userData:IUserInfo) => {
+        try {
+            // 1. supabase.auth.signUp 메소드로 회원가입 (새로운 사용자 등록)
+            const { data, error } = await supabase.auth.signUp({
+                email: userData.email,
+                password: userData.password,
+                options: {
+                    data: {
+                        username: userData.userName,
+                    }
+                }
+            });
+            // 2. 회원가입 성공 시 user_info 데이터베이스에 사용자 정보 저장
+            const userInfoData = await supabase.from("user_info").insert({
+                id: data.user?.id,                   // 회원가입 성공 시 받아온 data 중 id(uid) 값을 가져온다.
+                created_at: data.user?.created_at,   // 사용자가 등록한 시점의 timestamp
+                username: userData.userName,
+                email: data.user?.email
+            });
+
+            if(error) {
+                // 에러 발생 시, 에러 메세지 담은 경고창 띄우기
+                alert(`회원가입 실패 : ${error.message}`);
+                console.log(userInfoData);
+            } else {
+                // 회원가입 성공 시, 성공 메시지 띄우고 로그인 페이지로 이동
+                // console.log(data);
+                alert(`회원가입이 완료되었습니다.\n로그인 페이지로 이동합니다.`);
+                navigate("/login");
+            };
+        } catch(error) {
+            // 예상치 못한 오류 처리
+            console.log(error);
+            alert("예상치 못한 문제가 발생하였습니다. 다시 시도해주세요.");
+        }
     }
     return (
         <div style={{paddingTop: "170px", minWidth: "800px", backgroundColor: "#f2f2f2"}}>
             <JoinPageWrap>
                 <JoinPageTitle>회원가입</JoinPageTitle>
                 <JoinFormWrap>
-                    <JoinForm onSubmit={handleSubmit(onSubmit)}>
+                    <JoinForm onSubmit={handleSubmit(signUpHandler)}>
                         <FormContent>
                             <label htmlFor="userName">이름</label>
                             <input {...register("userName", { required: "필수 정보입니다." })} placeholder="이름" type="text" id="userName"/>
