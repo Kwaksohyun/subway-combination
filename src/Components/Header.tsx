@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
-import { Session } from "@supabase/supabase-js";
+import { useRecoilState } from "recoil";
+import { sessionState } from "../atoms";
 
 const HeaderContainer = styled.header`
     background-color: #fff;
@@ -145,7 +146,7 @@ const Dropdown = styled(motion.div)`
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState("");
-    const [session, setSession] = useState<Session|null>(null);
+    const [session, setSession] = useRecoilState(sessionState);
     const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
     };
@@ -158,20 +159,22 @@ function Header() {
             alert("로그아웃 되었습니다.");
         }
     }
-    // 현재 세션 정보를 상태에 저장
-    const getSession = (session:Session | null) => {
-        setSession(session);
-    }
+
     // onAuthStateChange를 통해 auth 상태 감지하고 세션 업데이트
     useEffect(() => {
-        supabase.auth.onAuthStateChange((event, session) => {
+        const { data: {subscription} } = supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN') {
                 // 로그인한 경우, username 상태 저장
                 setUser(session?.user.user_metadata.username);
             }
-            getSession(session);
+            // 현재 세션 정보를 상태에 저장
+            setSession(session);
         });
-    }, [])
+        // 컴포넌트가 언마운트될 때 리스너 제거
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [setSession])
     return (
         <HeaderContainer className={isOpen ? "open" : ""}>
             <HeaderWrap>
