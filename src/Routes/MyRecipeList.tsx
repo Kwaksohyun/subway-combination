@@ -1,12 +1,11 @@
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import SubHeader from "../Components/SubHeader";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { recipeState } from "../atoms";
+import { recipeState, sessionState } from "../atoms";
 import data from "../data.json";
 
 const PageHeaderContainer = styled.article`
-    align-items: center;
     margin: 140px 0 80px 0;
 `;
 
@@ -72,9 +71,11 @@ const MakeMyRecipeContent = styled.div`
     }
 `;
 
-const ShareButton = styled.div`
+const ShareButton = styled.button`
     background-color: ${(props) => props.theme.green.darker};
     color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
     font-weight: 500;
     width: 125px;
     height: 40px;
@@ -83,6 +84,7 @@ const ShareButton = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    border: 0;
 `;
 
 const RecipeListWrap = styled.div`
@@ -186,12 +188,27 @@ function MyRecipeList() {
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
     const recipes = useRecoilValue(recipeState);
+    const session = useRecoilValue(sessionState);
+    const navigate = useNavigate();
     const sandwichInfoObj = (sandwich:string) => {
         return data.sandwichList.find(i => i.title === sandwich);
+    }
+    // 버튼 클릭 시, 유저 로그인 상태 확인 함수
+    const handleRequireLogin = () => {
+        // session이 null인 경우
+        if(!session) {
+            // 로그인 요청 메시지를 띄우고 로그인 페이지로 이동
+            alert(`로그인 후 이용해 주세요.\n로그인 페이지로 이동합니다.`);
+            navigate("/login", { state: "registerMyRecipe" });
+        } else {
+            // 로그인이 되어 있는 경우, 레시피 등록 페이지로 이동
+            navigate("/myRecipeList/registerMyRecipe");
+        }
     }
     return (
         <div style={{paddingTop: "170px", minWidth: "800px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
+            
             {/* 나만의 꿀조합 레시피 헤더 */}
             <PageHeaderContainer>
                 <PageHeader>
@@ -208,9 +225,7 @@ function MyRecipeList() {
                         <h3>나만의 써브웨이 꿀조합은?</h3>
                         <PageText>내가 즐겨벅는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</PageText>
                     </MakeMyRecipeContent>
-                    <ShareButton>
-                        <Link to={"/myRecipeList/registerMyRecipe"}>공유하기</Link>
-                    </ShareButton>
+                    <ShareButton onClick={handleRequireLogin}>공유하기</ShareButton>
                 </MakeMyRecipeBox>
             
                 {/* 나만의 꿀조합 레시피 목록 */}
