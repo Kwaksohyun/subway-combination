@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
 
@@ -97,6 +97,7 @@ interface ILoginInfo {
 function Login() {
     const { register, handleSubmit } = useForm<ILoginInfo>();
     const navigate = useNavigate();
+    const location = useLocation();
 
     // supabase의 인증 API를 사용한 로그인
     const loginHandler = async (loginData:ILoginInfo) => {
@@ -113,10 +114,16 @@ function Login() {
                 console.log(error.code, error.status); // undefined 400
                 alert(`로그인 실패 : ${error.message}`);
             } else {
-                // 로그인 성공 시, 성공 메시지 띄우고 홈 화면으로 이동
-                console.log(data);
-                alert("로그인에 성공하였습니다.");
-                navigate("/");
+                // 로그인 성공 시, 로그인 필요 여부에 따라 각각 다른 페이지로 이동
+                // 저장된 state가 있다면 이전 페이지로 이동
+                if(location.state) {
+                    alert("로그인에 성공하였습니다.");
+                    navigate(-1);
+                } else {
+                    console.log(data);
+                    alert("로그인에 성공하였습니다.");
+                    navigate("/");
+                }
             }
         } catch(error) {
             // 예상치 못한 오류 처리
