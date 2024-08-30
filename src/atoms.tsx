@@ -1,4 +1,5 @@
-import { atom } from "recoil";
+import { Session } from "@supabase/supabase-js";
+import { atom, AtomEffect } from "recoil";
 
 export interface IRecipe {
     id: number;
@@ -13,17 +14,26 @@ export interface IRecipe {
     sauce: string[];
 }
 
-const localStorageEffect = (key: string) => ({ setSelf, onSet }: any) => {
+const localStorageEffect: <T>(key: string) => AtomEffect<T> = 
+    // ※제네릭 타입 : 단일 타입이 아닌 다양한 타입이 될 수 있다.
+    (key: string) => ({ setSelf, onSet }) => {
     const savedValue = localStorage.getItem(key);
     if(savedValue !== null) {
         // setSelft: atom 값들을 설정 혹은 재설정
         setSelf(JSON.parse(savedValue));
     }
     // onSet : atom 변화가 감지될 때 작동하며 Storage에 데이터 저장
-    onSet((newValue: IRecipe[]) => {
-        localStorage.setItem(key, JSON.stringify(newValue));
+    onSet((newValue, _, isReset) => {
+        isReset 
+            ? localStorage.removeItem(key)
+            : localStorage.setItem(key, JSON.stringify(newValue));
     })
 };
+
+export const sessionState = atom<Session|null>({
+    key: "sessionState",
+    default: null,
+});
 
 export const recipeState = atom<IRecipe[]>({
     key: "recipeList",
