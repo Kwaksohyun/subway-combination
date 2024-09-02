@@ -2,8 +2,8 @@ import { useForm } from "react-hook-form";
 import data from "../data.json";
 import styled from "styled-components";
 import { useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { recipeState } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { recipeState, sessionState } from "../atoms";
 import { useMatch, useNavigate } from "react-router-dom";
 
 const PageHeader = styled.div`
@@ -229,6 +229,7 @@ function RegisterMyRecipe() {
     const setRecipeLists = useSetRecoilState(recipeState);
     const { register, handleSubmit, formState:{ isSubmitting }, reset } = useForm<IForm>();
     const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
+    const session = useRecoilValue(sessionState);
     const navigate = useNavigate();
 
     // "소스" 체크박스 checked 개수 제한 함수
@@ -265,6 +266,7 @@ function RegisterMyRecipe() {
         const newRecipe = {
             id: Date.now(),
             date: `${year}-${month}-${day}`,
+            userEmailId: session?.user.user_metadata.email.split("@")[0],
             ...data
         };
         // 3. 새로운 레시피 추가

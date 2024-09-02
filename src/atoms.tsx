@@ -4,6 +4,7 @@ import { atom, AtomEffect } from "recoil";
 export interface IRecipe {
     id: number;
     date: string;
+    userEmailId: string;
     title: string;
     sandwich: string;
     bread: string;
@@ -41,6 +42,7 @@ export const recipeState = atom<IRecipe[]>({
         {
             id: 1,
             date: "2024-04-04",
+            userEmailId: "basiclover",
             title: "베스트셀러 메뉴의 추천 꿀조합",
             sandwich: "이탈리안 비엠티",
             bread: "파마산 오레가노",
@@ -48,11 +50,12 @@ export const recipeState = atom<IRecipe[]>({
             cheese: "모차렐라 치즈",
             topping: [],
             vegetable: ["양상추", "토마토", "피망", "양파", "할라피뇨", "올리브", "피클"],
-            sauce: ["랜치", "스위트 어니언"],
+            sauce: ["랜치", "스위트 어니언", "스위트 칠리",],
         },
         {
             id: 2,
             date: "2024-04-04",
+            userEmailId: "ardor",
             title: "다이어터를 위한 담백한 샌드위치",
             sandwich: "로스트 치킨",
             bread: "위트",
@@ -65,6 +68,7 @@ export const recipeState = atom<IRecipe[]>({
         {
             id: 3,
             date: "2024-04-04",
+            userEmailId: "minchef",
             title: "매운맛에 미친자의 추천 레시피",
             sandwich: "치킨 데리야끼",
             bread: "화이트",
@@ -77,6 +81,7 @@ export const recipeState = atom<IRecipe[]>({
         {
             id: 4,
             date: "2024-04-05",
+            userEmailId: "elinPark",
             title: "호불호 없이 맛있게 매운 거 좋아하시는 분들 추천",
             sandwich: "스테이크 & 치즈",
             bread: "화이트",
@@ -89,6 +94,7 @@ export const recipeState = atom<IRecipe[]>({
         {
             id: 5,
             date: "2024-04-05",
+            userEmailId: "soobin05",
             title: "진리의 에그마요",
             sandwich: "에그마요",
             bread: "플랫브레드",
@@ -97,6 +103,19 @@ export const recipeState = atom<IRecipe[]>({
             topping: ["베이컨"],
             vegetable: ["양상추", "토마토", "오이", "피망", "양파", "피클", "올리브", "할라피뇨"],
             sauce: ["랜치", "스위트 칠리"],
+        },
+        {
+            id: 6,
+            date: "2024-04-11",
+            userEmailId: "mukzzang",
+            title: "샌드위치 1000개 먹어본 전직 써브웨이 4년 알바생의 BMT 추천 조합",
+            sandwich: "이탈리안 비엠티",
+            bread: "위트",
+            toasting: "토스팅 O",
+            cheese: "모차렐라 치즈",
+            topping: [],
+            vegetable: ["양상추", "토마토", "피망", "양파", "피클", "올리브", "할라피뇨"],
+            sauce: ["홀스래디쉬", "엑스트라 버진 올리브 오일", "후추"],
         },
     ],
     effects: [localStorageEffect("recipeList")]

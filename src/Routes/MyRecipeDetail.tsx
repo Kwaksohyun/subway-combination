@@ -207,6 +207,7 @@ function MyRecipeDetail() {
     return (
         <div style={{paddingTop: "170px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false}  pathIncludesStr="myRecipe" />
+            
             <RecipeHeader>
                 <RecipeMenuWrap>
                     <span>샌드위치</span>
@@ -224,7 +225,7 @@ function MyRecipeDetail() {
                         </StarIcon>
                         <span>4.6 (10)</span>
                     </ReviewScoreWrap>
-                    <span>writer</span>
+                    <span>{recipeData?.userEmailId}</span>
                     <span>{recipeData?.date}</span>
                 </RecipeTextRowWrap>
             </RecipeHeader>
