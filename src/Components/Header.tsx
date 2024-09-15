@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
-import { useRecoilState } from "recoil";
-import { sessionState } from "../atoms";
 
 const HeaderContainer = styled.header`
     background-color: #fff;
@@ -145,8 +143,8 @@ const Dropdown = styled(motion.div)`
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState("");
-    const [session, setSession] = useRecoilState(sessionState);
+    const [user, setUser] = useState<null|string>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
     };
@@ -157,24 +155,30 @@ function Header() {
             console.log(error);
         } else {
             alert("로그아웃 되었습니다.");
+            setUser(null);
+            setIsLoggedIn(false);
         }
     }
-
-    // onAuthStateChange를 통해 auth 상태 감지하고 세션 업데이트
+    // onAuthStateChange를 통해 인증 상태 변화를 감지하여 사용자 이름과 로그인 상태를 업데이트
     useEffect(() => {
         const { data: {subscription} } = supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN') {
-                // 로그인한 경우, username 상태 저장
+            // SIGNED_IN : 사용자 세션이 확인되거나 재설정될 때마다 발생
+            // confirmed_at : 사용자의 이메일이 확인된 타임스탬프로, 로그인 성공했을 때만 속성이 포함됨(회원가입 시 포함x)
+            // -> 회원가입할 때에도 SIGNED_IN event 발생
+            //    로그인 성공 시에만 조건문이 실행되도록 confirmed_at 존재하는지 확인
+            if (event === 'SIGNED_IN' && session?.user.confirmed_at) {
                 setUser(session?.user.user_metadata.username);
+                setIsLoggedIn(true);
+            } else if(event === 'SIGNED_OUT') {
+                setUser(null);
+                setIsLoggedIn(false);
             }
-            // 현재 세션 정보를 상태에 저장
-            setSession(session);
         });
         // 컴포넌트가 언마운트될 때 리스너 제거
         return () => {
             subscription.unsubscribe();
         };
-    }, [setSession])
+    }, [])
     return (
         <HeaderContainer className={isOpen ? "open" : ""}>
             <HeaderWrap>
@@ -182,7 +186,7 @@ function Header() {
                     <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
                 </Logo>
                 <Utility>
-                    {session ? (
+                    {isLoggedIn ? (
                         <ul>
                             <UtilityItem>
                                 <div>
