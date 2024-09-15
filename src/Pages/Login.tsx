@@ -110,9 +110,9 @@ function Login() {
             
             if(error) {
                 // 에러 발생 시, 에러 메세지 담은 경고창 띄우기
-                console.log(error.message); // Invalid login credentials
+                console.log("로그인 실패: ", error.message); // Invalid login credentials
                 console.log(error.code, error.status); // undefined 400
-                alert(`로그인 실패 : ${error.message}`);
+                alert(`아이디와 비밀번호를 정확히 입력해 주세요.\n${error.message}`);
             } else {
                 // 로그인 성공 시, 로그인 필요 여부에 따라 각각 다른 페이지로 이동
                 // 저장된 state가 있다면 이전 페이지로 이동

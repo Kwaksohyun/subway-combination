@@ -258,9 +258,9 @@ function MyRecipeDetail() {
                 </RecipeDetailWrap>
             </RecipeInfoWrap>
 
-            {/* 레시피 후기 */}
+            {/* 레시피 리뷰 */}
             <RecipeReviewWrap>
-                <h3>레시피 후기</h3>
+                <h3>레시피 리뷰</h3>
                 <ul>
                     <ReviewItem>
                         <ReviewerContainer>

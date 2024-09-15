@@ -7,9 +7,7 @@ import SubHeader from "../Components/SubHeader";
 import { useMatch } from "react-router-dom";
 
 const MenuListWrap = styled.div`
-    min-width: 800px;
     background-color: #f2f2f2;
-    padding-top: 170px;
 `;
 
 const VisualWrap = styled.div`
@@ -137,10 +135,10 @@ function FreshIngredients() {
         setActiveTab(tabIndex);
     }
     return (
-        <>
+        <div style={{paddingTop: "170px", minWidth: "800px"}}>
             {/* 이용방법 페이지 내부 탐색 메뉴 */}
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={true} />
-
+            
             <MenuListWrap>
                 {/* 상품 visual */}
                 <VisualWrap>
@@ -172,7 +170,7 @@ function FreshIngredients() {
                     </ul>
                 </ProductListWrap>
             </MenuListWrap>
-        </>
+        </div>
     );
 }
 
