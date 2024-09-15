@@ -26,11 +26,11 @@ function App() {
           <Route path='sandwich' element={<Sandwich />}/>
           <Route path='unit' element={<Wrap />}/>
         </Route>
-        <Route path='/menuView/:menuCategory?' element={<MenuItemDetail/> } />
+        <Route path='/menuView/:menuCategory' element={<MenuItemDetail/> } />
         <Route path='/utilizationSubway' element={<UtilizationSubway />} />
         <Route path='/freshInfo' element={<FreshIngredients/>} />
         <Route path='/myRecipeList' element={<MyRecipeList/>} />
-        <Route path='/myRecipeView/recipe?' element={<MyRecipeDetail/>} />
+        <Route path='/myRecipeView/recipe' element={<MyRecipeDetail/>} />
         <Route path='/myRecipeList/registerMyRecipe' element={<RegisterMyRecipe />} />
       </Routes>
       <Footer />
