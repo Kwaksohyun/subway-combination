@@ -2,8 +2,10 @@ import { Link, useMatch, useNavigate } from "react-router-dom";
 import SubHeader from "../Components/SubHeader";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { recipeState, sessionState } from "../atoms";
+import { sessionState } from "../atoms";
 import data from "../data.json";
+import supabase from "../supabaseClient";
+import { useQuery } from "@tanstack/react-query";
 
 const PageHeaderContainer = styled.article`
     margin: 140px 0 80px 0;
@@ -119,6 +121,10 @@ const RecipeListWrap = styled.div`
     }
 `;
 
+const Loading = styled.h2`
+    text-align: center;
+`;
+
 const RecipeItem = styled.li`
     width: 290px;
     height: 360px;  
@@ -183,17 +189,49 @@ const StarIcon = styled.svg`
     height: 16px;
 `;
 
+interface IRecipe {
+    id: number;
+    created_at: string;
+    user_id: string;
+    user_email_id: string;
+    title: string;
+    sandwich: string;
+    bread: string;
+    toasting: string;
+    cheese: string;
+    topping: string[];
+    vegetable: string[];
+    sauce: string[];
+    description: string;
+}
+
 function MyRecipeList() {
     const subMenuInfo = [
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
-    const recipes = useRecoilValue(recipeState);
     const session = useRecoilValue(sessionState);
     const navigate = useNavigate();
+    
     const sandwichInfoObj = (sandwich:string) => {
         return data.sandwichList.find(i => i.title === sandwich);
-    }
-    // 버튼 클릭 시, 유저 로그인 상태 확인 함수
+    };
+
+    // supabase의 recipes 테이블에서 레시피 데이터 불러오는 함수
+    const fetchAllRecipesData = async () => {
+        const { data: recipeData, error: recipeError } = await supabase.from("recipes").select("*");
+        if(recipeError) {
+            // 오류 발생 시, 빈 배열 반환
+            console.log("레시피 정보를 가져오지 못했습니다.", recipeError);
+            return [];
+        } 
+        return recipeData;
+    };
+
+    const { data: recipesData, isLoading } = useQuery<IRecipe[]>({
+        queryKey: ['Allrecipes'], 
+        queryFn: fetchAllRecipesData,
+    });
+    
     const handleRequireLogin = () => {
         // session이 null인 경우
         if(!session) {
@@ -231,34 +269,36 @@ function MyRecipeList() {
                 {/* 나만의 꿀조합 레시피 목록 */}
                 <RecipeListWrap>
                     <div>
-                        <ul>
-                            {recipes.map((recipe) => (
-                                <RecipeItem key={recipe.id}>
-                                    <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipe.id}`}
-                                        state={{imgSrc: `${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`, calorie: `${sandwichInfoObj(recipe.sandwich)?.calorie}`}}>
-                                        <RecipeImg alt={`img_${sandwichInfoObj(recipe.sandwich)?.eng_title}`} src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`} />
-                                        <RecipeInfoWrap>
-                                            <RecipeTextWrap>
-                                                <RecipeTitle>{recipe.title}</RecipeTitle>
-                                                <RecipeMenu>샌드위치ㆍ{recipe.sandwich}</RecipeMenu>
-                                            </RecipeTextWrap>
-                                            <RecipeTextRowWrap>
-                                                <RecipeWriter>{recipe.userEmailId}</RecipeWriter>
-                                                <ReviewInfoWrap>
-                                                    <StarIcon version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <g id="info"/>
-                                                        <g id="icons">
-                                                            <path d="M12.9,2.6l2.3,5c0.1,0.3,0.4,0.5,0.7,0.6l5.2,0.8C22,9,22.3,10,21.7,10.6l-3.8,3.9c-0.2,0.2-0.3,0.6-0.3,0.9   l0.9,5.4c0.1,0.8-0.7,1.5-1.4,1.1l-4.7-2.6c-0.3-0.2-0.6-0.2-0.9,0l-4.7,2.6c-0.7,0.4-1.6-0.2-1.4-1.1l0.9-5.4   c0.1-0.3-0.1-0.7-0.3-0.9l-3.8-3.9C1.7,10,2,9,2.8,8.9l5.2-0.8c0.3,0,0.6-0.3,0.7-0.6l2.3-5C11.5,1.8,12.5,1.8,12.9,2.6z" id="favorite"/>
-                                                        </g>
-                                                    </StarIcon>
-                                                    <span>4.6 (10)</span>
-                                                </ReviewInfoWrap>
-                                            </RecipeTextRowWrap>
-                                        </RecipeInfoWrap>
-                                    </Link>
-                                </RecipeItem>
-                            ))}
-                        </ul>
+                        {isLoading ? <Loading>Loading...</Loading> : (
+                            <ul>
+                                {recipesData?.map((recipe) => (
+                                    <RecipeItem key={recipe.id}>
+                                        <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipe.id}`}
+                                            state={{imgSrc: `${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`, calorie: `${sandwichInfoObj(recipe.sandwich)?.calorie}`}}>
+                                            <RecipeImg alt={`img_${sandwichInfoObj(recipe.sandwich)?.eng_title}`} src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`} />
+                                            <RecipeInfoWrap>
+                                                <RecipeTextWrap>
+                                                    <RecipeTitle>{recipe.title}</RecipeTitle>
+                                                    <RecipeMenu>샌드위치ㆍ{recipe.sandwich}</RecipeMenu>
+                                                </RecipeTextWrap>
+                                                <RecipeTextRowWrap>
+                                                    <RecipeWriter>{recipe.user_email_id}</RecipeWriter>
+                                                    <ReviewInfoWrap>
+                                                        <StarIcon version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <g id="info"/>
+                                                            <g id="icons">
+                                                                <path d="M12.9,2.6l2.3,5c0.1,0.3,0.4,0.5,0.7,0.6l5.2,0.8C22,9,22.3,10,21.7,10.6l-3.8,3.9c-0.2,0.2-0.3,0.6-0.3,0.9   l0.9,5.4c0.1,0.8-0.7,1.5-1.4,1.1l-4.7-2.6c-0.3-0.2-0.6-0.2-0.9,0l-4.7,2.6c-0.7,0.4-1.6-0.2-1.4-1.1l0.9-5.4   c0.1-0.3-0.1-0.7-0.3-0.9l-3.8-3.9C1.7,10,2,9,2.8,8.9l5.2-0.8c0.3,0,0.6-0.3,0.7-0.6l2.3-5C11.5,1.8,12.5,1.8,12.9,2.6z" id="favorite"/>
+                                                            </g>
+                                                        </StarIcon>
+                                                        <span>4.6 (10)</span>
+                                                    </ReviewInfoWrap>
+                                                </RecipeTextRowWrap>
+                                            </RecipeInfoWrap>
+                                        </Link>
+                                    </RecipeItem>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </RecipeListWrap>
             </MyRecipeContentWrap>
