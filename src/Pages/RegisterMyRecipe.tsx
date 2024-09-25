@@ -2,9 +2,8 @@ import { useForm } from "react-hook-form";
 import data from "../data.json";
 import styled from "styled-components";
 import { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { recipeState, sessionState } from "../atoms";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import supabase from "../supabaseClient";
 
 const PageHeader = styled.div`
     display: flex;
@@ -226,10 +225,8 @@ interface IForm {
 }
 
 function RegisterMyRecipe() {
-    const setRecipeLists = useSetRecoilState(recipeState);
     const { register, handleSubmit, formState:{ isSubmitting }, reset } = useForm<IForm>();
     const [checkedBtns, setCheckedBtns] = useState<string[]>([]);
-    const session = useRecoilValue(sessionState);
     const navigate = useNavigate();
 
     // "소스" 체크박스 checked 개수 제한 함수
@@ -252,10 +249,23 @@ function RegisterMyRecipe() {
             }
         }
     };
-    const onSubmit = async (data:IForm) => {
+
+    const handleRequireLogin = async () => {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if(error || !user) {
+            console.log(user, error);
+            alert(`로그인 후 이용해 주세요.\n로그인 페이지로 이동합니다.`);
+        } else {
+            
+        }
+        console.log(user);
+    }
+    handleRequireLogin();
+
+    const onSubmit = async (formData:IForm) => {
         // 1. 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
         await new Promise((r) => setTimeout(r, 1000));
-        alert("나만의 꿀조합 레시피 등록이 완료되었습니다.");
+        
         // form 작성 날짜 = 오늘의 날짜
         const today = new Date();
         const year = today.getFullYear();
@@ -263,24 +273,41 @@ function RegisterMyRecipe() {
         const day =("0" + today.getDate()).slice(-2);
 
         // 2. 제출된 폼의 내용을 모두 담은 객체 생성
-        const newRecipe = {
-            id: Date.now(),
-            date: `${year}-${month}-${day}`,
-            userEmailId: session?.user.user_metadata.email.split("@")[0],
-            ...data
-        };
+        // const newRecipe = {
+        //     id: Date.now(),
+        //     date: `${year}-${month}-${day}`,
+        //     userEmailId: session?.user.user_metadata.email.split("@")[0],
+        //     ...formData
+        // };
+
         // 3. 새로운 레시피 추가
-        setRecipeLists((allRecipes) => {
-            const allRecipesCopy = [...allRecipes];
-            allRecipesCopy.push(newRecipe);
-            return allRecipesCopy;
+        // setRecipeLists((allRecipes) => {
+        //     const allRecipesCopy = [...allRecipes];
+        //     allRecipesCopy.push(newRecipe);
+        //     return allRecipesCopy;
+        // });
+
+        const { data: { user } } = await supabase.auth.getUser();
+        // 2. supabase의 recipes 데이터베이스에 새로운 레시피 데이터 등록
+        const { data, error } = await supabase.from("recipes").insert({
+            user_id: user?.id,
+            created_at: `${year}-${month}-${day}`,
+            user_email_id: user?.user_metadata.email.split("@")[0],
+            ...formData
         });
-        // 4. 제출 후 form 적은 값 화면에서 없애기
+        if(error) {
+            console.log(error.message);
+        } else {
+            alert("나만의 꿀조합 레시피가 등록되었습니다.");
+            console.log(data);
+        }
+        
+        // 3. 제출 후 form 적은 값 화면에서 없애기
         reset();
-        // 5. 꿀조합 레시피 리스트 페이지로 이동
+        // 4. 꿀조합 레시피 리스트 페이지로 이동
         navigate("/myRecipeList");
     };
-    console.log(useMatch("/myRecipeList/*"));
+    // console.log(useMatch("/myRecipeList/*"));
     return (
         <div style={{ paddingTop: "170px", minWidth: "800px" }}>
             <PageHeader>
