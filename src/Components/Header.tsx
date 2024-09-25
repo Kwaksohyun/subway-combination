@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
+import { useSetRecoilState } from "recoil";
+import { sessionState } from "../atoms";
 
 const HeaderContainer = styled.header`
     background-color: #fff;
@@ -145,6 +147,7 @@ function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState<null|string>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const setSessionState = useSetRecoilState(sessionState);
     const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
     };
@@ -157,6 +160,7 @@ function Header() {
             alert("로그아웃 되었습니다.");
             setUser(null);
             setIsLoggedIn(false);
+            setSessionState(null);
         }
     }
     // onAuthStateChange를 통해 인증 상태 변화를 감지하여 사용자 이름과 로그인 상태를 업데이트
@@ -169,16 +173,18 @@ function Header() {
             if (event === 'SIGNED_IN' && session?.user.confirmed_at) {
                 setUser(session?.user.user_metadata.username);
                 setIsLoggedIn(true);
+                setSessionState(session);
             } else if(event === 'SIGNED_OUT') {
                 setUser(null);
                 setIsLoggedIn(false);
+                setSessionState(null);
             }
         });
         // 컴포넌트가 언마운트될 때 리스너 제거
         return () => {
             subscription.unsubscribe();
         };
-    }, [])
+    }, [setSessionState])
     return (
         <HeaderContainer className={isOpen ? "open" : ""}>
             <HeaderWrap>
