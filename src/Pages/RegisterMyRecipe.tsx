@@ -191,6 +191,7 @@ const IngredientImg = styled.img`
     width: 90px;
     height: 90px;
     object-fit: cover;
+    margin-top: 2px;
 `;
 
 const NotSelectedImg = styled.svg`
@@ -219,7 +220,7 @@ interface IForm {
     bread: string;
     toasting: string;
     cheese: string;
-    topping: string[];
+    topping: false|string[];     // topping 선택 안 했을 때 → false
     vegetable: string[];
     sauce: string[];
 }
@@ -402,30 +403,20 @@ function RegisterMyRecipe() {
                         {/* 6) 추가 토핑 - 다중 선택 */}
                         <FormStepWrap>
                             <FormTitleWrap>
-                                <FormTitle>추가 토핑<span>*</span></FormTitle>
+                                <FormTitle>추가 토핑</FormTitle>
                                 <CheckMaximum>(최대 7개 선택)</CheckMaximum>
                             </FormTitleWrap>
                             <FormContent>
                                 <ul>
                                     {data.topping.map(topping => (
                                         <IngredientItem key={topping.id}>
-                                            <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_${topping.id}`} value={topping.title} />
+                                            <InputCheckbox {...register("topping")} type="checkbox" id={`topping_${topping.id}`} value={topping.title} />
                                             <label htmlFor={`topping_${topping.id}`}>
                                                 <IngredientImg src={`${process.env.PUBLIC_URL}/${topping.img}`} alt={`img_${topping.eng_title}`} />
                                                 {topping.title}
                                             </label>
                                         </IngredientItem>
                                     ))}
-                                    <IngredientItem>
-                                        <InputCheckbox {...register("topping", { required: true })} type="checkbox" id={`topping_notSelected`} value=""/>
-                                        <label htmlFor={`topping_notSelected`}>
-                                            <NotSelectedImg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-                                                <rect fill="none" height="256" width="256"/>
-                                                <path d="M128,24A104,104,0,1,0,232,128,104.2,104.2,0,0,0,128,24Zm37.7,130.3a8.1,8.1,0,0,1,0,11.4,8.2,8.2,0,0,1-11.4,0L128,139.3l-26.3,26.4a8.2,8.2,0,0,1-11.4,0,8.1,8.1,0,0,1,0-11.4L116.7,128,90.3,101.7a8.1,8.1,0,0,1,11.4-11.4L128,116.7l26.3-26.4a8.1,8.1,0,0,1,11.4,11.4L139.3,128Z"/>
-                                            </NotSelectedImg>
-                                            선택 안함
-                                        </label>
-                                    </IngredientItem>
                                 </ul>
                             </FormContent>
                         </FormStepWrap>
