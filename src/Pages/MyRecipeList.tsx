@@ -232,9 +232,10 @@ function MyRecipeList() {
         queryFn: fetchAllRecipesData,
     });
     
+    // "공유하기" 버튼 클릭 시, 로그인 상태 확인 함수
     const handleRequireLogin = () => {
-        // session이 null인 경우
-        if(!session) {
+        // 사용자의 이메일이 확인되지 않은 경우(로그인 성공했을 때만 속성이 포함됨)
+        if(!session?.user.confirmed_at) {
             // 로그인 요청 메시지를 띄우고 로그인 페이지로 이동
             alert(`로그인 후 이용해 주세요.\n로그인 페이지로 이동합니다.`);
             navigate("/login", { state: "registerMyRecipe" });
@@ -242,7 +243,7 @@ function MyRecipeList() {
             // 로그인이 되어 있는 경우, 레시피 등록 페이지로 이동
             navigate("/myRecipeList/registerMyRecipe");
         }
-    }
+    };
     return (
         <div style={{paddingTop: "170px", minWidth: "800px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
