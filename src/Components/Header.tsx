@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
 import { useSetRecoilState } from "recoil";
@@ -148,6 +148,7 @@ function Header() {
     const [user, setUser] = useState<null|string>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const setSessionState = useSetRecoilState(sessionState);
+    const navigate = useNavigate();
     const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
     };
@@ -157,10 +158,11 @@ function Header() {
         if(error) {
             console.log(error);
         } else {
-            alert("로그아웃 되었습니다.");
             setUser(null);
             setIsLoggedIn(false);
             setSessionState(null);
+            alert("로그아웃 되었습니다.");
+            navigate("/");
         }
     }
     // onAuthStateChange를 통해 인증 상태 변화를 감지하여 사용자 이름과 로그인 상태를 업데이트

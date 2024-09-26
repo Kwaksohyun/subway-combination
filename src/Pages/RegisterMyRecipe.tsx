@@ -250,18 +250,6 @@ function RegisterMyRecipe() {
         }
     };
 
-    const handleRequireLogin = async () => {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if(error || !user) {
-            console.log(user, error);
-            alert(`로그인 후 이용해 주세요.\n로그인 페이지로 이동합니다.`);
-        } else {
-            
-        }
-        console.log(user);
-    }
-    handleRequireLogin();
-
     const onSubmit = async (formData:IForm) => {
         // 1. 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
         await new Promise((r) => setTimeout(r, 1000));
@@ -286,20 +274,25 @@ function RegisterMyRecipe() {
         //     allRecipesCopy.push(newRecipe);
         //     return allRecipesCopy;
         // });
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        // 사용자 정보 불러오기 실패 시
+        if(userError) {
+            throw new Error(userError.message);
+        }
 
-        const { data: { user } } = await supabase.auth.getUser();
         // 2. supabase의 recipes 데이터베이스에 새로운 레시피 데이터 등록
-        const { data, error } = await supabase.from("recipes").insert({
+        const { error: newRecipeError } = await supabase.from("recipes").insert({
             user_id: user?.id,
             created_at: `${year}-${month}-${day}`,
             user_email_id: user?.user_metadata.email.split("@")[0],
             ...formData
         });
-        if(error) {
-            console.log(error.message);
+
+        if(newRecipeError) {
+            // 레시피 등록 실패 시
+            throw new Error(newRecipeError.message);
         } else {
             alert("나만의 꿀조합 레시피가 등록되었습니다.");
-            console.log(data);
         }
         
         // 3. 제출 후 form 적은 값 화면에서 없애기
