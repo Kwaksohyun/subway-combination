@@ -1,9 +1,12 @@
-import { useLocation, useMatch } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ListViewButton from "../Components/ListViewButton";
 import SubHeader from "../Components/SubHeader";
 import supabase from "../supabaseClient";
 import { useQuery } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+import { sessionState } from "../atoms";
+import { useForm } from "react-hook-form";
 
 const RecipeViewContainer = styled.section`
     margin: 140px 0 80px 0;
@@ -138,67 +141,97 @@ const StepContent = styled.p`
     line-height: 1.3;
 `;
 
-const RecipeReviewWrap = styled.section`
+const RecipeCommentsWrap = styled.section`
     width: 100%;
     max-width: 1170px;
     margin: 0 auto;
-    border-top: 3px solid #dddddd;
+    border-top: 1px solid #dddddd;
     padding: 0 30px;
     > h3 {
         font-size: 23px;
         font-weight: 700;
         padding: 30px 0 20px 0;
     }
-`;
-
-const ReviewItem = styled.li`
-    padding: 20px 0 30px 0;
-    &:not(:last-child) {
-        border-bottom: 2px solid #dddddd;
+    > h3 > span {
+        margin-left: 5px;
     }
 `;
 
-const ReviewerContainer = styled.div`
+const CommentForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 20px;
+`;
+
+const CommentTextarea = styled.textarea`
+    border: 1.5px solid #dddddd;
+    border-radius: 4px;
+    width: 100%;
+    height: 90px;
+    resize: none;
+    margin-bottom: 10px;
+    padding: 20px 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+`;
+
+const CommentPostBtn = styled.button`
+    background-color: ${(props) => props.theme.green.lighter};
+    color: #fff;
+    /* font-weight: 500; */
+    width: 65px;
+    height: 40px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+`;
+
+const CommentSortWrap = styled.ul`
+    display: flex;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dddddd;
+`;
+
+const CommentSortOption = styled.li`
+    padding-left: 5px;
+    padding-right: 10px;
+    cursor: pointer;
+`;
+
+const CommentItem = styled.li`
+    padding: 20px 0 30px 5px;
+    border-bottom: 1px solid #dddddd;
+`;
+
+const CommentContainer = styled.div`
     display: flex;
     align-items: center;
 `;
 
 const ProfileImg = styled.img`
-    width: 45px;
-    height: 45px;
+    width: 43px;
+    height: 43px;
     margin-right: 13px;
 `;
 
-const ReviewerInfoWrap = styled.div`
-    height: 40px;
+const CommentInfoWrap = styled.div`
+    height: 38px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-`;
-
-const ReviewerInfoRowWrap = styled.div`
-    display: flex;
-    align-items: center;
-    color: ${(props) => props.theme.grey.darker};
-    width: 135px;
-    justify-content: space-between;
-    font-size: 14px;
     > span {
-        position: relative;
-    }
-    > span::before {
-        content: '';
-        position: absolute;
-        background-color: #dddddd;
-        width: 1px;
-        height: 14px;
-        top: 1px;
-        left: -13px;
+        font-size: 15px;
     }
 `;
 
-const ReviewText = styled.p`
-    padding: 13px 0 0 10px;
+const CommentDateTime = styled.span`
+    color: ${(props) => props.theme.grey.darker};
+    font-size: 14px;
+    margin-right: 5px;
+`;
+
+const CommentText = styled.p`
+    padding-top: 13px;
     font-size: 15px;
 `;
 
@@ -209,6 +242,10 @@ function MyRecipeDetail() {
     const location = useLocation();
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
     const recipeItemIdx = location.search.slice(15);
+
+    const { register, handleSubmit, reset } = useForm();
+    const session = useRecoilValue(sessionState);
+    const navigate = useNavigate();
     
     // 레시피 상세 데이터 불러오는 함수
     const fetchRecipeDetailData = async () => {
@@ -221,16 +258,74 @@ function MyRecipeDetail() {
     };
 
     // ※ isLoading : 캐시된 데이터가 없고 쿼리 시도가 아직 완료되지 않은 경우 
-    const { data: recipeDetailData, isLoading } = useQuery({
+    const { data: recipeDetailData, isLoading:recipeDetalLoading } = useQuery({
         queryKey: ['recipeDetail'], 
         queryFn: fetchRecipeDetailData,
         enabled: !!recipeItemIdx    //  recipeItemIdx가 있을 때만 쿼리 요청
     });
+
+    // 로그인 상태 확인 함수
+    const confirmLoginState = () => {
+        // 사용자의 이메일이 확인되지 않은 경우(로그인 성공했을 때만 속성이 포함됨)
+        if(window.confirm("로그인을 하신 후 이용해 주시기 바랍니다.")) {
+            // 로그인이 되어 있는 경우, 레시피 등록 페이지로 이동
+            navigate("/login", { state: "MyRecipeDetail" });
+        } else {
+            document.getElementById("textarea")?.blur();
+        }
+    };
+
+    const onSubmit = async (data:any) => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = ("0"+ (today.getMonth()+1)).slice(-2);
+        const day =("0" + today.getDate()).slice(-2);
+
+        const hours = String(today.getHours()).padStart(2, '0');
+        const minutes = String(today.getMinutes()).padStart(2, '0');
+        const seconds = String(today.getSeconds()).padStart(2, '0');
+
+        // supabase의 comments DB에 댓글 comments DB에 추가
+        const { error: commentError } = await supabase.from('comments').insert({
+            recipe_id: recipeItemIdx,
+            user_id: session?.user?.id,
+            created_at: `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`,
+            comment: data.comment
+        });
+        
+        if(commentError) {
+            throw new Error(commentError.message);
+        } else {
+            // 댓글을 성공적으로 처리하면 -> 입력 form reset
+            alert("댓글이 등록되었습니다.");
+            reset();
+        }
+    };
+
+    // 현재 recipeItemIdx에 대한 전체 댓글 가져오기
+    const fetchAllCommentsData = async () => {
+        const { data: commentsData, error: commentsError } = await supabase
+            .from('comments')
+            .select(`*, user_info:user_info!user_id (username, email)`)
+            .eq('recipe_id', recipeItemIdx)
+            .order('created_at', {ascending: false});
+        if(commentsError) {
+            console.log(commentsError);
+            return [];
+        } 
+        return commentsData;
+    };
+
+    const { data: commentsData, isLoading:commentLoading } = useQuery({
+        queryKey: ['comments'], 
+        queryFn: fetchAllCommentsData,
+    });
+
     return (
         <div style={{paddingTop: "170px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false}  pathIncludesStr="myRecipe" />
                 <RecipeViewContainer>
-                    {isLoading ? <Loading>Loading...</Loading> : (
+                    {recipeDetalLoading ? <Loading>Loading...</Loading> : (
                         <>
                             <RecipeHeader>
                                 <RecipeMenuWrap>
@@ -285,54 +380,50 @@ function MyRecipeDetail() {
                     )}
                 </RecipeViewContainer>
 
-            {/* 레시피 리뷰 */}
-            <RecipeReviewWrap>
-                <h3>레시피 리뷰</h3>
+            {/* 레시피 댓글 */}
+            <RecipeCommentsWrap>
+                <h3>
+                    댓글
+                    <span>{commentsData?.length}</span>
+                </h3>
+                <CommentForm onSubmit={handleSubmit(onSubmit)}>
+                    {session?.user.confirmed_at ? (
+                        <>
+                            <CommentTextarea {...register("comment")} placeholder="댓글을 입력해 주세요."></CommentTextarea>
+                            <CommentPostBtn type="submit">등록</CommentPostBtn>
+                        </>
+                    ) : (
+                        <>
+                            <CommentTextarea {...register("comment")} 
+                            onClick={confirmLoginState} id="textarea" placeholder="댓글을 작성하려면 로그인 해주세요."></CommentTextarea>
+                        </>
+                    )}
+                </CommentForm>
+                <CommentSortWrap>
+                    <CommentSortOption>최신순</CommentSortOption>
+                    <CommentSortOption>등록순</CommentSortOption>
+                </CommentSortWrap>
                 <ul>
-                    <ReviewItem>
-                        <ReviewerContainer>
-                            <ProfileImg src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="img_user-profile" />
-                            <ReviewerInfoWrap>
-                                <span>reviewer1</span>
-                                <ReviewerInfoRowWrap>
-                                    <ReviewScoreWrap>
-                                        <StarIcon width="16" height="16" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <g id="info"/>
-                                            <g id="icons">
-                                                <path d="M12.9,2.6l2.3,5c0.1,0.3,0.4,0.5,0.7,0.6l5.2,0.8C22,9,22.3,10,21.7,10.6l-3.8,3.9c-0.2,0.2-0.3,0.6-0.3,0.9   l0.9,5.4c0.1,0.8-0.7,1.5-1.4,1.1l-4.7-2.6c-0.3-0.2-0.6-0.2-0.9,0l-4.7,2.6c-0.7,0.4-1.6-0.2-1.4-1.1l0.9-5.4   c0.1-0.3-0.1-0.7-0.3-0.9l-3.8-3.9C1.7,10,2,9,2.8,8.9l5.2-0.8c0.3,0,0.6-0.3,0.7-0.6l2.3-5C11.5,1.8,12.5,1.8,12.9,2.6z" id="favorite"/>
-                                            </g>
-                                        </StarIcon>
-                                        <span>5.0</span>
-                                    </ReviewScoreWrap>
-                                    <span>2024-04-06</span>
-                                </ReviewerInfoRowWrap>
-                            </ReviewerInfoWrap>
-                        </ReviewerContainer>
-                        <ReviewText>이제 이 레시피로만 먹어요..♥</ReviewText>
-                    </ReviewItem>
-                    <ReviewItem>
-                        <ReviewerContainer>
-                            <ProfileImg src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="img_user-profile" />
-                            <ReviewerInfoWrap>
-                                <span>reviewer2</span>
-                                <ReviewerInfoRowWrap>
-                                    <ReviewScoreWrap>
-                                        <StarIcon width="16" height="16" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <g id="info"/>
-                                            <g id="icons">
-                                                <path d="M12.9,2.6l2.3,5c0.1,0.3,0.4,0.5,0.7,0.6l5.2,0.8C22,9,22.3,10,21.7,10.6l-3.8,3.9c-0.2,0.2-0.3,0.6-0.3,0.9   l0.9,5.4c0.1,0.8-0.7,1.5-1.4,1.1l-4.7-2.6c-0.3-0.2-0.6-0.2-0.9,0l-4.7,2.6c-0.7,0.4-1.6-0.2-1.4-1.1l0.9-5.4   c0.1-0.3-0.1-0.7-0.3-0.9l-3.8-3.9C1.7,10,2,9,2.8,8.9l5.2-0.8c0.3,0,0.6-0.3,0.7-0.6l2.3-5C11.5,1.8,12.5,1.8,12.9,2.6z" id="favorite"/>
-                                            </g>
-                                        </StarIcon>
-                                        <span>5.0</span>
-                                    </ReviewScoreWrap>
-                                    <span>2024-04-07</span>
-                                </ReviewerInfoRowWrap>
-                            </ReviewerInfoWrap>
-                        </ReviewerContainer>
-                        <ReviewText>안 먹어본 사람은 있어도 한 번만 먹은 사람은 없을 듯</ReviewText>
-                    </ReviewItem>
+                    {commentLoading ? <Loading>Loading...</Loading> : (
+                        commentsData?.map(comment => (
+                            <CommentItem key={comment.id}>
+                                <CommentContainer>
+                                    <ProfileImg src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="img_user-profile" />
+                                    <CommentInfoWrap>
+                                        <span>{comment.user_info.email.split("@")[0]}</span>
+                                        <div>
+                                            {comment.created_at.split("T").map((i:string) => (
+                                                <CommentDateTime key={i}>{i}</CommentDateTime>
+                                            ))}
+                                        </div>
+                                    </CommentInfoWrap>
+                                </CommentContainer>
+                                <CommentText>{comment.comment}</CommentText>
+                            </CommentItem>
+                        ))
+                    )}
                 </ul>
-            </RecipeReviewWrap>
+            </RecipeCommentsWrap>
 
             <ListViewButton linkPath="/myRecipeList" />
         </div>
