@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { sessionState } from "../atoms";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const RecipeViewContainer = styled.section`
     margin: 140px 0 80px 0;
@@ -188,14 +189,19 @@ const CommentPostBtn = styled.button`
 
 const CommentSortWrap = styled.ul`
     display: flex;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
     border-bottom: 1px solid #dddddd;
 `;
 
 const CommentSortOption = styled.li`
     padding-left: 5px;
     padding-right: 10px;
+    color: ${(props) => props.theme.grey.darker};
     cursor: pointer;
+    &.active {
+        color: black;
+        font-weight: 600;
+    }
 `;
 
 const CommentItem = styled.li`
@@ -239,6 +245,7 @@ function MyRecipeDetail() {
     const subMenuInfo = [
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
+    const [sortType, setSortType] = useState("latest");
     const location = useLocation();
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
     const recipeItemIdx = location.search.slice(15);
@@ -262,6 +269,25 @@ function MyRecipeDetail() {
         queryKey: ['recipeDetail'], 
         queryFn: fetchRecipeDetailData,
         enabled: !!recipeItemIdx    //  recipeItemIdx가 있을 때만 쿼리 요청
+    });
+
+    // 현재 recipeItemIdx에 대한 전체 댓글 가져오기
+    const fetchAllCommentsData = async () => {
+        const { data: commentsData, error: commentsError } = await supabase
+            .from('comments')
+            .select(`*, user_info:user_info!user_id (username, email)`)
+            .eq('recipe_id', recipeItemIdx)
+            .order('created_at', {ascending: false});
+        if(commentsError) {
+            console.log(commentsError);
+            return [];
+        }
+        return commentsData;
+    };
+
+    const { data: commentsData, isLoading:commentLoading } = useQuery({
+        queryKey: ['comments'], 
+        queryFn: fetchAllCommentsData,
     });
 
     // 로그인 상태 확인 함수
@@ -302,28 +328,20 @@ function MyRecipeDetail() {
         }
     };
 
-    // 현재 recipeItemIdx에 대한 전체 댓글 가져오기
-    const fetchAllCommentsData = async () => {
-        const { data: commentsData, error: commentsError } = await supabase
-            .from('comments')
-            .select(`*, user_info:user_info!user_id (username, email)`)
-            .eq('recipe_id', recipeItemIdx)
-            .order('created_at', {ascending: false});
-        if(commentsError) {
-            console.log(commentsError);
-            return [];
-        } 
-        return commentsData;
-    };
+    const handleSortChange = (sortOption:string) => {
+        setSortType(sortOption);
+    }
 
-    const { data: commentsData, isLoading:commentLoading } = useQuery({
-        queryKey: ['comments'], 
-        queryFn: fetchAllCommentsData,
+    // 최신순-내림차순 정렬, 오래된 순-오름차순
+    const sortedCommentData = [...(commentsData ?? [])].sort((a, b) => {
+        return (sortType === "latest") 
+            ? (+new Date(b.created_at) - +new Date(a.created_at)) 
+            : (+new Date(a.created_at) - +new Date(b.created_at));
     });
 
     return (
         <div style={{paddingTop: "170px"}}>
-            <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false}  pathIncludesStr="myRecipe" />
+            <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} pathIncludesStr="myRecipe" />
                 <RecipeViewContainer>
                     {recipeDetalLoading ? <Loading>Loading...</Loading> : (
                         <>
@@ -400,12 +418,16 @@ function MyRecipeDetail() {
                     )}
                 </CommentForm>
                 <CommentSortWrap>
-                    <CommentSortOption>최신순</CommentSortOption>
-                    <CommentSortOption>등록순</CommentSortOption>
+                    <CommentSortOption 
+                        className={sortType === "latest" ? "active" : ""}
+                        onClick={() => handleSortChange("latest")}>최신순</CommentSortOption>
+                    <CommentSortOption 
+                        className={sortType === "oldest" ? "active" : ""}
+                        onClick={() => handleSortChange("oldest")}>오래된 순</CommentSortOption>
                 </CommentSortWrap>
                 <ul>
                     {commentLoading ? <Loading>Loading...</Loading> : (
-                        commentsData?.map(comment => (
+                        sortedCommentData?.map(comment => (
                             <CommentItem key={comment.id}>
                                 <CommentContainer>
                                     <ProfileImg src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="img_user-profile" />
