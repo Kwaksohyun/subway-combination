@@ -1,9 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
 import CommentForm from "./CommentForm";
+import { useRecoilValue } from "recoil";
+import { sessionState } from "../atoms";
 
 const RecipeCommentsWrap = styled.section`
     width: 100%;
@@ -47,7 +49,13 @@ const CommentItem = styled.li`
     border-bottom: 1px solid #dddddd;
 `;
 
-const CommentContainer = styled.div`
+const CommentHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    
+`;
+
+const CommentInfoWrap = styled.div`
     display: flex;
     align-items: center;
 `;
@@ -58,7 +66,7 @@ const ProfileImg = styled.img`
     margin-right: 13px;
 `;
 
-const CommentInfoWrap = styled.div`
+const CommentInfoMain = styled.div`
     height: 38px;
     display: flex;
     flex-direction: column;
@@ -74,10 +82,40 @@ const CommentDateTime = styled.span`
     margin-right: 5px;
 `;
 
+const CommentBtnWrap = styled.div``;
+
+const EditDeleteBtn = styled.button`
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    background-color: transparent;
+    padding: 4px 9px;
+    margin-left: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+        background-color: ${(props) => props.theme.grey.lighter};
+    }
+    &:active {
+        background-color: #dddddd;
+    }
+`;
+
 const CommentText = styled.p`
     padding-top: 13px;
     font-size: 15px;
 `;
+
+interface IComment {
+    id: number;
+    recipe_id: number;
+    user_id: string;
+    created_at: string;
+    comment: string;
+    user_info: {
+        email: string;
+        username: string;
+    }
+}
 
 function CommentsSection() {
     const location = useLocation();
@@ -85,6 +123,9 @@ function CommentsSection() {
     const recipeItemIdx = location.search.slice(15);
 
     const [sortType, setSortType] = useState("latest");
+    const session = useRecoilValue(sessionState);
+
+    const queryClient = useQueryClient();
 
     // 현재 recipeItemIdx에 대한 전체 댓글 가져오기
     const fetchAllCommentsData = async () => {
@@ -100,7 +141,7 @@ function CommentsSection() {
         return commentsData;
     };
 
-    const { data: commentsData, isLoading:commentLoading } = useQuery({
+    const { data: commentsData, isLoading:commentLoading } = useQuery<IComment[]>({
         queryKey: ['comments'], 
         queryFn: fetchAllCommentsData,
     });
@@ -115,6 +156,30 @@ function CommentsSection() {
             ? (+new Date(b.created_at) - +new Date(a.created_at)) 
             : (+new Date(a.created_at) - +new Date(b.created_at));
     });
+    
+    // 댓글 삭제
+    const deleteComment = async (id:number) => {
+        try {
+            const { error: deleteError } = await supabase.from('comments').delete().eq('id', id);
+
+            if(deleteError) {
+                console.log("삭제 중 오류 발생", deleteError);
+                alert("댓글 삭제에 실패했습니다.");
+            } else {
+                if(window.confirm("삭제하시겠습니까?")) {
+                    alert("성공적으로 삭제되었습니다.");
+                    // 댓글 삭제 후 댓글 목록 새로 가져오기(UI 업데이트)
+                    queryClient.invalidateQueries({
+                        queryKey: ['comments']
+                    });
+                }
+            }
+        } catch(error) {
+            // 예상치 못한 오류 처리
+            console.log(error);
+            alert("예상치 못한 문제가 발생하였습니다. 다시 시도해주세요.");
+        }   
+    };
 
     return (
         <RecipeCommentsWrap>
@@ -137,17 +202,25 @@ function CommentsSection() {
                 {commentLoading ? <Loading>Loading...</Loading> : (
                     sortedCommentData?.map(comment => (
                         <CommentItem key={comment.id}>
-                            <CommentContainer>
-                                <ProfileImg src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="img_user-profile" />
+                            <CommentHeader>
                                 <CommentInfoWrap>
-                                    <span>{comment.user_info.email.split("@")[0]}</span>
-                                    <div>
-                                        {comment.created_at.split("T").map((i:string) => (
-                                            <CommentDateTime key={i}>{i}</CommentDateTime>
-                                        ))}
-                                    </div>
+                                    <ProfileImg src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="img_user-profile" />
+                                    <CommentInfoMain>
+                                        <span>{comment.user_info.email.split("@")[0]}</span>
+                                        <div>
+                                            {comment.created_at.split("T").map((i:string) => (
+                                                <CommentDateTime key={i}>{i}</CommentDateTime>
+                                            ))}
+                                        </div>
+                                    </CommentInfoMain>
                                 </CommentInfoWrap>
-                            </CommentContainer>
+                                {(session?.user.id === comment.user_id) ? (
+                                    <CommentBtnWrap>
+                                    <EditDeleteBtn type="button">수정</EditDeleteBtn>
+                                    <EditDeleteBtn onClick={() => deleteComment(comment.id)} type="button">삭제</EditDeleteBtn>
+                                </CommentBtnWrap>
+                                ) : ""}
+                            </CommentHeader>
                             <CommentText>{comment.comment}</CommentText>
                         </CommentItem>
                     ))
