@@ -4,6 +4,7 @@ import { sessionState } from "../atoms";
 import supabase from "../supabaseClient";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CommentFormWrap = styled.form`
     display: flex;
@@ -43,6 +44,8 @@ function CommentForm() {
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
     const recipeItemIdx = location.search.slice(15);
 
+    const queryClient = useQueryClient();
+
     // 로그인 상태 확인 함수
     const confirmLoginState = () => {
         // 사용자의 이메일이 확인되지 않은 경우(로그인 성공했을 때만 속성이 포함됨)
@@ -71,12 +74,16 @@ function CommentForm() {
             created_at: `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`,
             comment: data.comment
         });
-        
+
         if(commentError) {
             throw new Error(commentError.message);
         } else {
-            // 댓글을 성공적으로 처리하면 -> 입력 form reset
             alert("댓글이 등록되었습니다.");
+            // 댓글 등록 후 댓글 목록 새로 가져오기(UI 업데이트)
+            queryClient.invalidateQueries({
+                queryKey: ['comments']
+            });
+            // 댓글을 성공적으로 처리하면 -> 입력 form reset
             reset();
         }
     };
@@ -85,7 +92,7 @@ function CommentForm() {
         <CommentFormWrap onSubmit={handleSubmit(onSubmit)}>
             {session?.user.confirmed_at ? (
                 <>
-                    <CommentTextarea {...register("comment")} placeholder="댓글을 입력해 주세요."></CommentTextarea>
+                    <CommentTextarea {...register("comment", {required: true})} placeholder="댓글을 입력해 주세요."></CommentTextarea>
                     <CommentPostBtn type="submit">등록</CommentPostBtn>
                 </>
             ) : (
