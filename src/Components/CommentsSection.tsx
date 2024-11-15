@@ -201,19 +201,19 @@ function CommentsSection() {
     // 댓글 삭제
     const deleteComment = async (id:number) => {
         try {
-            const { error: deleteError } = await supabase.from('comments').delete().eq('id', id);
-
-            if(deleteError) {
-                console.log("삭제 중 오류 발생", deleteError);
-                alert("댓글 삭제에 실패했습니다.");
-            } else {
-                if(window.confirm("삭제하시겠습니까?")) {
-                    alert("성공적으로 삭제되었습니다.");
-                    // 댓글 삭제 후 댓글 목록 새로 가져오기(UI 업데이트)
-                    queryClient.invalidateQueries({
-                        queryKey: ['comments']
-                    });
+            if(window.confirm("삭제하시겠습니까?")) {
+                const { error: deleteError } = await supabase.from('comments').delete().eq('id', id);
+                
+                if(deleteError) {
+                    console.log("삭제 중 오류 발생", deleteError);
+                    alert("댓글 삭제에 실패했습니다.");
                 }
+                
+                alert("성공적으로 삭제되었습니다.");
+                // 댓글 삭제 후 댓글 목록 새로 가져오기(UI 업데이트)
+                queryClient.invalidateQueries({
+                    queryKey: ['comments']
+                });
             }
         } catch(error) {
             // 예상치 못한 오류 처리
