@@ -13,7 +13,7 @@ const CommentFormWrap = styled.form`
     margin-bottom: 20px;
 `;
 
-const CommentTextarea = styled.textarea`
+export const CommentTextarea = styled.textarea`
     border: 1.5px solid #dddddd;
     border-radius: 4px;
     width: 100%;

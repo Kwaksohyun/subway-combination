@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import supabase from "../supabaseClient";
-import CommentForm from "./CommentForm";
+import CommentForm, { CommentTextarea } from "./CommentForm";
 import { useRecoilValue } from "recoil";
 import { sessionState } from "../atoms";
 
@@ -84,7 +84,7 @@ const CommentDateTime = styled.span`
 
 const CommentBtnWrap = styled.div``;
 
-const EditDeleteBtn = styled.button`
+const CommentOptionBtn = styled.button`
     border: 1px solid #dddddd;
     border-radius: 5px;
     background-color: transparent;
@@ -98,6 +98,15 @@ const EditDeleteBtn = styled.button`
     &:active {
         background-color: #dddddd;
     }
+    &.submit {
+        background-color: ${(props) => props.theme.green.lighter};
+        color: #fff;
+        border: 1px solid ${(props) => props.theme.green.lighter};
+    }
+`;
+
+const EditCommentTextarea = styled(CommentTextarea)`
+    margin-top: 10px;
 `;
 
 const CommentText = styled.p`
@@ -118,6 +127,9 @@ interface IComment {
 }
 
 function CommentsSection() {
+    const [isEditing, setIsEditing] = useState(false);
+    const [selectedCommentId, setSelectedCommentId] = useState(0);
+    const [editValue, setEditValue] = useState("");
     const location = useLocation();
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
     const recipeItemIdx = location.search.slice(15);
@@ -146,6 +158,7 @@ function CommentsSection() {
         queryFn: fetchAllCommentsData,
     });
 
+    
     const handleSortChange = (sortOption:string) => {
         setSortType(sortOption);
     }
@@ -156,7 +169,35 @@ function CommentsSection() {
             ? (+new Date(b.created_at) - +new Date(a.created_at)) 
             : (+new Date(a.created_at) - +new Date(b.created_at));
     });
-    
+
+    const handleEditInput = (id:number, comment:string) => {
+        setSelectedCommentId(id);
+        setEditValue(comment);
+        // 수정중으로 변경
+        setIsEditing(true);
+    }
+
+    // 댓글 수정
+    const updateComment = async () => {
+        try {
+            const { error: updateError } = await supabase
+                .from('comments')
+                .update({ comment: editValue })
+                .eq('id', selectedCommentId);
+            if(updateError) {
+                console.log("업데이트 중 오류 발생", updateError);
+                alert("댓글 수정에 실패했습니다.");
+            } else {
+                // 댓글 수정 후 댓글 목록 새로 가져오기(UI 업데이트)
+                queryClient.invalidateQueries({
+                    queryKey: ['comments']
+                });
+                setIsEditing(false);
+            }
+        } catch(error) {
+            console.log(error);
+        }
+    }
     // 댓글 삭제
     const deleteComment = async (id:number) => {
         try {
@@ -214,14 +255,21 @@ function CommentsSection() {
                                         </div>
                                     </CommentInfoMain>
                                 </CommentInfoWrap>
-                                {(session?.user.id === comment.user_id) ? (
+                                {(session?.user.id !== comment.user_id) ? "" : isEditing ? (
                                     <CommentBtnWrap>
-                                    <EditDeleteBtn type="button">수정</EditDeleteBtn>
-                                    <EditDeleteBtn onClick={() => deleteComment(comment.id)} type="button">삭제</EditDeleteBtn>
-                                </CommentBtnWrap>
-                                ) : ""}
+                                        <CommentOptionBtn onClick={() => setIsEditing(false)} type="button">취소</CommentOptionBtn>
+                                        <CommentOptionBtn onClick={updateComment} className="submit" type="button">저장</CommentOptionBtn>
+                                    </CommentBtnWrap>
+                                ) : (
+                                    <CommentBtnWrap>
+                                        <CommentOptionBtn onClick={() => handleEditInput(comment.id, comment.comment)} type="button">수정</CommentOptionBtn>
+                                        <CommentOptionBtn onClick={() => deleteComment(comment.id)} type="button">삭제</CommentOptionBtn>
+                                    </CommentBtnWrap>
+                                )}
                             </CommentHeader>
-                            <CommentText>{comment.comment}</CommentText>
+                            {(isEditing && (selectedCommentId === comment.id)) ? (
+                                <EditCommentTextarea onChange={e => setEditValue(e.target.value)} defaultValue={comment.comment}></EditCommentTextarea>
+                            ) : <CommentText>{comment.comment}</CommentText>}
                         </CommentItem>
                     ))
                 )}
