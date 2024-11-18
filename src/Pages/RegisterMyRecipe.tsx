@@ -201,17 +201,41 @@ const NotSelectedImg = styled.svg`
     fill: #dadada;
 `;
 
-const SubmitBtn = styled.button`
-    border: 0;
-    width: 125px;
+const BtnWrap = styled.div`
+    width: 240px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const Button = styled.button`
+    width: 110px;
     height: 40px;
     border-radius: 20px;
-    background-color: ${(props) => props.theme.green.darker};
-    color: #fff;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
+`;
+
+const ResetBtn = styled(Button)`
+    background-color: #000;
+    color: #fff;
+    border: 0;
+    margin-top: 10px;
+`;
+
+const CancelBtn = styled(Button)`
+    border: 2px solid ${(props) => props.theme.green.darker};
+    background-color: #fff;
+    color: ${(props) => props.theme.green.darker};
+`;
+
+const SubmitBtn = styled(Button)`
+    border: 0;
+    background-color: ${(props) => props.theme.green.darker};
+    color: #fff;
 `;
 
 interface IForm {
@@ -251,6 +275,14 @@ function RegisterMyRecipe() {
         }
     };
 
+    // 레시피 작성 취소
+    const cancleRecipeForm = () => {
+        if(window.confirm("레시피 작성을 취소하시겠습니까?\n작성중인 레시피는 저장되지 않습니다.")) {
+            navigate("/myRecipeList");
+        }
+    }
+
+    // 레시피 등록
     const onSubmit = async (formData:IForm) => {
         // 1. 중복 제출 방지 - 로그인 버튼 비활성화되는 것을 확인하기 위한 1초 지연
         await new Promise((r) => setTimeout(r, 1000));
@@ -301,7 +333,6 @@ function RegisterMyRecipe() {
         // 4. 꿀조합 레시피 리스트 페이지로 이동
         navigate("/myRecipeList");
     };
-    // console.log(useMatch("/myRecipeList/*"));
     return (
         <div style={{ paddingTop: "170px", minWidth: "800px" }}>
             <PageHeader>
@@ -460,10 +491,12 @@ function RegisterMyRecipe() {
                                 </ul>
                             </FormContent>
                         </FormStepWrap>
-                        {/* form 제출 버튼 */}
-                        <div style={{margin: "15px auto"}}>
+                        <ResetBtn type="button" onClick={() => reset()}>초기화 ↺</ResetBtn>
+                        <BtnWrap>
+                            <CancelBtn type="button" onClick={cancleRecipeForm}>취소하기</CancelBtn>
+                            {/* form 제출 버튼 */}
                             <SubmitBtn type="submit" disabled={isSubmitting}>등록하기</SubmitBtn>
-                        </div>
+                        </BtnWrap>
                     </MyRecipeForm>
                 </div>
             </MyRecipeFormWrap>
