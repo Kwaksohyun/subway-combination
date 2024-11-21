@@ -202,7 +202,7 @@ function Header() {
                                     <Logout onClick={signOut}>로그아웃</Logout>
                                 </div>
                             </UtilityItem>
-                            <UtilityItem><Link to={"/"}>내 정보</Link></UtilityItem>
+                            <UtilityItem><Link to={"/myPage"}>내 정보</Link></UtilityItem>
                         </ul>
                     ) : (
                         <ul>

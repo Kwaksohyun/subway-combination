@@ -13,6 +13,7 @@ import MenuItemDetail from './Pages/MenuItemDetail';
 import UtilizationSubway from './Pages/UtilizationSubway';
 import Join from './Pages/Join';
 import Login from './Pages/Login';
+import MyPage from './Pages/Mypage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path='sandwich' element={<Sandwich />}/>
           <Route path='unit' element={<Wrap />}/>
         </Route>
+        <Route path='/myPage' element={<MyPage />} />
         <Route path='/menuView/:menuCategory' element={<MenuItemDetail/> } />
         <Route path='/utilizationSubway' element={<UtilizationSubway />} />
         <Route path='/freshInfo' element={<FreshIngredients/>} />
