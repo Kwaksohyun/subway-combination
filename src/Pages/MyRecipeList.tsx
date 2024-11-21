@@ -6,8 +6,9 @@ import { sessionState } from "../atoms";
 import data from "../data.json";
 import supabase from "../supabaseClient";
 import { useQuery } from "@tanstack/react-query";
+import { ReactComponent as HeartIcon } from '../assets/heart.svg';
 
-const PageHeaderContainer = styled.article`
+const PageHeaderContainer = styled.header`
     margin: 140px 0 80px 0;
 `;
 
@@ -175,18 +176,13 @@ const RecipeWriter = styled.span`
     font-size: 13px;
 `;
 
-const ReviewInfoWrap = styled.div`
+const RecipeHeartWrap = styled.div`
     display: flex;
+    align-items: center;
     > span {
-        color: #666666;
         font-size: 15px;
+        padding-bottom: 2px;
     }
-`;
-
-const StarIcon = styled.svg`
-    fill: ${(props) => props.theme.yellow.darker};
-    width: 16px;
-    height: 16px;
 `;
 
 interface IRecipe {
@@ -245,7 +241,7 @@ function MyRecipeList() {
         }
     };
     return (
-        <div style={{paddingTop: "170px", minWidth: "800px"}}>
+        <section style={{paddingTop: "170px", minWidth: "800px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
             
             {/* 나만의 꿀조합 레시피 헤더 */}
@@ -284,15 +280,10 @@ function MyRecipeList() {
                                                 </RecipeTextWrap>
                                                 <RecipeTextRowWrap>
                                                     <RecipeWriter>{recipe.user_email_id}</RecipeWriter>
-                                                    <ReviewInfoWrap>
-                                                        <StarIcon version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <g id="info"/>
-                                                            <g id="icons">
-                                                                <path d="M12.9,2.6l2.3,5c0.1,0.3,0.4,0.5,0.7,0.6l5.2,0.8C22,9,22.3,10,21.7,10.6l-3.8,3.9c-0.2,0.2-0.3,0.6-0.3,0.9   l0.9,5.4c0.1,0.8-0.7,1.5-1.4,1.1l-4.7-2.6c-0.3-0.2-0.6-0.2-0.9,0l-4.7,2.6c-0.7,0.4-1.6-0.2-1.4-1.1l0.9-5.4   c0.1-0.3-0.1-0.7-0.3-0.9l-3.8-3.9C1.7,10,2,9,2.8,8.9l5.2-0.8c0.3,0,0.6-0.3,0.7-0.6l2.3-5C11.5,1.8,12.5,1.8,12.9,2.6z" id="favorite"/>
-                                                            </g>
-                                                        </StarIcon>
-                                                        <span>4.6 (10)</span>
-                                                    </ReviewInfoWrap>
+                                                    <RecipeHeartWrap>
+                                                        <HeartIcon width="20" height="20" />
+                                                        <span>13</span>
+                                                    </RecipeHeartWrap>
                                                 </RecipeTextRowWrap>
                                             </RecipeInfoWrap>
                                         </Link>
@@ -303,7 +294,7 @@ function MyRecipeList() {
                     </div>
                 </RecipeListWrap>
             </MyRecipeContentWrap>
-        </div>
+        </section>
     )
 }
 
