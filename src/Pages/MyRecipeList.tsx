@@ -1,12 +1,11 @@
-import { Link, useMatch, useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import SubHeader from "../Components/SubHeader";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { sessionState } from "../atoms";
-import data from "../data.json";
 import supabase from "../supabaseClient";
 import { useQuery } from "@tanstack/react-query";
-import { ReactComponent as HeartIcon } from '../assets/heart.svg';
+import RecipeItem from "../Components/RecipeItem";
 
 const PageHeaderContainer = styled.header`
     margin: 140px 0 80px 0;
@@ -126,65 +125,6 @@ const Loading = styled.h2`
     text-align: center;
 `;
 
-const RecipeItem = styled.li`
-    width: 290px;
-    height: 360px;  
-    border-radius: 30px;
-    background-color: #fff;
-`;
-
-const RecipeImg = styled.img`
-    width: 290px;
-    height: 210px;
-    background-color: ${(props) => props.theme.yellow.lighter};
-    border-radius: 30px;
-`;
-
-const RecipeInfoWrap = styled.div`
-    width: 290px;
-    height: 150px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 25px 20px;
-`;
-
-const RecipeTextWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
-const RecipeTitle = styled.strong`
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.3;
-`;
-
-const RecipeMenu = styled.span`
-    color: #666666;
-    font-size: 13px;
-    margin-top: 7px;
-`;
-
-const RecipeTextRowWrap = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const RecipeWriter = styled.span`
-    color: ${(props) => props.theme.grey.darker};
-    font-size: 13px;
-`;
-
-const RecipeHeartWrap = styled.div`
-    display: flex;
-    align-items: center;
-    > span {
-        font-size: 15px;
-        padding-bottom: 2px;
-    }
-`;
-
 interface IRecipe {
     id: number;
     created_at: string;
@@ -207,10 +147,6 @@ function MyRecipeList() {
     ];
     const session = useRecoilValue(sessionState);
     const navigate = useNavigate();
-    
-    const sandwichInfoObj = (sandwich:string) => {
-        return data.sandwichList.find(i => i.title === sandwich);
-    };
 
     // supabase의 recipes 테이블에서 레시피 데이터 불러오는 함수
     const fetchAllRecipesData = async () => {
@@ -269,25 +205,8 @@ function MyRecipeList() {
                         {isLoading ? <Loading>Loading...</Loading> : (
                             <ul>
                                 {recipesData?.map((recipe) => (
-                                    <RecipeItem key={recipe.id}>
-                                        <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipe.id}`}
-                                            state={{imgSrc: `${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`, calorie: `${sandwichInfoObj(recipe.sandwich)?.calorie}`}}>
-                                            <RecipeImg alt={`img_${sandwichInfoObj(recipe.sandwich)?.eng_title}`} src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(recipe.sandwich)?.img}`} />
-                                            <RecipeInfoWrap>
-                                                <RecipeTextWrap>
-                                                    <RecipeTitle>{recipe.title}</RecipeTitle>
-                                                    <RecipeMenu>샌드위치ㆍ{recipe.sandwich}</RecipeMenu>
-                                                </RecipeTextWrap>
-                                                <RecipeTextRowWrap>
-                                                    <RecipeWriter>{recipe.user_email_id}</RecipeWriter>
-                                                    <RecipeHeartWrap>
-                                                        <HeartIcon width="20" height="20" />
-                                                        <span>13</span>
-                                                    </RecipeHeartWrap>
-                                                </RecipeTextRowWrap>
-                                            </RecipeInfoWrap>
-                                        </Link>
-                                    </RecipeItem>
+                                    <RecipeItem key={recipe.id} recipeId={recipe.id} recipeTitle={recipe.title}
+                                                sandwichName={recipe.sandwich} emailId={recipe.user_email_id} />
                                 ))}
                             </ul>
                         )}
