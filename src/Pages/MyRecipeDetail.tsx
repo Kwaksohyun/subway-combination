@@ -1,10 +1,15 @@
-import { useLocation, useMatch } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ListViewButton from "../Components/ListViewButton";
 import SubHeader from "../Components/SubHeader";
 import supabase from "../supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 import CommentsSection from "../Components/CommentsSection";
+import { ReactComponent as HeartIcon } from '../assets/heart.svg';
+import { ReactComponent as BookMarkIcon } from '../assets/bookmark.svg';
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { sessionState } from "../atoms";
 
 const RecipeViewContainer = styled.section`
     margin: 140px 0 80px 0;
@@ -18,8 +23,11 @@ const RecipeHeader = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 95px;
+    height: 100px;
+    max-width: 1160px;
+    margin: 0 auto;
     justify-content: space-between;
+    position: relative;
 `;
 
 const RecipeMenuWrap = styled.div`
@@ -37,7 +45,8 @@ const RecipeMenuWrap = styled.div`
 
 const RecipeTitle = styled.h3`
     font-size: 30px;
-    font-weight: 500;  
+    font-weight: 500;
+    text-align: center;
 `;
 
 const RecipeTextRowWrap = styled.div`
@@ -46,27 +55,39 @@ const RecipeTextRowWrap = styled.div`
     color: ${(props) => props.theme.grey.darker};
     > span {
         position: relative;
-        margin-left: 25px;
     }
-    > span::before {
+    > span:first-child {
+        margin-right: 25px;
+    }
+    > span:first-child::after {
         content: '';
         position: absolute;
         background-color: #dddddd;
         width: 1px;
         height: 14px;
         top: 2px;
-        left: -11px;
+        right: -12px;
     }
 `;
 
-const ReviewScoreWrap = styled.div`
-    display: flex;
-    align-items: center;
+const BtnWrap = styled.div`
+    position: absolute;
+    right: 5px;
 `;
 
-const StarIcon = styled.svg`
-    fill: ${(props) => props.theme.yellow.darker};
-    margin-right: 2px;
+const IconButton = styled.button`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 53px;
+    height: 53px;
+    border-radius: 30px;
+    border: 1px solid #dddddd;
+    background-color: #fff;
+    color: ${(props) => props.theme.grey.darker};
+    margin-bottom: 5px;
+    cursor: pointer;
 `;
 
 const RecipeInfoWrap = styled.div`
@@ -143,13 +164,19 @@ function MyRecipeDetail() {
     const subMenuInfo = [
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
+    const [isSaved, setIsSaved] = useState(false);      // 저장 여부 상태
+    const session = useRecoilValue(sessionState);
     const location = useLocation();
+    const navigate = useNavigate();
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
     const recipeItemIdx = location.search.slice(15);
 
     // 레시피 상세 데이터 불러오는 함수
     const fetchRecipeDetailData = async () => {
-        const { data: recipeData, error: recipeError } = await supabase.from('recipes').select().eq('id', recipeItemIdx).single();
+        const { data: recipeData, error: recipeError } = await supabase
+            .from('recipes')
+            .select()
+            .eq('id', recipeItemIdx).single();
         if(recipeError) {
             console.log(recipeError.message);
             return null;
@@ -158,12 +185,63 @@ function MyRecipeDetail() {
     };
 
     // ※ isLoading : 캐시된 데이터가 없고 쿼리 시도가 아직 완료되지 않은 경우 
-    const { data: recipeDetailData, isLoading:recipeDetalLoading } = useQuery({
+    const { data: recipeDetailData, isLoading: recipeDetalLoading } = useQuery({
         queryKey: ['recipeDetail'], 
         queryFn: fetchRecipeDetailData,
         enabled: !!recipeItemIdx    //  recipeItemIdx가 있을 때만 쿼리 요청
     });
 
+    // 로그인 확인 함수
+    const checkLoginState = () => {
+        if(!session?.user.confirmed_at) {
+            if(window.confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+                navigate("/login", { state: "MyRecipeDetail" });
+            }
+            return false;   // 로그인하지 않은 경우 false 반환
+        } 
+        return true;    // 로그인한 경우 true 반환
+    };
+
+    const savedRecipe = async () => {
+        // 로그인 확인
+            // 로그인하지 않은 경우 -> 함수 실행 중단
+            // 로그인한 경우 -> 아래 로직 실행
+        if(!checkLoginState()) return;
+
+        const { error: recipeSaveError } = await supabase
+                .from('saved_recipes')
+                .upsert({
+                    recipe_id: recipeItemIdx,
+                    user_id: session?.user?.id,
+                    is_saved: !isSaved,
+                }, { onConflict: 'recipe_id, user_id' });
+            if(recipeSaveError) {
+                console.log("레시피 저장 실패: ", recipeSaveError.message);
+            } else {
+                setIsSaved((prevIsSaved) => !prevIsSaved);
+            }
+    }
+    
+    useEffect(() => {
+        // 사용자의 현재 화면의 레시피 저장 상태를 가져오는 함수
+        const fetchSavedRecipesData = async () => {
+            const { data: savedRecipesData, error: savedRecipesFetchError } = await supabase
+                .from('saved_recipes')
+                .select()
+                .eq('user_id', session?.user?.id)
+                .eq('recipe_id', recipeItemIdx);
+            if(savedRecipesFetchError) {
+                console.log("저장된 데이터가 없습니다.: ", savedRecipesFetchError.message);
+            } else {
+                // 데이터가 있다면 is_saved 상태 설정
+                setIsSaved(savedRecipesData.length>0 && savedRecipesData[0].is_saved);  
+            }
+        };
+        // 사용자가 로그인 한 경우에만 실행
+        if(session?.user?.id) {
+            fetchSavedRecipesData();
+        }
+    }, [session?.user?.id, recipeItemIdx]);
     return (
         <div style={{paddingTop: "170px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} pathIncludesStr="myRecipe" />
@@ -178,18 +256,19 @@ function MyRecipeDetail() {
                                 </RecipeMenuWrap>
                                 <RecipeTitle>{recipeDetailData?.title}</RecipeTitle>
                                 <RecipeTextRowWrap>
-                                    <ReviewScoreWrap>
-                                        <StarIcon width="18" height="18" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <g id="info"/>
-                                            <g id="icons">
-                                                <path d="M12.9,2.6l2.3,5c0.1,0.3,0.4,0.5,0.7,0.6l5.2,0.8C22,9,22.3,10,21.7,10.6l-3.8,3.9c-0.2,0.2-0.3,0.6-0.3,0.9   l0.9,5.4c0.1,0.8-0.7,1.5-1.4,1.1l-4.7-2.6c-0.3-0.2-0.6-0.2-0.9,0l-4.7,2.6c-0.7,0.4-1.6-0.2-1.4-1.1l0.9-5.4   c0.1-0.3-0.1-0.7-0.3-0.9l-3.8-3.9C1.7,10,2,9,2.8,8.9l5.2-0.8c0.3,0,0.6-0.3,0.7-0.6l2.3-5C11.5,1.8,12.5,1.8,12.9,2.6z" id="favorite"/>
-                                            </g>
-                                        </StarIcon>
-                                        <span>4.6 (10)</span>
-                                    </ReviewScoreWrap>
                                     <span>{recipeDetailData?.user_email_id}</span>
                                     <span>{recipeDetailData?.created_at.split("T")[0]}</span>
                                 </RecipeTextRowWrap>
+                                <BtnWrap>
+                                    <IconButton type="button">
+                                        <HeartIcon width="30" height="30" strokeWidth="1.2" />
+                                        <span >13</span>
+                                    </IconButton>
+                                    <IconButton type="button" onClick={savedRecipe}>
+                                        <BookMarkIcon fill={isSaved ? "#ffce32" : "none"} stroke={isSaved ? "#ffce32" : "#999999"}
+                                            width="30" height="30" strokeWidth="1.2" />
+                                    </IconButton>
+                                </BtnWrap>
                             </RecipeHeader>
 
                             {/* 레시피 */}
