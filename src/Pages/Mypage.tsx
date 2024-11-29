@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as HeartIcon } from '../assets/heart.svg';
-import { ReactComponent as BookMarkIcon } from '../assets/bookmark.svg';
+import RecipeItem from "../Components/RecipeItem";
+import { useRecoilValue } from "recoil";
+import { sessionState } from "../atoms";
+import supabase from "../supabaseClient";
+import { useQuery } from "@tanstack/react-query";
 
 const PageHeaderContainer = styled.header`
     margin: 140px 0 80px 0;
@@ -138,70 +141,54 @@ const MyPageRecipeListWrap = styled.div`
     }
 `;
 
-const RecipeItem = styled.li`
-    width: 290px;
-    height: 360px;  
-    border-radius: 30px;
-    background-color: #fff;
-`;
-
-const RecipeImg = styled.img`
-    width: 290px;
-    height: 210px;
-    background-color: ${(props) => props.theme.yellow.lighter};
-    border-radius: 30px;
-`;
-
-const RecipeInfoWrap = styled.div`
-    width: 290px;
-    height: 150px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 25px 20px;
-`;
-
-const RecipeTextWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
-const RecipeTitle = styled.strong`
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.3;
-`;
-
-const RecipeMenu = styled.span`
-    color: #666666;
-    font-size: 13px;
-    margin-top: 7px;
-`;
-
-const RecipeTextRowWrap = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const RecipeWriter = styled.span`
-    color: ${(props) => props.theme.grey.darker};
-    font-size: 13px;
-`;
-
-const RecipeBtnWrap = styled.div`
-    display: flex;
-    align-items: center;
-    > div {
-        display: flex;
-        align-items: center;
-        margin-right: 5px;
-    }
-    > div > span {
-        font-size: 13px;
-    }
+const Loading = styled.h2`
+    text-align: center;
 `;
 
 function MyPage() {
+    const session = useRecoilValue(sessionState);
+
+    // 나만의 레시피
+    const fetchMyRecipesData = async () => {
+        const { data, error } = await supabase
+            .from('recipes')
+            .select()
+            .eq('user_id', session?.user?.id);
+        if(error) {
+            console.log("error: ", error);
+            return null;
+        } else {
+            return data;
+        }
+    }
+
+    // 저장한 레시피
+    const fetchSavedRecipesData = async () => {
+        const { data, error } = await supabase
+            .from('saved_recipes')
+            .select(`*, recipes (*)`)
+            .eq('user_id', session?.user?.id)
+            .eq('is_saved', true)
+        if(error) {
+            console.log("error: ", error);
+            return null;
+        } else {
+            return data;
+        }
+    }
+
+    const { data: myRecipeData, isLoading: myRecipeLoading} = useQuery({
+        queryKey: ['myRecipe'],
+        queryFn: fetchMyRecipesData,
+        enabled: !!session?.user.id         //  세션 데이터가 있을 때만 쿼리 요청
+    });
+
+    const { data: savedRecipesData, isLoading: savedRecipesLoading} = useQuery({
+        queryKey: ['savedRecipes'],
+        queryFn: fetchSavedRecipesData,
+        enabled: !!session?.user.id 
+    });
+    
     return (
         <section style={{paddingTop: "170px", minWidth: "800px"}}>
             {/* 마이페이지 헤더 */}
@@ -215,8 +202,8 @@ function MyPage() {
                         <div>
                             <img src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="profileImg" />
                             <MemberInfoDescWrap>
-                                <MemberName><strong>홍길동</strong>님 안녕하세요.</MemberName>
-                                <MemberEmail>test@naver.com</MemberEmail>
+                                <MemberName><strong>{session?.user.user_metadata.username}</strong>님 안녕하세요.</MemberName>
+                                <MemberEmail>{session?.user.user_metadata.email}</MemberEmail>
                             </MemberInfoDescWrap>
                         </div>
                         <EditMemberInfoLink to={"/"}>회원정보 수정</EditMemberInfoLink>
@@ -225,19 +212,19 @@ function MyPage() {
                         <BtnItem>
                             <Link to={"/"}>
                                 <span>나만의 레시피</span>
-                                <p>1</p>
+                                <p>{myRecipeData?.length}</p>
                             </Link>
                         </BtnItem>
                         <BtnItem>
                             <Link to={"/"}>
                                 <span>저장한 레시피</span>
-                                <p>2</p>
+                                <p>{savedRecipesData?.length}</p>
                             </Link>
                         </BtnItem>
                         <BtnItem>
                             <Link to={"/"}>
                                 <span>찜한 레시피</span>
-                                <p>17</p>
+                                <p>1</p>
                             </Link>
                         </BtnItem>
                     </MyPageUserInfoBtnWrap>
@@ -251,29 +238,14 @@ function MyPage() {
                             <Link to="/">더보기 &gt;</Link>
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
-                            <ul>
-                                <RecipeItem>
-                                    <Link to={"/"}>
-                                        <RecipeImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Tuna.png`} alt="Tuna.png" />
-                                        <RecipeInfoWrap>
-                                            <RecipeTextWrap>
-                                                <RecipeTitle>레시피 제목</RecipeTitle>
-                                                <RecipeMenu>샌드위치ㆍ샌드위치 메뉴 이름</RecipeMenu>
-                                            </RecipeTextWrap>
-                                            <RecipeTextRowWrap>
-                                                <RecipeWriter>test</RecipeWriter>
-                                                <RecipeBtnWrap>
-                                                    <div>
-                                                        <HeartIcon width="20" height="20" />
-                                                        <span>13</span>
-                                                    </div>
-                                                    <BookMarkIcon width="20" height="20" />
-                                                </RecipeBtnWrap>
-                                            </RecipeTextRowWrap>
-                                        </RecipeInfoWrap>
-                                    </Link>
-                                </RecipeItem>
-                            </ul>
+                            {myRecipeLoading ? <Loading>Loading...</Loading> : (
+                                <ul>
+                                    {myRecipeData?.map((recipe) => (
+                                        <RecipeItem key={recipe.id} recipeId={recipe.id} recipeTitle={recipe.title}
+                                                    sandwichName={recipe.sandwich} emailId={recipe.user_email_id} />
+                                    ))}
+                                </ul>
+                            )}
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
                     {/* 저장한 레시피 */}
@@ -283,50 +255,14 @@ function MyPage() {
                             <Link to="/">더보기 &gt;</Link>
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
-                            <ul>
-                            <RecipeItem>
-                                    <Link to={"/"}>
-                                        <RecipeImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Tuna.png`} alt="Tuna.png" />
-                                        <RecipeInfoWrap>
-                                            <RecipeTextWrap>
-                                                <RecipeTitle>레시피 제목</RecipeTitle>
-                                                <RecipeMenu>샌드위치ㆍ샌드위치 메뉴 이름</RecipeMenu>
-                                            </RecipeTextWrap>
-                                            <RecipeTextRowWrap>
-                                                <RecipeWriter>test</RecipeWriter>
-                                                <RecipeBtnWrap>
-                                                    <div>
-                                                        <HeartIcon width="20" height="20" />
-                                                        <span>13</span>
-                                                    </div>
-                                                    <BookMarkIcon width="20" height="20" />
-                                                </RecipeBtnWrap>
-                                            </RecipeTextRowWrap>
-                                        </RecipeInfoWrap>
-                                    </Link>
-                                </RecipeItem>
-                                <RecipeItem>
-                                    <Link to={"/"}>
-                                        <RecipeImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Tuna.png`} alt="Tuna.png" />
-                                        <RecipeInfoWrap>
-                                            <RecipeTextWrap>
-                                                <RecipeTitle>레시피 제목</RecipeTitle>
-                                                <RecipeMenu>샌드위치ㆍ샌드위치 메뉴 이름</RecipeMenu>
-                                            </RecipeTextWrap>
-                                            <RecipeTextRowWrap>
-                                                <RecipeWriter>test</RecipeWriter>
-                                                <RecipeBtnWrap>
-                                                    <div>
-                                                        <HeartIcon width="20" height="20" />
-                                                        <span>13</span>
-                                                    </div>
-                                                    <BookMarkIcon width="20" height="20" />
-                                                </RecipeBtnWrap>
-                                            </RecipeTextRowWrap>
-                                        </RecipeInfoWrap>
-                                    </Link>
-                                </RecipeItem>
-                            </ul>
+                            {savedRecipesLoading ? <Loading>Loading...</Loading> : (
+                                <ul>
+                                    {savedRecipesData?.map((savedRecipe) => (
+                                        <RecipeItem key={savedRecipe.id} recipeId={savedRecipe.recipes.id} recipeTitle={savedRecipe.recipes.title}
+                                                    sandwichName={savedRecipe.recipes.sandwich} emailId={savedRecipe.recipes.user_email_id} />
+                                    ))}
+                                </ul>
+                            )}
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
                     {/* 찜한 레시피 */}
@@ -337,27 +273,8 @@ function MyPage() {
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
                             <ul>
-                                <RecipeItem>
-                                    <Link to={"/"}>
-                                        <RecipeImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Tuna.png`} alt="Tuna.png" />
-                                        <RecipeInfoWrap>
-                                            <RecipeTextWrap>
-                                                <RecipeTitle>레시피 제목</RecipeTitle>
-                                                <RecipeMenu>샌드위치ㆍ샌드위치 메뉴 이름</RecipeMenu>
-                                            </RecipeTextWrap>
-                                            <RecipeTextRowWrap>
-                                                <RecipeWriter>test</RecipeWriter>
-                                                <RecipeBtnWrap>
-                                                    <div>
-                                                        <HeartIcon width="20" height="20" />
-                                                        <span>13</span>
-                                                    </div>
-                                                    <BookMarkIcon width="20" height="20" />
-                                                </RecipeBtnWrap>
-                                            </RecipeTextRowWrap>
-                                        </RecipeInfoWrap>
-                                    </Link>
-                                </RecipeItem>
+                                <RecipeItem key={Math.random()} recipeId={1} recipeTitle="레시피 제목"
+                                            sandwichName="에그마요" emailId="test" />
                             </ul>
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
