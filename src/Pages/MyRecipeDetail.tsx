@@ -208,22 +208,23 @@ function MyRecipeDetail() {
             // 로그인한 경우 -> 아래 로직 실행
         if(!checkLoginState()) return;
 
+        // recipe_id와 user_id의 조합으로 UNIQUE 제약 조건에 따라 UPSERT
         const { error: recipeSaveError } = await supabase
-                .from('saved_recipes')
-                .upsert({
-                    recipe_id: recipeItemIdx,
-                    user_id: session?.user?.id,
-                    is_saved: !isSaved,
-                }, { onConflict: 'recipe_id, user_id' });
-            if(recipeSaveError) {
-                console.log("레시피 저장 실패: ", recipeSaveError.message);
-            } else {
-                setIsSaved((prevIsSaved) => !prevIsSaved);
-            }
+            .from('saved_recipes')
+            .upsert({
+                recipe_id: recipeItemIdx,
+                user_id: session?.user?.id,
+                is_saved: !isSaved,
+            }, { onConflict: 'recipe_id, user_id' });       
+        if(recipeSaveError) {
+            console.log("레시피 저장 실패: ", recipeSaveError.message);
+        } else {
+            setIsSaved((prevIsSaved) => !prevIsSaved);
+        }
     }
     
     useEffect(() => {
-        // 사용자의 현재 화면의 레시피 저장 상태를 가져오는 함수
+        // 페이지 로드될 때 사용자의 해당 레시피 저장 상태를 가져오는 함수
         const fetchSavedRecipesData = async () => {
             const { data: savedRecipesData, error: savedRecipesFetchError } = await supabase
                 .from('saved_recipes')
@@ -233,7 +234,7 @@ function MyRecipeDetail() {
             if(savedRecipesFetchError) {
                 console.log("저장된 데이터가 없습니다.: ", savedRecipesFetchError.message);
             } else {
-                // 데이터가 있다면 is_saved 상태 설정
+                // 데이터가 있다면 isSaved 상태 업데이트
                 setIsSaved(savedRecipesData.length>0 && savedRecipesData[0].is_saved);  
             }
         };
