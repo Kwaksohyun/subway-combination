@@ -177,6 +177,21 @@ function MyPage() {
         }
     }
 
+    // 찜한 레시피
+    const fetchLikedRecipesData = async () => {
+        const { data: likedData, error: likedDataFetchError } = await supabase
+            .from('recipe_likes')
+            .select(`*, recipes (*)`)
+            .eq('user_id', session?.user?.id)
+            .eq('is_liked', true)
+        if(likedDataFetchError) {
+            console.log("찜한 데이터 불러오기 실패.", likedDataFetchError.message);
+            return null;
+        } else {
+            return likedData;
+        }
+    }
+
     const { data: myRecipeData, isLoading: myRecipeLoading} = useQuery({
         queryKey: ['myRecipe'],
         queryFn: fetchMyRecipesData,
@@ -186,6 +201,12 @@ function MyPage() {
     const { data: savedRecipesData, isLoading: savedRecipesLoading} = useQuery({
         queryKey: ['savedRecipes'],
         queryFn: fetchSavedRecipesData,
+        enabled: !!session?.user.id 
+    });
+
+    const { data: likedRecipesData, isLoading: likedRecipesLoading} = useQuery({
+        queryKey: ['likedRecipes'],
+        queryFn: fetchLikedRecipesData,
         enabled: !!session?.user.id 
     });
     
@@ -224,7 +245,7 @@ function MyPage() {
                         <BtnItem>
                             <Link to={"/"}>
                                 <span>찜한 레시피</span>
-                                <p>1</p>
+                                <p>{likedRecipesData?.length}</p>
                             </Link>
                         </BtnItem>
                     </MyPageUserInfoBtnWrap>
@@ -272,10 +293,14 @@ function MyPage() {
                             <Link to="/">더보기 &gt;</Link>
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
-                            <ul>
-                                <RecipeItem key={Math.random()} recipeId={1} recipeTitle="레시피 제목"
-                                            sandwichName="에그마요" emailId="test" />
-                            </ul>
+                            {likedRecipesLoading ? <Loading>Loading...</Loading> : (
+                                <ul>
+                                    {likedRecipesData?.map((likedRecipe) => (
+                                        <RecipeItem key={likedRecipe.id} recipeId={likedRecipe.recipes.id} recipeTitle={likedRecipe.recipes.title}
+                                                    sandwichName={likedRecipe.recipes.sandwich} emailId={likedRecipe.recipes.user_email_id} />
+                                    ))}
+                                </ul>
+                            )}
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
                 </MyPageSubRecipeWrap>
