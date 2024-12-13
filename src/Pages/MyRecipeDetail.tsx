@@ -9,7 +9,8 @@ import { ReactComponent as HeartIcon } from '../assets/heart.svg';
 import { ReactComponent as BookMarkIcon } from '../assets/bookmark.svg';
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { sessionState } from "../atoms";
+import { likesCountState, likesState, sessionState } from "../atoms";
+import { useRecipeLikes } from "../hooks/useRecipeLikes";
 
 const RecipeViewContainer = styled.section`
     margin: 140px 0 80px 0;
@@ -165,7 +166,11 @@ function MyRecipeDetail() {
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
     const [isSaved, setIsSaved] = useState(false);      // 저장 여부 상태
+    const likes = useRecoilValue(likesState);
+    const likesCount = useRecoilValue(likesCountState);
     const session = useRecoilValue(sessionState);
+
+    const { handleManageRecipeLike } = useRecipeLikes();
     const location = useLocation();
     const navigate = useNavigate();
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
@@ -202,6 +207,7 @@ function MyRecipeDetail() {
         return true;    // 로그인한 경우 true 반환
     };
 
+    // 레시피 저장
     const savedRecipe = async () => {
         // 로그인 확인
             // 로그인하지 않은 경우 -> 함수 실행 중단
@@ -222,7 +228,7 @@ function MyRecipeDetail() {
             setIsSaved((prevIsSaved) => !prevIsSaved);
         }
     }
-    
+
     useEffect(() => {
         // 페이지 로드될 때 사용자의 해당 레시피 저장 상태를 가져오는 함수
         const fetchSavedRecipesData = async () => {
@@ -231,6 +237,7 @@ function MyRecipeDetail() {
                 .select()
                 .eq('user_id', session?.user?.id)
                 .eq('recipe_id', recipeItemIdx);
+
             if(savedRecipesFetchError) {
                 console.log("저장된 데이터가 없습니다.: ", savedRecipesFetchError.message);
             } else {
@@ -261,12 +268,15 @@ function MyRecipeDetail() {
                                     <span>{recipeDetailData?.created_at.split("T")[0]}</span>
                                 </RecipeTextRowWrap>
                                 <BtnWrap>
-                                    <IconButton type="button">
-                                        <HeartIcon width="30" height="30" strokeWidth="1.2" />
-                                        <span >13</span>
+                                    <IconButton type="button" value={recipeItemIdx} onClick={() => handleManageRecipeLike(+recipeItemIdx)}>
+                                        <HeartIcon fill={likes[+recipeItemIdx] ? "#ff3232" : "none"} 
+                                            stroke={likes[+recipeItemIdx] ? "#ff3232" : "#999999"}
+                                            width="30" height="30" strokeWidth="1.2" />
+                                        <span>{likesCount[+recipeItemIdx] || 0}</span>
                                     </IconButton>
                                     <IconButton type="button" onClick={savedRecipe}>
-                                        <BookMarkIcon fill={isSaved ? "#ffce32" : "none"} stroke={isSaved ? "#ffce32" : "#999999"}
+                                        <BookMarkIcon fill={isSaved ? "#ffce32" : "none"} 
+                                            stroke={isSaved ? "#ffce32" : "#999999"}
                                             width="30" height="30" strokeWidth="1.2" />
                                     </IconButton>
                                 </BtnWrap>

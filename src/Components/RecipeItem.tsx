@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { ReactComponent as HeartIcon } from '../assets/heart.svg';
 import data from "../data.json";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { likesCountState, likesState } from "../atoms";
+import { useRecipeLikes } from "../hooks/useRecipeLikes";
 
 const RecipeItemWrap = styled.li`
     width: 290px;
@@ -23,7 +26,7 @@ const RecipeInfoWrap = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 25px 20px;
+    padding: 23px 20px;
 `;
 
 const RecipeTextWrap = styled.div`
@@ -39,26 +42,40 @@ const RecipeTitle = styled.strong`
 
 const RecipeMenu = styled.span`
     color: #666666;
-    font-size: 13px;
+    font-size: 12.5px;
     margin-top: 7px;
 `;
 
 const RecipeTextRowWrap = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `;
 
 const RecipeWriter = styled.span`
     color: ${(props) => props.theme.grey.darker};
-    font-size: 13px;
+    font-size: 14px;
 `;
 
 const RecipeHeartWrap = styled.div`
     display: flex;
     align-items: center;
     > span {
-        font-size: 15px;
+        font-size: 14px;
         padding-bottom: 2px;
+        color: ${(props) => props.theme.grey.darker};
+    }
+`;
+
+const IconButton = styled.button`
+    border: 0;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+    > .heart-icon {
+        transition: fill 1s;
     }
 `;
 
@@ -70,10 +87,14 @@ interface IRecipeItemProps {
 }
 
 function RecipeItem({recipeId, recipeTitle, sandwichName, emailId}: IRecipeItemProps) {
+    const likes = useRecoilValue(likesState);
+    const likesCount = useRecoilValue(likesCountState);
+    
+    const { handleRecipeLikeClick } = useRecipeLikes();
+
     const sandwichInfoObj = (sandwich:string) => {
         return data.sandwichList.find(i => i.title === sandwich);
     };
-
     return (
         <RecipeItemWrap>
             <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipeId}`}
@@ -87,8 +108,12 @@ function RecipeItem({recipeId, recipeTitle, sandwichName, emailId}: IRecipeItemP
                     <RecipeTextRowWrap>
                         <RecipeWriter>{emailId}</RecipeWriter>
                         <RecipeHeartWrap>
-                            <HeartIcon width="20" height="20" />
-                            <span>13</span>
+                            <IconButton type="button" value={recipeId} onClick={handleRecipeLikeClick(recipeId)}>
+                                <HeartIcon className="heart-icon" fill={likes[recipeId] ? "#ff3232" : "none"} 
+                                        stroke={likes[recipeId] ? "#ff3232" : "#999999"}
+                                        width="22" height="22" />
+                            </IconButton>
+                            <span>{likesCount[recipeId] || 0}</span>
                         </RecipeHeartWrap>
                     </RecipeTextRowWrap>
                 </RecipeInfoWrap>
