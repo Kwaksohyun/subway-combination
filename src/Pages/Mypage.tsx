@@ -145,6 +145,21 @@ const Loading = styled.h2`
     text-align: center;
 `;
 
+const NoRecipeCommentWrap = styled.div`
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    > p {
+        font-size: 15px;
+    }
+    > p:last-child {
+        color: ${(props) => props.theme.grey.darker};
+        margin-top: 10px;
+    }
+`;
+
 function MyPage() {
     const session = useRecoilValue(sessionState);
 
@@ -195,7 +210,7 @@ function MyPage() {
     const { data: myRecipeData, isLoading: myRecipeLoading} = useQuery({
         queryKey: ['myRecipe'],
         queryFn: fetchMyRecipesData,
-        enabled: !!session?.user.id         //  세션 데이터가 있을 때만 쿼리 요청
+        enabled: !!session?.user.id     // 세션 데이터가 있을 때만 쿼리 요청
     });
 
     const { data: savedRecipesData, isLoading: savedRecipesLoading} = useQuery({
@@ -260,12 +275,19 @@ function MyPage() {
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
                             {myRecipeLoading ? <Loading>Loading...</Loading> : (
-                                <ul>
-                                    {myRecipeData?.map((recipe) => (
-                                        <RecipeItem key={recipe.id} recipeId={recipe.id} recipeTitle={recipe.title}
-                                                    sandwichName={recipe.sandwich} emailId={recipe.user_email_id} />
-                                    ))}
-                                </ul>
+                                (myRecipeData?.length) ? (
+                                    <ul>
+                                        {myRecipeData?.map((recipe) => (
+                                            <RecipeItem key={recipe.id} recipeId={recipe.id} recipeTitle={recipe.title}
+                                                        sandwichName={recipe.sandwich} emailId={recipe.user_email_id} />
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <NoRecipeCommentWrap>
+                                        <p>등록한 레시피가 없습니다.</p>
+                                        <p>{"즐겨먹는 나만의 꿀조합 레시피를 공유해보세요 :)"}</p>
+                                    </NoRecipeCommentWrap>
+                                )
                             )}
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
@@ -277,12 +299,19 @@ function MyPage() {
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
                             {savedRecipesLoading ? <Loading>Loading...</Loading> : (
-                                <ul>
-                                    {savedRecipesData?.map((savedRecipe) => (
-                                        <RecipeItem key={savedRecipe.id} recipeId={savedRecipe.recipes.id} recipeTitle={savedRecipe.recipes.title}
-                                                    sandwichName={savedRecipe.recipes.sandwich} emailId={savedRecipe.recipes.user_email_id} />
-                                    ))}
-                                </ul>
+                                (savedRecipesData?.length) ? (
+                                    <ul>
+                                        {savedRecipesData?.map((savedRecipe) => (
+                                            <RecipeItem key={savedRecipe.id} recipeId={savedRecipe.recipes.id} recipeTitle={savedRecipe.recipes.title}
+                                                        sandwichName={savedRecipe.recipes.sandwich} emailId={savedRecipe.recipes.user_email_id} />
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <NoRecipeCommentWrap>
+                                        <p>저장한 레시피가 없습니다.</p>
+                                        <p>{"맘에 드는 레시피가 있다면 저장해보세요 :)"}</p>
+                                    </NoRecipeCommentWrap>
+                                )
                             )}
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
@@ -294,12 +323,19 @@ function MyPage() {
                         </MyPageSubRecipeTitle>
                         <MyPageRecipeListWrap>
                             {likedRecipesLoading ? <Loading>Loading...</Loading> : (
-                                <ul>
-                                    {likedRecipesData?.map((likedRecipe) => (
-                                        <RecipeItem key={likedRecipe.id} recipeId={likedRecipe.recipes.id} recipeTitle={likedRecipe.recipes.title}
-                                                    sandwichName={likedRecipe.recipes.sandwich} emailId={likedRecipe.recipes.user_email_id} />
-                                    ))}
-                                </ul>
+                                (likedRecipesData?.length) ? (
+                                    <ul>
+                                        {likedRecipesData?.map((likedRecipe) => (
+                                            <RecipeItem key={likedRecipe.id} recipeId={likedRecipe.recipes.id} recipeTitle={likedRecipe.recipes.title}
+                                                        sandwichName={likedRecipe.recipes.sandwich} emailId={likedRecipe.recipes.user_email_id} />
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <NoRecipeCommentWrap>
+                                        <p>찜한 레시피가 없습니다.</p>
+                                        <p>{"맘에 드는 레시피에 ♥를 눌러 찜해보세요 :)"}</p>
+                                    </NoRecipeCommentWrap>
+                                )
                             )}
                         </MyPageRecipeListWrap>
                     </MyPageSubRecipeSection>
