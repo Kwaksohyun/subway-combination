@@ -14,10 +14,12 @@ import UtilizationSubway from './Pages/UtilizationSubway';
 import Join from './Pages/Join';
 import Login from './Pages/Login';
 import MyPage from './Pages/Mypage';
+import ScrollToTop from './Components/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
