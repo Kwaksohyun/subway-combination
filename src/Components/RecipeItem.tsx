@@ -97,8 +97,7 @@ function RecipeItem({recipeId, recipeTitle, sandwichName, emailId}: IRecipeItemP
     };
     return (
         <RecipeItemWrap>
-            <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipeId}`}
-                state={{imgSrc: `${process.env.PUBLIC_URL}/${sandwichInfoObj(sandwichName)?.img}`, calorie: `${sandwichInfoObj(sandwichName)?.calorie}`}}>
+            <Link to={`/myRecipeView/recipe?recipeItemIdx=${recipeId}`}>
                 <RecipeImg alt={`img_${sandwichInfoObj(sandwichName)?.eng_title}`} src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(sandwichName)?.img}`} />
                 <RecipeInfoWrap>
                     <RecipeTextWrap>

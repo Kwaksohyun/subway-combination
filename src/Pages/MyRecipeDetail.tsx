@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { likesCountState, likesState, sessionState } from "../atoms";
 import { useRecipeLikes } from "../hooks/useRecipeLikes";
+import data from "../data.json";
 
 const RecipeViewContainer = styled.section`
     margin: 140px 0 80px 0;
@@ -176,6 +177,10 @@ function MyRecipeDetail() {
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")
     const recipeItemIdx = location.search.slice(15);
 
+    const sandwichInfoObj = (sandwich:string) => {
+        return data.sandwichList.find(i => i.title === sandwich);
+    };
+
     // 레시피 상세 데이터 불러오는 함수
     const fetchRecipeDetailData = async () => {
         const { data: recipeData, error: recipeError } = await supabase
@@ -191,9 +196,9 @@ function MyRecipeDetail() {
 
     // ※ isLoading : 캐시된 데이터가 없고 쿼리 시도가 아직 완료되지 않은 경우 
     const { data: recipeDetailData, isLoading: recipeDetalLoading } = useQuery({
-        queryKey: ['recipeDetail'], 
+        queryKey: ['recipeDetail', recipeItemIdx],  // 각 레시피의 데이터를 별도의 캐시로 관리
         queryFn: fetchRecipeDetailData,
-        enabled: !!recipeItemIdx    //  recipeItemIdx가 있을 때만 쿼리 요청
+        enabled: !!recipeItemIdx,                   //  recipeItemIdx가 있을 때만 쿼리 요청
     });
 
     // 로그인 확인 함수
@@ -260,7 +265,7 @@ function MyRecipeDetail() {
                                 <RecipeMenuWrap>
                                     <span>샌드위치</span>
                                     <span>{recipeDetailData?.sandwich}</span>
-                                    <span>{location.state.calorie}</span>
+                                    <span>{sandwichInfoObj(recipeDetailData?.sandwich)?.calorie}</span>
                                 </RecipeMenuWrap>
                                 <RecipeTitle>{recipeDetailData?.title}</RecipeTitle>
                                 <RecipeTextRowWrap>
@@ -284,7 +289,7 @@ function MyRecipeDetail() {
 
                             {/* 레시피 */}
                             <RecipeInfoWrap>
-                                <RecipeImg src={`${process.env.PUBLIC_URL}${location.state.imgSrc}`} alt={`img_${recipeDetailData?.sandwich}`} />
+                                <RecipeImg src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(recipeDetailData?.sandwich)?.img}`} alt={`img_${recipeDetailData?.sandwich}`} />
                                 <RecipeDetailWrap>
                                     <strong>나만의 꿀조합 레시피</strong>
                                     <StepItem>
