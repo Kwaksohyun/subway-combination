@@ -9,7 +9,7 @@ import { ReactComponent as HeartIcon } from '../assets/heart.svg';
 import { ReactComponent as BookMarkIcon } from '../assets/bookmark.svg';
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { likesCountState, likesState, sessionState } from "../atoms";
+import { sessionState } from "../atoms";
 import { useRecipeLikes } from "../hooks/useRecipeLikes";
 import data from "../data.json";
 
@@ -167,11 +167,10 @@ function MyRecipeDetail() {
         { index: 0, menuName: "나만의 꿀조합 레시피", menuPath: "/myRecipeList", menuMatch: useMatch("/myRecipeList") }
     ];
     const [isSaved, setIsSaved] = useState(false);      // 저장 여부 상태
-    const likes = useRecoilValue(likesState);
-    const likesCount = useRecoilValue(likesCountState);
     const session = useRecoilValue(sessionState);
+    
+    const { likes, likesCount, handleManageRecipeLike } = useRecipeLikes();
 
-    const { handleManageRecipeLike } = useRecipeLikes();
     const location = useLocation();
     const navigate = useNavigate();
     // query string에서 recipeItemIdx 추출 (location.search 예시 : "?recipeItemIdx=1")

@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { ReactComponent as HeartIcon } from '../assets/heart.svg';
 import data from "../data.json";
 import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { likesCountState, likesState } from "../atoms";
 import { useRecipeLikes } from "../hooks/useRecipeLikes";
 
 const RecipeItemWrap = styled.li`
@@ -87,10 +85,7 @@ interface IRecipeItemProps {
 }
 
 function RecipeItem({recipeId, recipeTitle, sandwichName, emailId}: IRecipeItemProps) {
-    const likes = useRecoilValue(likesState);
-    const likesCount = useRecoilValue(likesCountState);
-    
-    const { handleRecipeLikeClick } = useRecipeLikes();
+    const { likes, likesCount, handleRecipeLikeClick } = useRecipeLikes();
 
     const sandwichInfoObj = (sandwich:string) => {
         return data.sandwichList.find(i => i.title === sandwich);

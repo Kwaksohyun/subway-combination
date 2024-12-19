@@ -31,31 +31,10 @@ import { atom } from "recoil";
 //     })
 // };
 
-// 인덱스 시그니처(Index Signature) : 객체의 키 정의하는 방식
-export interface ILikesType {
-    [key: number]: boolean;
-}
-
-export interface ILikesCountType {
-    [key: number]: number;
-}
-
 export const sessionState = atom<Session|null>({
     key: "sessionState",
     default: null,
 });
-
-// 좋아요 상태
-export const likesState = atom<ILikesType>({
-    key: "likesState",
-    default: {},
-})
-
-// 좋아요 갯수
-export const likesCountState = atom<ILikesCountType>({
-    key: "likesCountState",
-    default: {},
-})
 
 // export const recipeState = atom<IRecipe[]>({
 //     key: "recipeList",

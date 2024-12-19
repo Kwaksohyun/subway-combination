@@ -1,12 +1,21 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { ILikesCountType, ILikesType, likesCountState, likesState, sessionState } from "../atoms";
+import { useRecoilValue } from "recoil";
+import { sessionState } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+// 인덱스 시그니처(Index Signature) : 객체의 키 정의하는 방식
+interface ILikesType {
+    [key: number]: boolean;
+}
+
+interface ILikesCountType {
+    [key: number]: number;
+}
 
 export const useRecipeLikes = () => {
-    const [likes, setLikes] = useRecoilState(likesState);
-    const [likesCount, setLikesCount] = useRecoilState(likesCountState);
+    const [likes, setLikes] = useState<ILikesType>({});
+    const [likesCount, setLikesCount] = useState<ILikesCountType>({});
     const session = useRecoilValue(sessionState);
     const navigate = useNavigate();
 
@@ -96,5 +105,5 @@ export const useRecipeLikes = () => {
         }
     }, [session?.user?.id, setLikes, setLikesCount])
 
-    return { handleManageRecipeLike, handleRecipeLikeClick };
+    return { likes, likesCount, handleManageRecipeLike, handleRecipeLikeClick };
 }
