@@ -109,7 +109,7 @@ const BtnItem = styled.li`
 `;
 
 const MyPageSubRecipeWrap = styled.div`
-    width: 1190px;
+    width: 1250px;
     margin: 0 auto;
 `;
 
@@ -242,7 +242,7 @@ function MyPage() {
                                 <MemberEmail>{session?.user.user_metadata.email}</MemberEmail>
                             </MemberInfoDescWrap>
                         </div>
-                        <EditMemberInfoLink to={"/"}>회원정보 수정</EditMemberInfoLink>
+                        <EditMemberInfoLink to={"/myPage/memberInfo"}>회원정보 수정</EditMemberInfoLink>
                     </MemberInfoWrap>
                     <MyPageUserInfoBtnWrap>
                         <BtnItem>

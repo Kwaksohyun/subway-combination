@@ -15,6 +15,7 @@ import Join from './Pages/Join';
 import Login from './Pages/Login';
 import MyPage from './Pages/Mypage';
 import ScrollToTop from './Components/ScrollToTop';
+import MemberInfo from './Pages/MemberInfo';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path='unit' element={<Wrap />}/>
         </Route>
         <Route path='/myPage' element={<MyPage />} />
+        <Route path='/myPage/memberInfo' element={<MemberInfo />} />
         <Route path='/menuView/:menuCategory' element={<MenuItemDetail/> } />
         <Route path='/utilizationSubway' element={<UtilizationSubway />} />
         <Route path='/freshInfo' element={<FreshIngredients/>} />
