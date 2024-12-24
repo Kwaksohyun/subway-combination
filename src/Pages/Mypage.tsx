@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { sessionState } from "../atoms";
 import supabase from "../supabaseClient";
 import { useQuery } from "@tanstack/react-query";
+import useUserInfo from "../hooks/useUserInfo";
 
 const PageHeaderContainer = styled.header`
     margin: 140px 0 80px 0;
@@ -225,6 +226,12 @@ function MyPage() {
         enabled: !!session?.user.id 
     });
     
+    const { userInfoData, isLoading, userInfoError } = useUserInfo();
+
+    if(userInfoError) {
+        return <Loading>사용자 정보를 가져오는데 실패했습니다.</Loading>
+    };
+    
     return (
         <section style={{paddingTop: "170px", minWidth: "800px"}}>
             {/* 마이페이지 헤더 */}
@@ -237,10 +244,12 @@ function MyPage() {
                     <MemberInfoWrap>
                         <div>
                             <img src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="profileImg" />
-                            <MemberInfoDescWrap>
-                                <MemberName><strong>{session?.user.user_metadata.username}</strong>님 안녕하세요.</MemberName>
-                                <MemberEmail>{session?.user.user_metadata.email}</MemberEmail>
-                            </MemberInfoDescWrap>
+                            {isLoading ? <Loading>Loading...</Loading> : (
+                                <MemberInfoDescWrap>
+                                    <MemberName><strong>{userInfoData?.username}</strong>님 안녕하세요.</MemberName>
+                                    <MemberEmail>{userInfoData?.email}</MemberEmail>
+                                </MemberInfoDescWrap>
+                            )}
                         </div>
                         <EditMemberInfoLink to={"/myPage/memberInfo"}>회원정보 수정</EditMemberInfoLink>
                     </MemberInfoWrap>

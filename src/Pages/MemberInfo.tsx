@@ -1,10 +1,7 @@
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { sessionState } from "../atoms";
-import supabase from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
+import useUserInfo from "../hooks/useUserInfo";
 
 const EditMemberInfoPageWrap = styled.div`
     width: 800px;
@@ -130,28 +127,14 @@ const EditBtn = styled(Button)`
 `;
 
 function MemberInfo() {
-    const session = useRecoilValue(sessionState);
     const navigate = useNavigate();
     const { register } = useForm();
 
-    const fetchUserInfoData = async () => {
-        const { data, error } = await supabase
-            .from('user_info')
-            .select()
-            .eq('id', session?.user?.id);
-        if(error) {
-            console.log("error: ", error);
-            return null;
-        } else {
-            return data[0];
-        }
-    }
+    const { userInfoData, isLoading, userInfoError } = useUserInfo();
 
-    const { data: userInfoData, isLoading } = useQuery({
-        queryKey: ["userInfo"],
-        queryFn: fetchUserInfoData,
-        enabled: !!session?.user.id     // 세션 데이터가 있을 때만 쿼리 요청
-    });
+    if(userInfoError) {
+        return <Loading>사용자 정보를 가져오는데 실패했습니다.</Loading>
+    }
 
     return (
         <div style={{paddingTop: "170px", minWidth: "800px", backgroundColor: "#f2f2f2"}}>
@@ -177,18 +160,21 @@ function MemberInfo() {
                                         <InfoTableRowTitle>생년월일</InfoTableRowTitle>
                                         <InfoTableContent>
                                             <BirthDateInput {...register("birth_date_year",{ pattern: /^(19[0-9][0-9]|20\d{2})$/ })} 
-                                                title="출생연도" placeholder="YYYY" type="text" id="birth_date_year" defaultValue={userInfoData?.birth_date.split("-")[0]} />
+                                                title="출생연도" placeholder="YYYY" type="text" id="birth_date_year" 
+                                                defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[0] : ""} />
                                             <BirthDateInput {...register("birth_date_month",{ pattern: /^(0[0-9]|1[0-2])$/ })}
-                                                title="월" placeholder="MM" type="text" id="birth_date_month" defaultValue={userInfoData?.birth_date.split("-")[1]} />
+                                                title="월" placeholder="MM" type="text" id="birth_date_month" 
+                                                defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[1] : ""} />
                                             <BirthDateInput {...register("birth_date_day", { pattern: /^(0[1-9]|[1-2][0-9]|3[0-1])$/ })} 
-                                                title="일" placeholder="DD" type="text" id="birth_date_day" defaultValue={userInfoData?.birth_date.split("-")[2]} />
+                                                title="일" placeholder="DD" type="text" id="birth_date_day" 
+                                                defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[2] : ""} />
                                         </InfoTableContent>
                                     </InfoTableRow>
                                     <InfoTableRow>
                                         <InfoTableRowTitle>전화번호</InfoTableRowTitle>
                                         <InfoTableContent>
                                             <select {...register("phone1")} title="휴대폰 국번">
-                                                <option value="010" selected>010</option>
+                                                <option value="010">010</option>
                                                 <option value="011">011</option>
                                                 <option value="016">016</option>
                                                 <option value="017">017</option>
@@ -197,10 +183,10 @@ function MemberInfo() {
                                             </select>
                                             <span>-</span>
                                             <InfoInput {...register("phone2", { pattern: /^([0-9]{3,4})$/ })} 
-                                                defaultValue={userInfoData?.phone.split("-")[1]} type="text" id="phone2" title="휴대폰 앞자리" />
+                                                defaultValue={userInfoData?.phone ? userInfoData?.phone.split("-")[1] : ""} type="text" id="phone2" title="휴대폰 앞자리" />
                                             <span>-</span>
                                             <InfoInput {...register("phone3", { pattern: /^([0-9]{4})$/ })} 
-                                                defaultValue={userInfoData?.phone.split("-")[2]} type="text" id="phone3" title="휴대폰 뒷자리"/>
+                                                defaultValue={userInfoData?.phone ? userInfoData?.phone.split("-")[2] : ""} type="text" id="phone3" title="휴대폰 뒷자리"/>
                                         </InfoTableContent>
                                     </InfoTableRow>
                                 </tbody>
