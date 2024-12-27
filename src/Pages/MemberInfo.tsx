@@ -27,11 +27,26 @@ const EditMemInfoFormWrap = styled.div`
     background-color: #fff;
     width: 800px;
     padding: 45px;
+`;
+
+const EditMemInfoTitle = styled.div`
+    width: 700px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 7px;
     > h3 {
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 500;
+        padding-bottom: 15px;
+    }
+    > span {
+        font-size: 13px;
         color: #666666;
-        margin-bottom: 20px;
+    }
+    > span::before {
+        content: "*";
+        color: #e85a1c;
     }
 `;
 
@@ -56,11 +71,24 @@ const InfoTableRowTitle = styled.th`
     font-weight: 500;
     text-align: left;
     width: 100px;
+    > span {
+        color: #e85a1c;
+    }
 `;
 
 const InfoTableContent = styled.td`
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    &.username {
+        display: block;
+    }
+    
+    > span {
+        padding: 0 2px 0 2px;
+    }
+`;
+
+const InfoInputWrap = styled.div`
     > select {
         outline: none;
         width: 60px;
@@ -70,9 +98,6 @@ const InfoTableContent = styled.td`
         border: 1px solid #dadada;
         font-family: 'Noto Sans KR', sans-serif;
         font-size: 15px;
-    }
-    > span {
-        padding: 0 2px 0 2px;
     }
 `;
 
@@ -94,6 +119,12 @@ const UserNameInput = styled(InfoInput)`
 
 const BirthDateInput = styled(InfoInput)`
     margin-right: 5px;
+`;
+
+const ErrorMessage = styled.p`
+    font-size: 12px;
+    color: #e85a1c;
+    margin-top: 3px;
 `;
 
 const BtnWrap = styled.div`
@@ -126,14 +157,29 @@ const EditBtn = styled(Button)`
     color: #fff;
 `;
 
+// interface IEditUserInfoForm {
+//     username: string;
+//     birth_date_year: string;     // 입력 안 했을 때 → ""
+//     birth_date_month: string;
+//     birth_date_day: string;
+//     phone1: string;
+//     phone2: string;
+//     phone3: string;
+// }
+
 function MemberInfo() {
     const navigate = useNavigate();
-    const { register } = useForm();
+    const { register, handleSubmit, getValues, formState:{errors} } = useForm();
 
     const { userInfoData, isLoading, userInfoError } = useUserInfo();
 
     if(userInfoError) {
         return <Loading>사용자 정보를 가져오는데 실패했습니다.</Loading>
+    }
+
+    // 회원 정보 수정
+    const updateUserInfo = async (data:any) => {
+        console.log(data);
     }
 
     return (
@@ -142,7 +188,10 @@ function MemberInfo() {
                 <EditMemberInfoTitle>회원정보 수정</EditMemberInfoTitle>
                 {isLoading ? <Loading>Loading...</Loading> : (
                     <EditMemInfoFormWrap>
-                        <h3>회원 정보</h3>
+                        <EditMemInfoTitle>
+                            <h3>회원 정보</h3>
+                            <span>필수 입력 항목</span>
+                        </EditMemInfoTitle>
                         <EditMemInfoForm>
                             <table>
                                 <tbody>
@@ -151,49 +200,91 @@ function MemberInfo() {
                                         <InfoTableContent>{userInfoData?.email}</InfoTableContent>
                                     </InfoTableRow>
                                     <InfoTableRow>
-                                        <InfoTableRowTitle>이름</InfoTableRowTitle>
-                                        <InfoTableContent>
-                                            <UserNameInput {...register("username", { required: true })} title="이름" type="text" id="username" defaultValue={userInfoData?.username} />
+                                        <InfoTableRowTitle>이름<span>*</span></InfoTableRowTitle>
+                                        <InfoTableContent className="username">
+                                            <UserNameInput {...register("username", { required: "이름을 입력해주세요." })} title="이름" type="text" id="username" defaultValue={userInfoData?.username} />
+                                            {errors.username && <ErrorMessage>{errors.username.message?.toString()}</ErrorMessage>}
                                         </InfoTableContent>
                                     </InfoTableRow>
                                     <InfoTableRow>
                                         <InfoTableRowTitle>생년월일</InfoTableRowTitle>
                                         <InfoTableContent>
-                                            <BirthDateInput {...register("birth_date_year",{ pattern: /^(19[0-9][0-9]|20\d{2})$/ })} 
-                                                title="출생연도" placeholder="YYYY" type="text" id="birth_date_year" 
-                                                defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[0] : ""} />
-                                            <BirthDateInput {...register("birth_date_month",{ pattern: /^(0[0-9]|1[0-2])$/ })}
-                                                title="월" placeholder="MM" type="text" id="birth_date_month" 
-                                                defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[1] : ""} />
-                                            <BirthDateInput {...register("birth_date_day", { pattern: /^(0[1-9]|[1-2][0-9]|3[0-1])$/ })} 
-                                                title="일" placeholder="DD" type="text" id="birth_date_day" 
-                                                defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[2] : ""} />
+                                            <InfoInputWrap>
+                                                <BirthDateInput {...register("birth_date_year", { 
+                                                        pattern: { value: /^(19[0-9][0-9]|20\d{2})$/, message: "생년월일을 확인해주세요." },
+                                                        maxLength: { value: 4, message: "생년월일을 확인해주세요." },
+                                                        validate: {
+                                                            // 입력 필드 중 일부만 입력한 경우 나머지 필드도 입력하도록
+                                                            validateRequiredGroup: (value) => {
+                                                                const { birth_date_month, birth_date_day } = getValues();
+                                                                if((value || birth_date_month || birth_date_day) && !(value && birth_date_month && birth_date_day)) {
+                                                                    return "생년월일 8자리를 모두 입력해 주세요.";
+                                                                }
+                                                                return true;
+                                                            }
+                                                        }
+                                                    })} 
+                                                    title="출생연도" placeholder="YYYY" type="text" id="birth_date_year" 
+                                                    defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[0] : ""} />
+                                                <BirthDateInput {...register("birth_date_month",{ 
+                                                        pattern: { value: /^(0[0-9]|1[0-2])$/, message: "생년월일을 확인해주세요." }
+                                                    })}
+                                                    title="월" placeholder="MM" type="text" id="birth_date_month" 
+                                                    defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[1] : ""} />
+                                                <BirthDateInput {...register("birth_date_day", { 
+                                                        pattern: { value: /^(0[1-9]|[1-2][0-9]|3[0-1])$/, message: "생년월일을 확인해주세요." }
+                                                    })} 
+                                                    title="일" placeholder="DD" type="text" id="birth_date_day" 
+                                                    defaultValue={userInfoData?.birth_date ? userInfoData?.birth_date.split("-")[2] : ""} />
+                                            </InfoInputWrap>
+                                            {(errors.birth_date_year || errors.birth_date_month || errors.birth_date_day) && (
+                                                <ErrorMessage>
+                                                    {errors.birth_date_year?.message?.toString() || errors.birth_date_month?.message?.toString() || errors.birth_date_day?.message?.toString()}
+                                                </ErrorMessage>
+                                            )}
                                         </InfoTableContent>
                                     </InfoTableRow>
                                     <InfoTableRow>
                                         <InfoTableRowTitle>전화번호</InfoTableRowTitle>
                                         <InfoTableContent>
-                                            <select {...register("phone1")} title="휴대폰 국번">
-                                                <option value="010">010</option>
-                                                <option value="011">011</option>
-                                                <option value="016">016</option>
-                                                <option value="017">017</option>
-                                                <option value="018">018</option>
-                                                <option value="019">019</option>
-                                            </select>
-                                            <span>-</span>
-                                            <InfoInput {...register("phone2", { pattern: /^([0-9]{3,4})$/ })} 
-                                                defaultValue={userInfoData?.phone ? userInfoData?.phone.split("-")[1] : ""} type="text" id="phone2" title="휴대폰 앞자리" />
-                                            <span>-</span>
-                                            <InfoInput {...register("phone3", { pattern: /^([0-9]{4})$/ })} 
-                                                defaultValue={userInfoData?.phone ? userInfoData?.phone.split("-")[2] : ""} type="text" id="phone3" title="휴대폰 뒷자리"/>
+                                            <InfoInputWrap>
+                                                <select {...register("phone1")} title="휴대폰 국번">
+                                                    <option value="010">010</option>
+                                                    <option value="011">011</option>
+                                                    <option value="016">016</option>
+                                                    <option value="017">017</option>
+                                                    <option value="018">018</option>
+                                                    <option value="019">019</option>
+                                                </select>
+                                                <span>-</span>
+                                                <InfoInput {...register("phone2", { 
+                                                    pattern: { value: /^([0-9]{3,4})$/, message: "전화번호를 확인해주세요."},
+                                                    validate: (value) => {
+                                                        // 입력 필드 중 일부만 입력한 경우 나머지 필드도 입력하도록
+                                                        const { phone3 } = getValues();
+                                                        if((value || phone3) && !(value && phone3)) {
+                                                            return "전화번호를 모두 입력해 주세요.";
+                                                        }
+                                                        return true;
+                                                    }
+                                                    })} 
+                                                    defaultValue={userInfoData?.phone ? userInfoData?.phone.split("-")[1] : ""} type="text" id="phone2" title="휴대폰 앞자리" />
+                                                <span>-</span>
+                                                <InfoInput {...register("phone3", { pattern: { value: /^([0-9]{4})$/, message: "전화번호를 확인해주세요."} })} 
+                                                    defaultValue={userInfoData?.phone ? userInfoData?.phone.split("-")[2] : ""} type="text" id="phone3" title="휴대폰 뒷자리"/>
+                                            </InfoInputWrap>
+                                            {(errors.phone2 || errors.phone3) && (
+                                                <ErrorMessage>
+                                                    {errors.phone2?.message?.toString() || errors.phone3?.message?.toString()}
+                                                </ErrorMessage>
+                                            )}
                                         </InfoTableContent>
                                     </InfoTableRow>
                                 </tbody>
                             </table>
                             <BtnWrap>
                                 <CancelBtn type="button" onClick={() => navigate("/myPage")}>취소</CancelBtn>
-                                <EditBtn type="button">수정</EditBtn>
+                                <EditBtn type="button" onClick={handleSubmit(updateUserInfo)}>수정</EditBtn>
                             </BtnWrap>
                         </EditMemInfoForm>
                     </EditMemInfoFormWrap>
