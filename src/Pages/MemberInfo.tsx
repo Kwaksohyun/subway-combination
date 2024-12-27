@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useUserInfo from "../hooks/useUserInfo";
+import supabase from "../supabaseClient";
+import { useQueryClient } from "@tanstack/react-query";
 
 const EditMemberInfoPageWrap = styled.div`
     width: 800px;
@@ -157,29 +159,68 @@ const EditBtn = styled(Button)`
     color: #fff;
 `;
 
-// interface IEditUserInfoForm {
-//     username: string;
-//     birth_date_year: string;     // 입력 안 했을 때 → ""
-//     birth_date_month: string;
-//     birth_date_day: string;
-//     phone1: string;
-//     phone2: string;
-//     phone3: string;
-// }
+interface IEditUserInfoForm {
+    username: string;
+    birth_date_year: string;     // 입력 안 했을 때 → ""
+    birth_date_month: string;
+    birth_date_day: string;
+    phone1: string;
+    phone2: string;
+    phone3: string;
+}
+
+interface IEditedInfo {
+    username: string;
+    birth_date?: string;
+    phone?: string;
+}
 
 function MemberInfo() {
     const navigate = useNavigate();
-    const { register, handleSubmit, getValues, formState:{errors} } = useForm();
+    const { register, handleSubmit, getValues, formState:{errors} } = useForm<IEditUserInfoForm>();
 
     const { userInfoData, isLoading, userInfoError } = useUserInfo();
+
+    const queryClient = useQueryClient();
 
     if(userInfoError) {
         return <Loading>사용자 정보를 가져오는데 실패했습니다.</Loading>
     }
 
     // 회원 정보 수정
-    const updateUserInfo = async (data:any) => {
-        console.log(data);
+    const updateUserInfo = async (data:IEditUserInfoForm) => {        
+        const editedUserInfoObj:IEditedInfo = {
+            username: data.username.trim(),
+        }
+        // 생년월일 모두 입력된 경우에 추가
+        if(data.birth_date_year && data.birth_date_month && data.birth_date_day) {
+            editedUserInfoObj.birth_date = `${data.birth_date_year}-${data.birth_date_month}-${data.birth_date_day}`;
+        }
+        // 전화번호 모두 입력된 경우에 추가
+        if(data.phone1 && data.phone2 && data.phone3) {
+            editedUserInfoObj.phone = `${data.phone1}-${data.phone2}-${data.phone3}`;
+        }
+        try {
+            if(window.confirm("입력하신 내용으로 회원정보를 수정하시겠습니까?")) {
+                const { error: editUserInfoError } = await supabase
+                    .from('user_info')
+                    .update(editedUserInfoObj)
+                    .eq('id', userInfoData.id);
+                if(editUserInfoError) {
+                    alert("회원 정보 수정 중 오류가 발생했습니다.");
+                    throw new Error(editUserInfoError.message);
+                } else {
+                    // 캐시 무효화(쿼리 재요청) : 회원 정보 수정 후 최신 데이터로 새로 가져오기
+                    queryClient.invalidateQueries({
+                        queryKey: ['userInfo']
+                    });
+                    alert("회원 정보를 수정하였습니다.");
+                    navigate("/myPage");
+                }
+            }
+        } catch(error) {
+            console.log("회원 정보 수정 중 오류가 발생했습니다.", error);
+        }
     }
 
     return (
