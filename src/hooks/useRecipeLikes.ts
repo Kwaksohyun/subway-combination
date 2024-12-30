@@ -30,6 +30,7 @@ export const useRecipeLikes = () => {
         return true;    // 로그인한 경우 true 반환
     };
 
+    // 좋아요 버튼 클릭 시 실행행
     const handleManageRecipeLike = async (recipeId:number) => {
         if(!checkLoginState()) return;
 
@@ -53,7 +54,6 @@ export const useRecipeLikes = () => {
                 [+recipeId]: (prevCounts[+recipeId] || 0) + (!likes[recipeId] ? 1 : -1)
                 // prevCounts[+recipeId]가 undefined인 경우 0으로 쳐리
             }))
-            console.log(likes, likesCount);
         }
     }
 
@@ -64,22 +64,16 @@ export const useRecipeLikes = () => {
     }
 
     useEffect(() => {
-        const fetchLikedRecipeData = async () => {
-            // 사용자가 좋아요 누른 데이터
+        // 현재 로그인한 사용자의 좋아요 데이터
+        const fetchUserLikedRecipes = async () => {
             const { data: usersLikedData, error: usersLikedFetchError } = await supabase
-                .from('recipe_likes')
-                .select('recipe_id, is_liked')
-                .eq('user_id', session?.user?.id)
-                .eq('is_liked', true);
-
-            // 좋아요 누른 레시피들
-            const { data: likedData, error: likedFetchError } = await supabase
-                .from('recipe_likes')
-                .select('recipe_id')
-                .eq('is_liked', true);
+            .from('recipe_likes')
+            .select('recipe_id, is_liked')
+            .eq('user_id', session?.user?.id)
+            .eq('is_liked', true);
 
             if(usersLikedFetchError) {
-                console.log("사용자가 좋아요 누른 데이터 불러오기 실패: ", usersLikedFetchError.message);
+                console.log("사용자 좋아요 데이터 불러오기 실패: ", usersLikedFetchError.message);
             } else {
                 const initialLikes = usersLikedData.reduce<ILikesType>((acc, recipe) => {
                     acc[recipe.recipe_id] = recipe.is_liked;
@@ -87,9 +81,24 @@ export const useRecipeLikes = () => {
                 }, {});
                 setLikes(initialLikes);
             }
+        }
+
+        // 사용자가 로그인 한 경우에만 실행
+        if(session?.user?.id) {
+            fetchUserLikedRecipes();
+        }
+    }, [session?.user?.id]);
+
+    useEffect(() => {
+        // 모든 레시피의 좋아요 카운트 가져오기
+        const fetchRecipeLikesCount = async () => {
+            const { data: likedData, error: likedFetchError } = await supabase
+                .from('recipe_likes')
+                .select('recipe_id')
+                .eq('is_liked', true);
 
             if(likedFetchError) {
-                console.log("좋아요 누른 데이터가 없습니다.: ", likedFetchError.message);
+                console.log("좋아요 데이터 불러오기 실패패: ", likedFetchError.message);
             } else {
                 // 레시피별 좋아요 받은 횟수 카운트({1:2, 2:1, 3:5})
                 const likesCount = likedData.reduce<ILikesCountType>((acc, recipe) => {
@@ -99,11 +108,9 @@ export const useRecipeLikes = () => {
                 setLikesCount(likesCount);
             }
         }
-        // 사용자가 로그인 한 경우에만 실행
-        if(session?.user?.id) {
-            fetchLikedRecipeData();
-        }
-    }, [session?.user?.id, setLikes, setLikesCount])
+
+        fetchRecipeLikesCount();
+    }, [setLikes, setLikesCount])
 
     return { likes, likesCount, handleManageRecipeLike, handleRecipeLikeClick };
 }
