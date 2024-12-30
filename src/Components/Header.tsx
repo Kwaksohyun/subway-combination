@@ -5,6 +5,7 @@ import styled from "styled-components";
 import supabase from "../supabaseClient";
 import { useSetRecoilState } from "recoil";
 import { sessionState } from "../atoms";
+import useUserInfo from "../hooks/useUserInfo";
 
 const HeaderContainer = styled.header`
     background-color: #fff;
@@ -145,9 +146,9 @@ const Dropdown = styled(motion.div)`
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState<null|string>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const setSessionState = useSetRecoilState(sessionState);
+    const { userInfoData } = useUserInfo();
     const navigate = useNavigate();
     const mouseEvent = (event: React.MouseEvent<HTMLElement>, bool:boolean) => {
         setIsOpen(bool);
@@ -158,7 +159,6 @@ function Header() {
         if(error) {
             console.log(error);
         } else {
-            setUser(null);
             setIsLoggedIn(false);
             setSessionState(null);
             alert("로그아웃 되었습니다.");
@@ -173,11 +173,9 @@ function Header() {
             // -> 회원가입할 때에도 SIGNED_IN event 발생
             //    로그인 성공 시에만 조건문이 실행되도록 confirmed_at 존재하는지 확인
             if (event === 'SIGNED_IN' && session?.user.confirmed_at) {
-                setUser(session?.user.user_metadata.username);
                 setIsLoggedIn(true);
                 setSessionState(session);
             } else if(event === 'SIGNED_OUT') {
-                setUser(null);
                 setIsLoggedIn(false);
                 setSessionState(null);
             }
@@ -198,7 +196,7 @@ function Header() {
                         <ul>
                             <UtilityItem>
                                 <div>
-                                    <Username>{user}</Username>
+                                    <Username>{userInfoData?.username}</Username>
                                     <Logout onClick={signOut}>로그아웃</Logout>
                                 </div>
                             </UtilityItem>
