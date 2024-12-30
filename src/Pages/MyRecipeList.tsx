@@ -194,7 +194,7 @@ function MyRecipeList() {
                     <img src={`${process.env.PUBLIC_URL}/images/img_recipe_customizing.png`} alt="img_recipe_customizing" />
                     <MakeMyRecipeContent>
                         <h3>나만의 써브웨이 꿀조합은?</h3>
-                        <PageText>내가 즐겨벅는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</PageText>
+                        <PageText>내가 즐겨먹는 나만의 써브웨이 꿀조합 레시피를 공유해주세요!</PageText>
                     </MakeMyRecipeContent>
                     <ShareButton onClick={handleRequireLogin}>공유하기</ShareButton>
                 </MakeMyRecipeBox>

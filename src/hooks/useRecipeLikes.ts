@@ -98,7 +98,7 @@ export const useRecipeLikes = () => {
                 .eq('is_liked', true);
 
             if(likedFetchError) {
-                console.log("좋아요 데이터 불러오기 실패패: ", likedFetchError.message);
+                console.log("좋아요 데이터 불러오기 실패: ", likedFetchError.message);
             } else {
                 // 레시피별 좋아요 받은 횟수 카운트({1:2, 2:1, 3:5})
                 const likesCount = likedData.reduce<ILikesCountType>((acc, recipe) => {
