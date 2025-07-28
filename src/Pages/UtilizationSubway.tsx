@@ -4,7 +4,7 @@ import SubHeader from "../Components/SubHeader";
 import data from "../data.json";
 import { Fragment, useState } from "react";
 
-const PageHeaderContainer = styled.article`
+const PageHeaderContainer = styled.header`
     align-items: center;
     margin: 140px 0 80px 0;
 `;
