@@ -30,7 +30,7 @@ export const useRecipeLikes = () => {
         return true;    // 로그인한 경우 true 반환
     };
 
-    // 좋아요 버튼 클릭 시 실행행
+    // 좋아요 버튼 클릭 시 실행
     const handleManageRecipeLike = async (recipeId:number) => {
         if(!checkLoginState()) return;
 

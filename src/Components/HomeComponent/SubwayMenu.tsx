@@ -179,6 +179,7 @@ function SubwayMenu() {
     };
     useEffect(() => {
         window.addEventListener("resize", handleResize);
+        // 이벤트 등록 제거 -> 이벤트리스너를 제거하여 컴포넌트가 리렌더링될 때마다 계속해서 handler가 추가되지 않도록 처리 (clean up)
         return () => {
             window.addEventListener("resize", handleResize);
         }
