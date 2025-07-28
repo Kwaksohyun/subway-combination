@@ -152,18 +152,13 @@ function CommentsSection() {
         }
         return commentsData;
     };
-
+    
     const { data: commentsData, isLoading:commentLoading } = useQuery<IComment[]>({
         queryKey: ['comments'], 
         queryFn: fetchAllCommentsData,
     });
 
-    
-    const handleSortChange = (sortOption:string) => {
-        setSortType(sortOption);
-    }
-
-    // 최신순-내림차순 정렬, 오래된 순-오름차순
+    // 댓글 정렬(최신순: 내림차순 정렬, 오래된 순: 오름차순)
     const sortedCommentData = [...(commentsData ?? [])].sort((a, b) => {
         return (sortType === "latest") 
             ? (+new Date(b.created_at) - +new Date(a.created_at)) 
@@ -234,10 +229,10 @@ function CommentsSection() {
             <CommentSortWrap>
                 <CommentSortOption 
                     className={sortType === "latest" ? "active" : ""}
-                    onClick={() => handleSortChange("latest")}>최신순</CommentSortOption>
+                    onClick={() => setSortType("latest")}>최신순</CommentSortOption>
                 <CommentSortOption 
                     className={sortType === "oldest" ? "active" : ""}
-                    onClick={() => handleSortChange("oldest")}>오래된 순</CommentSortOption>
+                    onClick={() => setSortType("oldest")}>오래된 순</CommentSortOption>
             </CommentSortWrap>
             <ul>
                 {commentLoading ? <Loading>Loading...</Loading> : (
