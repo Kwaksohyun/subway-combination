@@ -45,7 +45,7 @@ const TabItem = styled.li`
     color: #666666;
     cursor: pointer;
     &.active {
-        color: ${(props) => props.theme.green.lighter};
+        color: ${(props) => props.theme.green.darkest};
     }
 
     &:not(:last-child)::after {
@@ -102,7 +102,7 @@ const Summary = styled.p`
     text-align: center;
     width: 230px;
     margin-top: 15px;
-    color: ${(props) => props.theme.grey.darker};
+    color: #666666;
 `;
 
 const SlideDirectionBtnWrap = styled.div`

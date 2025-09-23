@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const MainContainer = styled.div`
-    background-color: ${(props) => props.theme.yellow.darkest};
-    height: 450px;
+    background-color: ${(props) => props.theme.yellow.darker};
+    height: 500px;
     width: 100%;
     min-width: 800px;
     display: flex;
@@ -32,15 +32,15 @@ const ContentWrap = styled.div`
     }
 `;
 
-const Title = styled.h1`
-    color: ${(props) => props.theme.green.lighter};
+const Title = styled.h2`
+    color: ${(props) => props.theme.green.darker};
     font-size: 65px;
     font-weight: 800;
     margin-bottom: 20px;
 `;
 
 const Description = styled.p`
-    color: #fff;
+    color: #6D590D;
     line-height: normal;
     font-weight: 500;
 `;
@@ -61,7 +61,7 @@ const RecipeContainer = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    > h3 {
+    > strong {
         background-color: #fff;
         color: ${(props) => props.theme.yellow.darkest};
         font-weight: 700;
@@ -94,7 +94,7 @@ const SandwichWrap = styled.div`
     position: relative;
     > span {
         color: ${(props) => props.theme.brown.darker};
-        font-weight: 800;
+        font-weight: 700;
         font-size: 18px;
         position: absolute;
         top: 30px;
@@ -161,7 +161,7 @@ function MyRecipeBanner() {
                 </ContentWrap>
 
                 <RecipeContainer>
-                    <h3>베스트셀러 메뉴의 추천 꿀조합</h3>
+                    <strong>베스트셀러 메뉴의 추천 꿀조합</strong>
                     <RecipeList>
                         <li>
                             <SandwichWrap>
@@ -171,15 +171,15 @@ function MyRecipeBanner() {
                             <RecipeSauceWrap>
                                 <ul>
                                     <SauceItem style={{right: "140px"}}>
-                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt="랜치"/>
+                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt=""/>
                                         <span>랜치</span>
                                     </SauceItem>
                                     <SauceItem style={{right: "65px"}}>
-                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s02.png`} alt="스위트 어니언"/>
+                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s02.png`} alt=""/>
                                         <span>스위트 어니언</span>
                                     </SauceItem>
                                     <SauceItem style={{right: "-10px"}}>
-                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s06.png`} alt="핫 칠리"/>
+                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s06.png`} alt=""/>
                                         <span>핫 칠리</span>
                                     </SauceItem>
                                 </ul>
@@ -193,11 +193,11 @@ function MyRecipeBanner() {
                         <RecipeSauceWrap>
                             <ul>
                                 <SauceItem style={{right: "125px"}}>
-                                    <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt="랜치"/>
+                                    <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt=""/>
                                     <span>랜치</span>
                                 </SauceItem>
                                 <SauceItem style={{right: "50px"}}>
-                                    <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s04.png`} alt="스위트 칠리"/>
+                                    <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s04.png`} alt=""/>
                                     <span>스위트 칠리</span>
                                 </SauceItem>
                             </ul>
