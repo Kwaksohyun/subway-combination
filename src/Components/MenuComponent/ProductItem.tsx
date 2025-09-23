@@ -10,7 +10,7 @@ const ProductInfoWrap = styled.div`
 `;
 
 const Img = styled.img`
-    width: 280px;
+    width: 285px;
     height: 200px;
     &.hasNotCalorie {
         margin-top: 15px;
