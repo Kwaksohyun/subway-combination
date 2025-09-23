@@ -86,7 +86,7 @@ const MenuItemInfo = styled.div`
 `;
 
 const SandwichImg = styled.img`
-    width: 280px;
+    width: 285px;
     height: 200px;
 `;
 

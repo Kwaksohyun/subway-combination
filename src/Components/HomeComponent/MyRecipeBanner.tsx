@@ -102,8 +102,8 @@ const SandwichWrap = styled.div`
 `;
 
 const SandwichImg = styled.img`
-    width: 350px;
-    height: 230px;
+    width: 355px;
+    height: 250px;
 `;
 
 const RecipeSauceWrap = styled.div`
