@@ -150,7 +150,7 @@ const Button = styled.button`
 const CancelBtn = styled(Button)`
     border: 2px solid ${(props) => props.theme.green.lighter};
     background-color: #fff;
-    color: ${(props) => props.theme.green.darker};
+    color: ${(props) => props.theme.green.darkest};
 `;
 
 const EditBtn = styled(Button)`

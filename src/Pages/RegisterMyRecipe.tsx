@@ -227,14 +227,14 @@ const ResetBtn = styled(Button)`
 `;
 
 const CancelBtn = styled(Button)`
-    border: 2px solid ${(props) => props.theme.green.darker};
+    border: 2px solid ${(props) => props.theme.green.darkest};
     background-color: #fff;
-    color: ${(props) => props.theme.green.darker};
+    color: ${(props) => props.theme.green.darkest};
 `;
 
 const SubmitBtn = styled(Button)`
     border: 0;
-    background-color: ${(props) => props.theme.green.darker};
+    background-color: ${(props) => props.theme.green.darkest};
     color: #fff;
 `;
 

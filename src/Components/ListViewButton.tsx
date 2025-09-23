@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const ListViewBtnWrap = styled.div`
-    background-color: ${(props) => props.theme.green.darker};
+    background-color: ${(props) => props.theme.green.darkest};
     color: #fff;
     font-weight: 500;
     width: 130px;

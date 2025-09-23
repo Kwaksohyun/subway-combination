@@ -74,7 +74,7 @@ const MakeMyRecipeContent = styled.div`
 `;
 
 const ShareButton = styled.button`
-    background-color: ${(props) => props.theme.green.darker};
+    background-color: ${(props) => props.theme.green.darkest};
     color: #fff;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 16px;

@@ -3,7 +3,8 @@ import { DefaultTheme } from "styled-components";
 export const theme: DefaultTheme = {
     green: {
         lighter: "#009223",
-        darker: "#00682B",
+        darker: "#008939",
+        darkest: "#00682B",
     },
     yellow: {
         lighter: "#ffc300",
