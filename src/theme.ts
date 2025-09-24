@@ -13,7 +13,7 @@ export const theme: DefaultTheme = {
     },
     grey: {
         lighter: "#f2f2f2",
-        darker: "#999999"
+        darker: "#757575"
     },
     brown: {
         darker: "#5F311B"

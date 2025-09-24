@@ -81,7 +81,7 @@ const Tab = styled.li`
         bottom: 33px;
     }
     &.active {
-        color: ${(props) => props.theme.green.lighter};
+        color: ${(props) => props.theme.green.darker};
     }
 `;
 

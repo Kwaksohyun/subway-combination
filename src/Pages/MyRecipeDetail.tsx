@@ -45,7 +45,7 @@ const RecipeMenuWrap = styled.div`
     }
 `;
 
-const RecipeTitle = styled.h3`
+const RecipeTitle = styled.h2`
     font-size: 30px;
     font-weight: 500;
     text-align: center;
@@ -111,7 +111,7 @@ const RecipeImg = styled.img`
     object-fit: contain;
 `;
 
-const RecipeDetailWrap = styled.ul`
+const RecipeDetailWrap = styled.div`
     border: 5px solid ${(props) => props.theme.grey.lighter};
     border-radius: 50px;
     height: 350px;
@@ -123,7 +123,7 @@ const RecipeDetailWrap = styled.ul`
     position: relative;
     > strong {
         background-color: ${(props) => props.theme.yellow.darker};
-        color: #fff;
+        color: #6D590D;
         font-weight: 700;
         width: 200px;
         height: 40px;
@@ -272,13 +272,13 @@ function MyRecipeDetail() {
                                     <span>{recipeDetailData?.created_at.split("T")[0]}</span>
                                 </RecipeTextRowWrap>
                                 <BtnWrap>
-                                    <IconButton type="button" value={recipeItemIdx} onClick={() => handleManageRecipeLike(+recipeItemIdx)}>
+                                    <IconButton aria-label={likes[+recipeItemIdx] ? "좋아요 취소" : "좋아요 추가"} type="button" value={recipeItemIdx} onClick={() => handleManageRecipeLike(+recipeItemIdx)}>
                                         <HeartIcon fill={likes[+recipeItemIdx] ? "#ff3232" : "none"} 
                                             stroke={likes[+recipeItemIdx] ? "#ff3232" : "#999999"}
                                             width="30" height="30" strokeWidth="1.2" />
                                         <span>{likesCount[+recipeItemIdx] || 0}</span>
                                     </IconButton>
-                                    <IconButton type="button" onClick={savedRecipe}>
+                                    <IconButton aria-label={isSaved ? "북마크 취소" : "북마크 저장"} type="button" onClick={savedRecipe}>
                                         <BookMarkIcon fill={isSaved ? "#ffce32" : "none"} 
                                             stroke={isSaved ? "#ffce32" : "#999999"}
                                             width="30" height="30" strokeWidth="1.2" />
@@ -291,26 +291,28 @@ function MyRecipeDetail() {
                                 <RecipeImg src={`${process.env.PUBLIC_URL}/${sandwichInfoObj(recipeDetailData?.sandwich)?.img}`} alt={`img_${recipeDetailData?.sandwich}`} />
                                 <RecipeDetailWrap>
                                     <strong>나만의 꿀조합 레시피</strong>
-                                    <StepItem>
-                                        <StepName>빵</StepName>
-                                        <StepContent>{recipeDetailData?.bread} / {recipeDetailData?.toasting}</StepContent>
-                                    </StepItem>
-                                    <StepItem>
-                                        <StepName>치즈</StepName>
-                                        <StepContent>{recipeDetailData?.cheese}</StepContent>
-                                    </StepItem>
-                                    <StepItem>
-                                        <StepName>토핑</StepName>
-                                        <StepContent>{recipeDetailData?.topping.join(", ")}</StepContent>
-                                    </StepItem>
-                                    <StepItem>
-                                        <StepName>야채</StepName>
-                                        <StepContent>{recipeDetailData?.vegetable.join(", ")}</StepContent>
-                                    </StepItem>
-                                    <StepItem>
-                                        <StepName>소스</StepName>
-                                        <StepContent>{recipeDetailData?.sauce.join(", ")}</StepContent>
-                                    </StepItem>
+                                    <ul>
+                                        <StepItem>
+                                            <StepName>빵</StepName>
+                                            <StepContent>{recipeDetailData?.bread} / {recipeDetailData?.toasting}</StepContent>
+                                        </StepItem>
+                                        <StepItem>
+                                            <StepName>치즈</StepName>
+                                            <StepContent>{recipeDetailData?.cheese}</StepContent>
+                                        </StepItem>
+                                        <StepItem>
+                                            <StepName>토핑</StepName>
+                                            <StepContent>{recipeDetailData?.topping.join(", ")}</StepContent>
+                                        </StepItem>
+                                        <StepItem>
+                                            <StepName>야채</StepName>
+                                            <StepContent>{recipeDetailData?.vegetable.join(", ")}</StepContent>
+                                        </StepItem>
+                                        <StepItem>
+                                            <StepName>소스</StepName>
+                                            <StepContent>{recipeDetailData?.sauce.join(", ")}</StepContent>
+                                        </StepItem>
+                                    </ul>
                                 </RecipeDetailWrap>
                             </RecipeInfoWrap>
                         </>

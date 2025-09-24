@@ -25,7 +25,7 @@ export const CommentTextarea = styled.textarea`
 `;
 
 const CommentPostBtn = styled.button`
-    background-color: ${(props) => props.theme.green.lighter};
+    background-color: ${(props) => props.theme.green.darker};
     color: #fff;
     /* font-weight: 500; */
     width: 65px;

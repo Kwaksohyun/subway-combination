@@ -6,14 +6,14 @@ import { useRecipeLikes } from "../hooks/useRecipeLikes";
 
 const RecipeItemWrap = styled.li`
     width: 290px;
-    height: 360px;  
+    height: 355px;  
     border-radius: 30px;
     background-color: #fff;
 `;
 
 const RecipeImg = styled.img`
     width: 290px;
-    height: 210px;
+    height: 205px;
     background-color: ${(props) => props.theme.yellow.lighter};
     border-radius: 30px;
 `;
@@ -102,7 +102,7 @@ function RecipeItem({recipeId, recipeTitle, sandwichName, emailId}: IRecipeItemP
                     <RecipeTextRowWrap>
                         <RecipeWriter>{emailId}</RecipeWriter>
                         <RecipeHeartWrap>
-                            <IconButton type="button" value={recipeId} onClick={handleRecipeLikeClick(recipeId)}>
+                            <IconButton aria-label={likes[recipeId] ? "좋아요 취소" : "좋아요 추가"} type="button" value={recipeId} onClick={handleRecipeLikeClick(recipeId)}>
                                 <HeartIcon className="heart-icon" fill={likes[recipeId] ? "#ff3232" : "none"} 
                                         stroke={likes[recipeId] ? "#ff3232" : "#999999"}
                                         width="22" height="22" />

@@ -87,7 +87,7 @@ const LNBItem = styled.li<{$isactive: boolean, $isBackImg: boolean}>`
         color: ${(props) => props.$isactive ? props.theme.yellow.darker: "#fff"};
     }
     &.NoBackgroundImg {
-        color: ${(props) => props.$isactive ? props.theme.green.lighter: props.theme.grey.darker};
+        color: ${(props) => props.$isactive ? props.theme.green.darker: props.theme.grey.darker};
     }
     &:not(:first-child)::before {
         content: '';
@@ -108,13 +108,13 @@ const LNBItem = styled.li<{$isactive: boolean, $isBackImg: boolean}>`
             height: 4px;
             bottom: 0;
             left: 0;
-            background-color: ${(props) => props.$isBackImg ? props.theme.yellow.darker : props.theme.green.lighter};
+            background-color: ${(props) => props.$isBackImg ? props.theme.yellow.darker : props.theme.green.darker};
             opacity: 1;
             z-index: 5;
         }
     }
     &.fixed {
-        color: ${(props) => (!props.$isactive) ? props.theme.grey.darker : props.$isBackImg ? props.theme.yellow.darker : props.theme.green.lighter};
+        color: ${(props) => (!props.$isactive) ? props.theme.grey.darker : props.$isBackImg ? props.theme.yellow.darker : props.theme.green.darker};
         &:not(:first-child)::before {
             opacity: 1;
         }
