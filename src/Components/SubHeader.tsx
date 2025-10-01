@@ -63,15 +63,16 @@ const SubHeaderWrap = styled.div`
     margin: 0 auto;
     height: 60px;
     max-width: 1160px;
-    min-width: 650px;
     padding: 0 10px;
-    > ul {
-        overflow: hidden;
-        display: flex;
-    }
 `;
 
 const LNBWrap = styled.div`
+    width: 100%;
+    margin: 0 auto;
+    margin-right: 108px;    /* 가운데 정렬을 위해 */
+    &.fixed {
+        margin-right: 0;
+    }
     > ul {
         display: flex;
         justify-content: center;
@@ -82,6 +83,7 @@ const LNBItem = styled.li<{$isactive: boolean, $isBackImg: boolean}>`
     position: relative;
     margin: 0 25px;
     font-weight: 500;
+    white-space: nowrap;
     > a {
         line-height: 60px;
     }
@@ -169,7 +171,7 @@ function SubHeader(props:IsubMenuProps) {
                 <Logo>
                     <Link to={"/"}><img src={`${process.env.PUBLIC_URL}/images/main/subway_logo.webp`} alt="logo" /></Link>
                 </Logo>
-                <LNBWrap>
+                <LNBWrap className={fixedNav ? "fixed" : ""}>
                     <ul>
                         {props.subMenuInfo.map((menuItem)  => (
                             <LNBItem key={menuItem.index} 
