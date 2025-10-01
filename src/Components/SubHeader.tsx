@@ -4,9 +4,11 @@ import styled from "styled-components";
 
 const Logo = styled.h1`
     opacity: 0;
+    height: 25px;
     img{
-        width: 110px;
-        height: 25px;
+        width: 150px;
+        height: 100%;
+        object-fit: cover;
     }
 `;
 
@@ -165,7 +167,7 @@ function SubHeader(props:IsubMenuProps) {
         <SubHeaderContainer className={fixedNav ? "fixed" : ""} $isBackImg={props.isBackgroundImg}>
             <SubHeaderWrap>
                 <Logo>
-                    <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
+                    <Link to={"/"}><img src={`${process.env.PUBLIC_URL}/images/main/subway_logo.webp`} alt="logo" /></Link>
                 </Logo>
                 <LNBWrap>
                     <ul>

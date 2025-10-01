@@ -51,14 +51,16 @@ const HeaderWrap = styled.div`
 `;
 
 const Logo = styled.h1`
-    margin: 30px auto;
-    max-width: 200px;
+    margin: 0 auto;
+    width: 250px;
+    height: 100px;
     a {
         margin: 0 auto;
     }
     img {
-        width: 200px;
-        height: 40px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 `;
 
@@ -338,7 +340,7 @@ function Header() {
             <HeaderWrap>
                 <div>
                     <Logo>
-                        <Link to={"/"}><img src="https://www.subway.co.kr/images/common/logo_w.png" alt="logo" /></Link>
+                        <Link to={"/"}><img src={`${process.env.PUBLIC_URL}/images/main/subway_logo.webp`} alt="logo" /></Link>
                     </Logo>
                     <Utility className={isSidebarOpen ? "sidebaropen" : ""}>
                         {isLoggedIn ? (
