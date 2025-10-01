@@ -4,9 +4,8 @@ import styled from "styled-components";
 const FooterContainer = styled.footer`
     background-color: #292929;
     color: #ffffff95;
-    min-width: 800px;
+    width: 100%;
     > div {
-        max-width: 1200px;
         padding: 40px 0;
         margin: 0 auto;
         display: flex;
@@ -31,8 +30,8 @@ const FooterMenuWrap = styled.div`
     @media (max-width: 768px) {
         margin: 0;
         > ul {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 `;
@@ -40,22 +39,26 @@ const FooterMenuWrap = styled.div`
 const FooterMenuItem = styled.li`
     &:not(:last-child) {
         margin-right: 45px;
-    }    
-    > h3 {
-        font-weight: 800;
-        font-size: 18px;
-        margin-bottom: 30px;
-    }
-    > ul > li {
-        margin-bottom: 15px;
-        font-size: 15px;
     }
     // 화면 768px 이하
     @media (max-width: 768px) {
+        margin: 20px 0;
         &:not(:last-child) {
-        margin-right: 0px;
+            margin-right: 0px;
         }
-        margin-bottom: 25px;
+    }
+    > h3 {
+        font-weight: 800;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    > ul > li {
+        padding: 10px 0;
+        font-size: 15px;
+    }
+    > ul > li:hover {
+        color: ${(props) => props.theme.grey.lighter};
+        transition-duration: 0.2s;
     }
 `;
 
@@ -86,6 +89,10 @@ const SnsIcon = styled.svg`
     cursor: pointer;
     &:not(:last-child) {
         margin-right: 15px;
+    }
+    &:hover {
+        background-color: #6b6a6ac1;
+        transition-duration: 0.2s;
     }
 `;
 
