@@ -26,11 +26,10 @@ const PageHeaderTitle = styled.h2`
 
 const PageText = styled.span`
     color: ${(props) => props.theme.grey.darker};
-    white-space: nowrap;    // 자동 줄바꿈 무시
+    /* white-space: nowrap;    // 자동 줄바꿈 무시 */
 `;
 
 const MyRecipeContentWrap = styled.div`
-    
 `;
 
 const MakeMyRecipeBox = styled.aside`
@@ -41,23 +40,23 @@ const MakeMyRecipeBox = styled.aside`
     border: 4px solid ${(props) => props.theme.yellow.darker};
     border-radius: 25px;
     max-width: 950px;
-    min-width: 550px;
     height: 130px;
-    padding: 0 30px;
+    padding: 30px 28px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
-    // 화면 800px 이하
-    @media (max-width: 900px) {
-        max-width: 760px;
+    @media (max-width: 1024px) {
+        margin: 0 1rem;
     }
-    @media (max-width: 800px) {
-        max-width: 630px;
+    @media (max-width: 768px) {
+        display: block;
+        height: 100%;
+        padding: 25px 28px;
     }
     > img {
         width: 250px;
         height: 80px;
-        // 화면 800px 이하
+        // 화면 900px 이하
         @media (max-width: 900px) {
             display: none;
         }
@@ -87,6 +86,10 @@ const ShareButton = styled.button`
     align-items: center;
     cursor: pointer;
     border: 0;
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-top: 20px;
+    }
 `;
 
 const RecipeListWrap = styled.div`
@@ -95,27 +98,23 @@ const RecipeListWrap = styled.div`
     padding: 130px 0 120px 0;
     overflow: hidden;
     > div {
-        width: 1250px;
+        width: 100%;
+        max-width: 1250px;
         margin: 0 auto;
-        // 화면 1024px 이하
-        @media (max-width: 1024px) {
-            width: 920px;
-        }
-        // 화면 800px 이하
-        @media (max-width: 800px) {
-            width: 605px;
-        }
     }
     > div > ul {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 30px;
-        // 화면 1024px 이하
-        @media (max-width: 1024px) {
+        padding: 0 20px;
+        // 화면 1180px 이하
+        @media (max-width: 1180px) {
             grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 0 1.5rem;
         }
-        // 화면 800px 이하
-        @media (max-width: 800px) {
+        // 화면 870px 이하
+        @media (max-width: 860px) {
             grid-template-columns: repeat(2, 1fr);
         }
     }
@@ -177,7 +176,7 @@ function MyRecipeList() {
         }
     };
     return (
-        <section style={{paddingTop: "170px", minWidth: "800px"}}>
+        <section style={{paddingTop: "170px"}}>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
             
             {/* 나만의 꿀조합 레시피 헤더 */}
