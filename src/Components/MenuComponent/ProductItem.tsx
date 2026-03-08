@@ -7,11 +7,16 @@ const ProductInfoWrap = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    height: 100%;
 `;
 
 const Img = styled.img`
-    width: 285px;
-    height: 200px;
+    /* width: 285px;  */
+    /* height: 200px; */
+    width: 74%;
+    height: 58%;
+    object-fit: cover;
     &.hasNotCalorie {
         margin-top: 15px;
     }
@@ -40,7 +45,7 @@ const Summary = styled.div`
     text-align: center;
     color: #c3e698;
     font-size: 15px;
-    width: 310px;
+    max-width: 310px;
     opacity: 0;
     position: absolute;
     top: 150px;
@@ -60,8 +65,11 @@ const ViewBtn = styled.svg`
 `;
 
 const ProductItemWrap = styled(motion.li)`
-    width: 370px;
-    height: 330px;
+    /* width: 370px;
+    height: 330px; */
+    width: 100%;
+    max-width: 370px;
+    aspect-ratio: 37 / 33;
     background-color: #fff;
     position: relative;
     &:hover {

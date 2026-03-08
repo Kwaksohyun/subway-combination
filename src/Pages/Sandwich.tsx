@@ -14,6 +14,7 @@ const VisualWrap = styled.div`
     background-color: #e85a1c;
     color: #fff;
     text-align: center;
+    overflow: hidden;
     position: relative;
     > h2 {
         font-weight: 800;
@@ -38,8 +39,8 @@ const VisualWrap = styled.div`
 `;
 
 const ProductTab = styled.div`
+    width: 100%;
     max-width: 1170px;
-    min-width: 585px;
     height: 80px;
     margin: 0 auto;
     margin-bottom: 40px;
@@ -47,9 +48,15 @@ const ProductTab = styled.div`
     position: relative;
     z-index: 2;
     bottom: 40px;
+    overflow: auto;
+    scrollbar-width: none;
     > ul {
         display: flex;
         justify-content: center;
+        // 화면 480px 이하
+        @media (max-width: 480px) {
+            justify-content: start;
+        }
     }
 `;
 
@@ -61,6 +68,7 @@ const Tab = styled.li`
     cursor: pointer;
     height: 80px;
     line-height: 80px;
+    white-space: nowrap;
     &:not(:last-child)::after {
         content: '';
         position: absolute;
@@ -76,21 +84,24 @@ const Tab = styled.li`
 `;
 
 const ProductListWrap = styled.div`
-    width: 1170px;
+    width: 100%;
+    max-width: 1170px;
     margin: 0 auto;
     padding-bottom: 120px;
-    // 화면 1024px 이하
-    @media (max-width: 1024px) {
-        width: 800px;
-    }
     ul {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 30px;
-        overflow: hidden;
-        // 화면 1024px 이하
-        @media (max-width: 1024px) {
+        // 화면 900px 이하
+        @media (max-width: 900px) {
             grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            justify-items: center;
+        }
+        // 화면 600px 이하
+        @media (max-width: 600px) {
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
         }
     }
 `;
