@@ -4,9 +4,12 @@ import styled from "styled-components";
 
 const Logo = styled.h1`
     opacity: 0;
+    width: 100%;
+    min-width: 60px;
+    max-width: 150px;
     height: 25px;
     img{
-        width: 150px;
+        width: 100%;
         height: 100%;
         object-fit: cover;
     }
@@ -37,6 +40,8 @@ const SubHeaderContainer = styled.nav<{$isBackImg: boolean}>`
     background-color: transparent;
     z-index: 10;
     width: 100%;
+    overflow: auto;
+    scrollbar-width: none;
     &.fixed {
         position: fixed;
         top: 0;
@@ -58,19 +63,25 @@ const SubHeaderContainer = styled.nav<{$isBackImg: boolean}>`
 
 const SubHeaderWrap = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin: 0 auto;
     height: 60px;
+    width: 100%;
     max-width: 1160px;
+    margin: 0 auto;
     padding: 0 10px;
+    position: relative;
+    &.fixed {
+        justify-content: space-between;
+    }
+
 `;
 
 const LNBWrap = styled.div`
     width: 100%;
-    margin: 0 auto;
-    margin-right: 108px;    /* 가운데 정렬을 위해 */
+    position: absolute;     // 가운데 정렬을 위해
     &.fixed {
+        position: static;
         margin-right: 0;
     }
     > ul {
@@ -167,7 +178,7 @@ function SubHeader(props:IsubMenuProps) {
     }, []);
     return (
         <SubHeaderContainer className={fixedNav ? "fixed" : ""} $isBackImg={props.isBackgroundImg}>
-            <SubHeaderWrap>
+            <SubHeaderWrap className={fixedNav ? "fixed" : ""}>
                 <Logo>
                     <Link to={"/"}><img src={`${process.env.PUBLIC_URL}/images/main/subway_logo.webp`} alt="logo" /></Link>
                 </Logo>
