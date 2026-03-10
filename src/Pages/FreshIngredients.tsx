@@ -74,10 +74,6 @@ const ProductTab = styled.div`
     > ul {
         display: flex;
         justify-content: center;
-        // 화면 480px 이하
-        @media (max-width: 480px) {
-            justify-content: start;
-        }
     }
 `;
 
