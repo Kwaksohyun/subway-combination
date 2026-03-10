@@ -7,6 +7,7 @@ import { useSetRecoilState } from "recoil";
 import { sessionState } from "../atoms";
 import useUserInfo from "../hooks/useUserInfo";
 import { ReactComponent as BarIcon } from '../assets/bar.svg';
+import SidebarMenu from "./SidebarMenu";
 
 const HeaderContainer = styled.header`
     background-color: #fff;
@@ -31,7 +32,6 @@ const HeaderContainer = styled.header`
     }
     // 화면 768px 이하
     @media (max-width: 768px) {
-        height: 100px;
         overflow: visible;
         transition: none;
         &.open {
@@ -71,38 +71,11 @@ const Utility = styled.div`
     align-items: center;
     // 화면 768px 이하
     @media (max-width: 768px) {
-        width: 310px;
-        height: 100px;
-        right: 0;
-        padding-left: 40px;
-        background-color: #fff;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: transform 0.4s ease-in-out;
-        box-shadow: -5px 5px 5px -5px rgba(0,0,0,0.12);
-        &.sidebaropen {
-            opacity: 1;
-            transform: translateX(0);
-            transition: transform 0.4s ease-in-out;
-            position: fixed;
-            z-index: 20;
-        }
+        display: none;
     }
     > ul {
         display: flex;
         align-items: center;
-    }
-`;
-
-const SidebarUserIcon = styled.img`
-    width: 45px;
-    height: 45px;
-    border-radius: 7px;
-    opacity: 0;
-    z-index: 20;
-    // 화면 768px 이하
-    @media (max-width: 768px) {
-        opacity: 1;
     }
 `;
 
@@ -122,12 +95,6 @@ const UtilityItem = styled.li`
         left: -16px;
         bottom: 5px;
     }
-    // 화면 768px 이하
-    @media (max-width: 768px) {
-        &:not(:first-child) {
-            margin-bottom: -17px;
-        }
-    }
     > a {
         font-size: 14px;
         color: #666666;
@@ -139,14 +106,6 @@ const Username = styled.span<{$isLoggedIn:boolean}>`
     font-size: 14px;
     font-weight: 500;
     opacity: ${(props) => props.$isLoggedIn ? 1 : 0};
-    // 화면 768px 이하
-    @media (max-width: 768px) {
-        white-space: nowrap;
-        position: absolute;
-        top: -17px;
-        margin-left: 15px;
-        opacity: 1;
-    }
 `;
 
 const Logout = styled.span`
@@ -159,54 +118,19 @@ const NavLink = styled(Link)`
     font-weight: 700;
     font-size: 18px;
     margin: 25px 0px;
-    // 화면 768px 이하
-    @media (max-width: 768px) {
-        padding: 0 25px;
-    }
 `;
 
 const GNBWrap = styled.nav`
     width: 100%;
     text-align: center;
     word-break: keep-all;
-
     // 화면 768px 이하
     @media (max-width: 768px) {
-        width: 310px;
-        height: 100%;
-        padding: 10px;
-        background-color: #fff;
-        box-shadow: -5px 5px 5px -5px rgba(0,0,0,0.12);
-        position: absolute;
-        right: 0;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: transform 0.4s ease-in-out;
-
-        &.sidebaropen {
-            opacity: 1;
-            transform: translateX(0);
-            transition: transform 0.4s ease-in-out;
-            position: fixed;
-            z-index: 20;
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                background-color: #e5e5e5;
-                width: 100%;
-                height: 1px;
-            }
-        }
+        display: none;
     }
     > ul {
         display: flex;
         justify-content: center;
-        // 화면 768px 이하
-        @media (max-width: 768px) {
-            flex-direction: column;
-        }
     }
     > ul > li {
         display: flex;
@@ -215,11 +139,6 @@ const GNBWrap = styled.nav`
         width: 155px;
         cursor: pointer;
         position: relative;
-        // 화면 768px 이하
-        @media (max-width: 768px) {
-            align-items: flex-start;
-            margin: 5px 0;
-        }
     }
     > ul > li:hover ${NavLink} {
         color: ${(props) => props.theme.green.lighter};
@@ -239,26 +158,11 @@ const Dropdown = styled(motion.div)`
         transform: translateY(0px);
         transition: all 0.2s ease;
     }
-    // 화면 768px 이하
-    @media (max-width: 768px) {
-        top: 0;
-        height: 500px;
-        transform: translateX(60%);
-
-        &.open {
-            transform: translateX(85%);
-        }
-    }
     > ul {
         padding: 15px 0;
     }
     > ul > li {
         padding: 15px 0;
-        // 화면 768px 이하
-        @media (max-width: 768px) {
-            padding: 10px 0;
-            text-align: start;
-        }
     }
     > ul > li > a:hover,
     > ul > li > a:focus {
@@ -279,12 +183,11 @@ const IconBtn = styled.button`
     // 화면 768px 이하
     @media (max-width: 768px) {
         display: block;
-
         &.sidebaropen {
             position: fixed;
         }
     }
-`
+`;
 
 function Header() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);        // nav 드롭다운
@@ -336,17 +239,15 @@ function Header() {
         })
     }, [])
     return (
-        <HeaderContainer className={`${isDropdownOpen ? "open" : ""} ${isSidebarOpen ? "sidebaropen" : ""}`}>
+        <HeaderContainer className={isDropdownOpen ? "open" : ""}>
             <HeaderWrap>
                 <div>
                     <Logo>
                         <Link to={"/"}><img src={`${process.env.PUBLIC_URL}/images/main/subway_logo.webp`} alt="logo" /></Link>
                     </Logo>
-                    <Utility className={isSidebarOpen ? "sidebaropen" : ""}>
+                    <Utility>
                         {isLoggedIn ? (
-                            <>
-                                <SidebarUserIcon className={isSidebarOpen ? "sidebaropen" : ""} 
-                                    src={`${process.env.PUBLIC_URL}/images/user_icon.png`} alt="profileImg" />
+                            <> 
                                 <ul>
                                     <UtilityItem><Username $isLoggedIn={isLoggedIn}>{userInfoData?.username}</Username></UtilityItem>
                                     <UtilityItem><Logout onClick={signOut}>로그아웃</Logout></UtilityItem>
@@ -355,8 +256,6 @@ function Header() {
                             </>
                         ) : (
                             <>
-                                <SidebarUserIcon className={isSidebarOpen ? "sidebaropen" : ""} 
-                                    src={`${process.env.PUBLIC_URL}/images/main/subway_logo_emblem.jpg`} alt="로고 이미지" />
                                 <ul>
                                     <UtilityItem><Username $isLoggedIn={isLoggedIn}>로그인이 필요합니다</Username></UtilityItem>
                                     <UtilityItem><Link to={"/login"}>로그인</Link></UtilityItem>
@@ -366,7 +265,7 @@ function Header() {
                         )}
                     </Utility>
                 </div>
-                <GNBWrap className={isSidebarOpen ? "sidebaropen" : ""} onMouseLeave={(event) => mouseEvent(event, false)}>
+                <GNBWrap onMouseLeave={(event) => mouseEvent(event, false)}>
                     <ul>
                         <li onMouseEnter={(event) => mouseEvent(event, true)}>
                             <NavLink to={"#none"}>메뉴소개</NavLink>
@@ -409,10 +308,15 @@ function Header() {
                     </ul>
                 </GNBWrap>
             </HeaderWrap>
+
             {/* 햄버거 버튼 (메뉴 바) */}
             <IconBtn onClick={() => setSidebarOpen(prev => !prev)} className={isSidebarOpen ? "sidebaropen" : ""} aria-label="메뉴 버튼">
                 <BarIcon width="40" height="40" />
             </IconBtn>
+
+            {/* 반응형 사이드 메뉴 */}
+            <SidebarMenu isLoggedIn={isLoggedIn} isSidebarOpen={isSidebarOpen} isDropdownOpen={isDropdownOpen}
+                        mouseEvent={mouseEvent} signOut={signOut} />
         </HeaderContainer>
     );
 }
