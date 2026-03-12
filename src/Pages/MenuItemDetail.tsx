@@ -6,10 +6,11 @@ import SubHeader from "../Components/SubHeader";
 import { Fragment } from "react";
 
 const ProductInfoWrap = styled.div`
-    padding-top: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 140px 10px 0 10px;
+    word-break: keep-all;      // 단어 단위로 줄바꿈
 `;
 
 const ProductCategory = styled.span`
@@ -20,13 +21,29 @@ const ProductCategory = styled.span`
 
 const Title = styled.strong`
     font-size: 50px;
-    white-space: nowrap;    // 자동 줄바꿈 무시
+    text-align: center;
     margin: 20px 0 15px 0;
+    @media (max-width: 768px) {
+        font-size: 45px;
+    }
+    @media (max-width: 500px) {
+        font-size: 40px;
+        font-weight: 500;
+    }
+    @media (max-width: 400px) {
+        font-size: 35px;
+    }
 `;
 
 const TextRowWrap = styled.div`
     font-size: 17px;
     display: flex;
+    @media (max-width: 500px) {
+        font-size: 16px;
+    }
+    @media (max-width: 400px) {
+        font-size: 14px;
+    }
 `;
 
 const EngTitle = styled.span`
@@ -47,7 +64,12 @@ const Calorie = styled.span`
     }
 `;
 
-const Img = styled.img``;
+const Img = styled.img`
+    width: 100%;
+    height: 100%;
+    max-width: 570px;
+    object-fit: cover;
+`;
 
 const Summary = styled.p`
     text-align: center;
