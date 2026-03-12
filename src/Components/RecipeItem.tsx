@@ -29,22 +29,22 @@ const RecipeInfoWrap = styled.div`
     width: 100%;
     min-width: 0;
     height: 42.5%;
-    min-height: 105px;
+    min-height: 95px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 23px 20px;
-    flex-shrink: 0;
+    flex-shrink: 0;     // 컨테이너 초과 공간 발생하더라도 아이템 사이즈 줄지 않음
     // 화면 600px 이하
     @media (max-width: 600px) {
         padding: 20px;
     }
     // 화면 575px 이하
     @media (max-width: 575px) {
-        padding: 17px;
+        padding: 15px 17px;
     }
-    // 화면 545px 이하
-    @media (max-width: 545px) {
+    // 화면 500px 이하
+    @media (max-width: 500px) {
         padding: 13px 15px;
     }
 `;
@@ -65,6 +65,10 @@ const RecipeTitle = styled.strong`
     @media (max-width: 575px) {
         font-size: 15px;
     }
+    // 화면 500px 이하
+    @media (max-width: 500px) {
+        font-size: 13px;
+    }
 `;
 
 const RecipeMenu = styled.span`
@@ -76,6 +80,15 @@ const RecipeMenu = styled.span`
     @media (max-width: 575px) {
         font-size: 11.5px;
     }
+    // 화면 500px 이하
+    @media (max-width: 500px) {
+        font-size: 10.5px;
+    }
+    // 화면 425px 이하
+    @media (max-width: 425px) {
+        font-size: 9.5px;
+        margin-top: 5px;
+    }
 `;
 
 const RecipeTextRowWrap = styled.div`
@@ -86,6 +99,14 @@ const RecipeTextRowWrap = styled.div`
     // 화면 575px 이하
     @media (max-width: 575px) {
         font-size: 13px;
+    }
+    // 화면 500px 이하
+    @media (max-width: 500px) {
+        font-size: 12px;
+    }
+    // 화면 425px 이하
+    @media (max-width: 425px) {
+        font-size: 11px;
     }
 `;
 
@@ -110,7 +131,19 @@ const IconButton = styled.button`
     padding: 0;
     cursor: pointer;
     > .heart-icon {
+        width: 22px;
+        height: 22px;
         transition: fill 1s;
+        // 화면 500px 이하
+        @media (max-width: 500px) {
+            width: 20px;
+            height: 20px;
+        }
+        // 화면 425px 이하
+        @media (max-width: 425px) {
+            width: 19px;
+            height: 19px;
+        }
     }
 `;
 
@@ -141,8 +174,7 @@ function RecipeItem({recipeId, recipeTitle, sandwichName, emailId}: IRecipeItemP
                         <RecipeHeartWrap>
                             <IconButton aria-label={likes[recipeId] ? "좋아요 취소" : "좋아요 추가"} type="button" value={recipeId} onClick={handleRecipeLikeClick(recipeId)}>
                                 <HeartIcon className="heart-icon" fill={likes[recipeId] ? "#ff3232" : "none"} 
-                                        stroke={likes[recipeId] ? "#ff3232" : "#999999"}
-                                        width="22" height="22" />
+                                        stroke={likes[recipeId] ? "#ff3232" : "#999999"} viewBox="0 0 24 24" />
                             </IconButton>
                             <span>{likesCount[recipeId] || 0}</span>
                         </RecipeHeartWrap>

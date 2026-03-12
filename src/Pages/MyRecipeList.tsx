@@ -7,8 +7,13 @@ import supabase from "../supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 import RecipeItem from "../Components/RecipeItem";
 
+const MyRecipeListContainer = styled.section`
+    padding-top: 170px;
+`;
+
 const PageHeaderContainer = styled.header`
     margin: 140px 0 80px 0;
+    word-break: keep-all;      // 단어 단위로 줄바꿈
 `;
 
 const PageHeader = styled.div`
@@ -26,7 +31,6 @@ const PageHeaderTitle = styled.h2`
 
 const PageText = styled.span`
     color: ${(props) => props.theme.grey.darker};
-    /* white-space: nowrap;    // 자동 줄바꿈 무시 */
 `;
 
 const MyRecipeContentWrap = styled.div`
@@ -45,6 +49,7 @@ const MakeMyRecipeBox = styled.aside`
     margin: 0 auto;
     position: relative;
     z-index: 1;
+    word-break: keep-all;      // 단어 단위로 줄바꿈
     @media (max-width: 1024px) {
         margin: 0 1rem;
     }
@@ -96,13 +101,14 @@ const RecipeListWrap = styled.div`
     background-color: #f2f2f2;
     margin-top: -60px;
     padding: 130px 0 120px 0;
-    overflow: hidden;
     > div {
         width: 100%;
         max-width: 1250px;
         margin: 0 auto;
     }
     > div > ul {
+        width: 100%;
+        margin: 0 auto;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 30px;
@@ -113,9 +119,15 @@ const RecipeListWrap = styled.div`
             gap: 20px;
             padding: 0 1.5rem;
         }
-        // 화면 870px 이하
-        @media (max-width: 860px) {
+        // 화면 768px 이하
+        @media (max-width: 768px) {
             grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 0 1rem;
+        }
+        // 화면 450px 이하
+        @media (max-width: 450px) {
+            gap: 10px;
         }
     }
 `;
@@ -176,7 +188,7 @@ function MyRecipeList() {
         }
     };
     return (
-        <section style={{paddingTop: "170px"}}>
+        <MyRecipeListContainer>
             <SubHeader subMenuInfo={subMenuInfo} isBackgroundImg={false} />
             
             {/* 나만의 꿀조합 레시피 헤더 */}
@@ -212,7 +224,7 @@ function MyRecipeList() {
                     </div>
                 </RecipeListWrap>
             </MyRecipeContentWrap>
-        </section>
+        </MyRecipeListContainer>
     )
 }
 
