@@ -5,18 +5,24 @@ const MainContainer = styled.div`
     background-color: ${(props) => props.theme.yellow.darker};
     height: 500px;
     width: 100%;
-    min-width: 800px;
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
+    @media (max-width: 1024px) {
+        height: 550px;
+    }
+    @media (max-width: 480px) {
+        height: 700px;
+    }
     > div {
-        width: 1200px;
-        min-width: 900px;
+        width: 100%;
+        max-width: 1240px;
+        height: 100%;
         margin: 0 auto;
+        padding: 0 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        overflow: hidden;
+        @media (max-width: 1024px) {
+            flex-direction: column;
+        }
     }
 `;
 
@@ -25,42 +31,70 @@ const ContentWrap = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    overflow: hidden;
+    word-break: keep-all;
+    @media (max-width: 1024px) {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
     > header {
         width: 530px;
         word-spacing: 2px;
+        @media (max-width: 1024px) {
+            width: 100%;
+        }
     }
 `;
 
 const Title = styled.h2`
     color: ${(props) => props.theme.green.darker};
-    font-size: 65px;
+    /* font-size: 65px; */
+    font-size: clamp(45px, 5vw + 20px, 65px);
     font-weight: 800;
     margin-bottom: 20px;
+    @media (max-width: 1024px) {
+        margin-bottom: 10px;
+    }
 `;
 
 const Description = styled.p`
     color: #6D590D;
     line-height: normal;
     font-weight: 500;
+    @media (max-width: 1024px) {
+        font-size: 14px;
+    }
 `;
 
 const Button = styled.div`
     background-color: ${(props) => props.theme.green.darker};
     color: #fff;
-    width: 125px;
+    width: 170px;
     height: 40px;
     border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 500;
+    @media (max-width: 1024px) {
+        margin-top: 40px;
+    }
 `;
 
 const RecipeContainer = styled.div`
+    width: 100%;
+    height: 370px;
     position: relative;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    @media (max-width: 1024px) {
+        height: 280px;
+        flex-direction: row;
+    }
+    @media (max-width: 480px) {
+        height: 370px;
+    }
     > strong {
         background-color: #fff;
         color: ${(props) => props.theme.yellow.darkest};
@@ -72,22 +106,45 @@ const RecipeContainer = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: -20px;
-        position: relative;
-        right: 60px;
-        top: 0px;
+        @media (max-width: 1024px) {
+            display: none;
+        }
     }
 `;
 
 const RecipeList = styled.ul`
+    width: 100%;
+    display: flex;
     position: relative;
-    height: 400px;
+    @media (max-width: 1024px) {
+        position: static;
+        justify-content: center;
+        align-items: center;
+        margin-top: -80px;
+    }
+    @media (max-width: 480px) {
+        flex-direction: column;
+    }
     > li {
-        position: relative;
+        position: absolute;
+        top: -50px;
+        right: 0px;
+        @media (max-width: 1024px) {
+            position: static;
+        }
+    }
+    > li:first-child {
+        top: 30px;
+        right: 270px;
     }
 `;
 
 const SandwichWrap = styled.div`
+    /* width: 330px;
+    height: 250px; */
+    width: 100%;
+    max-width: 330px;
+    aspect-ratio: 35 / 25;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -97,44 +154,57 @@ const SandwichWrap = styled.div`
         font-weight: 700;
         font-size: 18px;
         position: absolute;
-        top: 30px;
+        bottom: 34px;
+        @media (max-width: 1024px) {
+            font-size: 15px;
+        }
+        @media (max-width: 768px) {
+            bottom: 25px;
+        }
     }
 `;
 
 const SandwichImg = styled.img`
-    width: 355px;
-    height: 250px;
+    width: clamp(220px, 28vw, 350px);
+    height: auto;
 `;
 
 const RecipeSauceWrap = styled.div`
-    position: absolute;
-    bottom: -10px;
-    right: 50px;
-    > ul {
-        display: flex;
-        position: relative;
-        margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: -35px;
+    @media (max-width: 768px) {
+        margin-top: -30px;
     }
 `;
 
+const SauceList = styled.ul`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`;
+
 const SauceItem = styled.li`
+    /* width: 120px;
+    height: 80px; */
+    width: 100%;
+    max-width: 100px;
+    aspect-ratio: 3 / 2;
     display: flex;
     flex-direction: column;
-    position: absolute;
-    bottom: -5px;
+    align-items: center;
+    margin: 0 -17px;
     > span {
-        text-align: center;
         color: ${(props) => props.theme.brown.darker};
         font-size: 14px;
-        font-weight: 700;
-        position: relative;
-        top: -14px;
+        font-weight: 500;
+        margin-top: -10px;
     }
 `;
 
 const SauceImg = styled.img`
-    width: 120px;
-    height: 85px;
+    width: clamp(80px, 18vw, 100px);
+    height: auto;
 `;
 
 // const ArrowIcon = styled.svg`
@@ -156,7 +226,7 @@ function MyRecipeBanner() {
                         </Description>
                     </header>
                     <Button>
-                        <Link to={"/myRecipeList"}>자세히보기</Link>
+                        <Link to={"/myRecipeList"}>꿀조합 레시피 보기</Link>
                     </Button>
                 </ContentWrap>
 
@@ -165,43 +235,43 @@ function MyRecipeBanner() {
                     <RecipeList>
                         <li>
                             <SandwichWrap>
-                                <span>이탈리안 B.M.T.™</span>
-                                <SandwichImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Italian_B.M.T.png`} alt="이탈리안 B.M.T.™" />
+                                <SandwichImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Egg-Mayo.png`} alt="에그마요" />
+                                <span>에그마요</span>
                             </SandwichWrap>
                             <RecipeSauceWrap>
-                                <ul>
-                                    <SauceItem style={{right: "140px"}}>
+                                <SauceList>
+                                    <SauceItem>
                                         <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt=""/>
                                         <span>랜치</span>
                                     </SauceItem>
-                                    <SauceItem style={{right: "65px"}}>
+                                    <SauceItem>
+                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s04.png`} alt=""/>
+                                        <span>스위트 칠리</span>
+                                    </SauceItem>
+                                </SauceList>
+                            </RecipeSauceWrap>
+                        </li>
+                        <li>
+                            <SandwichWrap>
+                                <SandwichImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Italian_B.M.T.png`} alt="이탈리안 B.M.T.™" />
+                                <span>이탈리안 B.M.T.™</span>
+                            </SandwichWrap>
+                            <RecipeSauceWrap>
+                                <SauceList>
+                                    <SauceItem>
+                                        <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt=""/>
+                                        <span>랜치</span>
+                                    </SauceItem>
+                                    <SauceItem>
                                         <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s02.png`} alt=""/>
                                         <span>스위트 어니언</span>
                                     </SauceItem>
-                                    <SauceItem style={{right: "-10px"}}>
+                                    <SauceItem>
                                         <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s06.png`} alt=""/>
                                         <span>핫 칠리</span>
                                     </SauceItem>
-                                </ul>
+                                </SauceList>
                             </RecipeSauceWrap>
-                        </li>
-                        <li style={{bottom: "60px", right: "160px"}}>
-                            <SandwichWrap>
-                                <span>에그마요</span>
-                                <SandwichImg src={`${process.env.PUBLIC_URL}/images/menu/sandwich/Egg-Mayo.png`} alt="에그마요" />
-                            </SandwichWrap>
-                        <RecipeSauceWrap>
-                            <ul>
-                                <SauceItem style={{right: "125px"}}>
-                                    <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s01.png`} alt=""/>
-                                    <span>랜치</span>
-                                </SauceItem>
-                                <SauceItem style={{right: "50px"}}>
-                                    <SauceImg src={`${process.env.PUBLIC_URL}/images/ingredients/img_recipe_s04.png`} alt=""/>
-                                    <span>스위트 칠리</span>
-                                </SauceItem>
-                            </ul>
-                        </RecipeSauceWrap>
                         </li>
                     </RecipeList>
                     
