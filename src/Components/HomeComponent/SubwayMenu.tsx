@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 const SubwayMenuContainer = styled.div`
     background-color: #fff;
     height: 700px;
-    min-width: 800px;
+    width: 100%;
     padding-top: 170px;
     display: flex;
     flex-direction: column;
@@ -19,35 +19,56 @@ const SubwayMenuHeader = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1220px;
+    min-width: 373px;
     margin: 0 auto;
-    padding-bottom: 30px;
+    padding: 0 10px 30px 10px;
+    /* padding-bottom: 30px; */
     > h2 {
         font-size: 32px;
         font-weight: 800;
         background: url("../images/main/bul_tit.png") 0 12px no-repeat;
         min-height: 60px;
         padding: 30px 0px 10px 30px;
+        @media (max-width: 768px) {
+            font-size: 30px;
+        }
+        @media (max-width: 480px) {
+            font-size: 25px;
+        }
     }
 `;
 
 const Tabs = styled.div`
+    overflow: auto;
+    scrollbar-width: none;
 `;
 
 const TabList = styled.ul`
     display: flex;
+    @media (max-width: 480px) {
+        padding-left: 5px;
+    }
 `;
 
 const TabItem = styled.li`
     position: relative;
-    margin-left: 40px;
     font-weight: 500;
     color: #666666;
+    white-space: nowrap;    // 자동 줄바꿈 무시
     cursor: pointer;
+    @media (max-width: 480px) {
+        font-size: 15px;
+    }
+    &:not(:last-child) {
+        margin-right: 40px;
+        @media (max-width: 480px) {
+            margin-right: 30px;
+        }
+    }
     &.active {
         color: ${(props) => props.theme.green.darkest};
     }
-
     &:not(:last-child)::after {
         content: '';
         position: absolute;
@@ -55,6 +76,9 @@ const TabItem = styled.li`
         width: 1px;
         height: 15px;
         right: -20px;
+        @media (max-width: 480px) {
+            right: -15px;
+        }
     }
 `;
 
@@ -64,17 +88,26 @@ const MenuSlideContainer = styled.div`
 `;
 
 const MenuSlideWrap = styled.div`
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1220px;
     margin: 0 auto;
+    padding: 0 10px;
 `;
 
 const MenuListWrap = styled.ul`
-    display: flex;
     width: 100%;
     height: 370px;
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
     > li {
+        min-width: 200px;
         margin: 0 25px;
+        @media (max-width: 768px) {
+            margin: 0 15px;
+        }
+        @media (max-width: 480px) {
+            margin: 0 5px;
+        }
     }
 `;
 
@@ -82,12 +115,17 @@ const MenuItemInfo = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 250px;
+    /* width: 250px; */
+    width: 100%;
+    max-width: 250px;
 `;
 
 const SandwichImg = styled.img`
-    width: 285px;
-    height: 200px;
+    /* width: 285px;
+    height: 200px; */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 `;
 
 const SandwichTitle = styled.strong`
@@ -100,7 +138,7 @@ const Summary = styled.p`
     word-break: keep-all;
     font-size: 13px;
     text-align: center;
-    width: 230px;
+    max-width: 230px;       // 사진에 따라 조정할 것!!
     margin-top: 15px;
     color: #666666;
 `;
@@ -159,7 +197,14 @@ function SubwayMenu() {
     
     const handleResize = () => {
         // 현재 브라우저 가로 길이에 따라 페이지당 보여주는 메뉴 수 변경
-        if(window.innerWidth <= 960) {
+        // if(window.innerWidth <= 1024) {
+        //     setOffset(3);
+        // } else {
+        //     setOffset(4);
+        // }
+        if(window.innerWidth <= 768) {
+            setOffset(2);
+        } else if(window.innerWidth <= 1024) {
             setOffset(3);
         } else {
             setOffset(4);
@@ -178,10 +223,11 @@ function SubwayMenu() {
         setPageIndex((prev) => prev===maxIndex ? maxIndex : prev + 1);
     };
     useEffect(() => {
+        handleResize();     // 초기 실행
         window.addEventListener("resize", handleResize);
         // 이벤트 등록 제거 -> 이벤트리스너를 제거하여 컴포넌트가 리렌더링될 때마다 계속해서 handler가 추가되지 않도록 처리 (clean up)
         return () => {
-            window.addEventListener("resize", handleResize);
+            window.removeEventListener("resize", handleResize);
         }
     }, [])
     return (
