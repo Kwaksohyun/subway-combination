@@ -40,7 +40,7 @@ const SubwayMenuHeader = styled.div`
 `;
 
 const Tabs = styled.div`
-    overflow: auto;
+    overflow-x: auto;
     scrollbar-width: none;
 `;
 
@@ -100,7 +100,7 @@ const MenuListWrap = styled.ul`
     display: flex;
     justify-content: center;
     > li {
-        min-width: 200px;
+        min-width: 175px;
         margin: 0 25px;
         @media (max-width: 768px) {
             margin: 0 15px;
@@ -131,6 +131,9 @@ const SandwichImg = styled.img`
 const SandwichTitle = styled.strong`
     font-size: 18px;
     font-weight: 700;
+    @media (max-width: 480px) {
+        font-size: 16px;
+    }
 `;
 
 const Summary = styled.p`
@@ -141,6 +144,9 @@ const Summary = styled.p`
     max-width: 230px;       // 사진에 따라 조정할 것!!
     margin-top: 15px;
     color: #666666;
+    @media (max-width: 480px) {
+        font-size: 12px;
+    }
 `;
 
 const SlideDirectionBtnWrap = styled.div`
