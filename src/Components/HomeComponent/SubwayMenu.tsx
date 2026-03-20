@@ -161,6 +161,9 @@ const SlideDirectionBtnWrap = styled.div`
         overflow: hidden;
         fill: ${(props) => props.theme.grey.darker};
         cursor: pointer;
+        @media (max-width: 768px) {
+            top: 80px;
+        }
     }
     svg:hover {
         fill: black;
@@ -170,10 +173,22 @@ const SlideDirectionBtnWrap = styled.div`
 
 const PrevBtn = styled.svg`
     left: 50px;
+    @media (max-width: 768px) {
+        left: 30px;
+    }
+    @media (max-width: 480px) {
+        left: 5px;
+    }
 `;
 
 const NextBtn = styled.svg`
     right: 50px;
+    @media (max-width: 768px) {
+        right: 30px;
+    }
+    @media (max-width: 480px) {
+        right: 5px;
+    }
 `;
 
 const Slide = {
